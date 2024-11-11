@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="BD7A49EF-FC40-99EE-7C1A-117D92C2438B" name="Autor">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:16:41 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_autora" id="AA4F2C84-FC6A-6523-FF39-DA14EB38FDA1">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:40:16 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nazwa_autora" id="2AD24BEA-CC02-354F-AA67-3659E326FDAF">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 15:51:01 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="zdjęcie" id="89F062F8-CEAD-E437-F4F3-620361285317">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 15:03:07 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="link_do_wikipedii" id="23EC044F-9B0A-D5CC-A845-6F3DDFE29EF5">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:43:17 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="F40CA8D4-4574-1EF3-96D7-7CC92EF37EA3" name="Autor PK">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:40:21 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>AA4F2C84-FC6A-6523-FF39-DA14EB38FDA1</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

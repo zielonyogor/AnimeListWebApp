@@ -1,0 +1,95 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2C6CB3F9-BE91-7036-8CE7-00163AF82F63" name="Konto">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:15:53 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="adres_email" id="48F74AE5-514D-772A-B4C8-8A327286D354">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:18:47 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nazwa_uzytkownika" id="64DD15F6-18D2-E400-F5C5-4E6866B2D801">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:19:03 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="haslo" id="65246C66-8338-4551-8BDF-372E49551D6C">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:19:47 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data_zalozenia" id="8E643593-3032-9545-B1F7-BCA7416B733D">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:19:55 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ikona_profilu" id="9932100E-6218-E0DE-9151-277335474915">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:21:50 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="opis" id="142DDC12-E165-3C74-1DB7-104FA37F6833">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:21:57 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="DA9A2772-8A76-073A-D900-CFA84F212F5F" name="Konto PK">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:18:57 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>48F74AE5-514D-772A-B4C8-8A327286D354</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

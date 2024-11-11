@@ -1,0 +1,122 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="96D92C7C-61EF-1E72-64D8-F7AB43ED4F96" name="Element listy">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:16:54 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_medium" id="FFC0C4DB-BAD1-F907-2E02-FC55B3288BC0">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:13:24 UTC</createdTime>
+<generatorID>724C305A-815E-845C-E5C9-750C9899FDA5</generatorID>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<referedAttribute>F4273FAC-E1F0-F217-D926-380955AAB22C</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="adres_email" id="A8659F4B-C636-A5B3-9513-95BDB877AEEB">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:23:25 UTC</createdTime>
+<generatorID>4FEF2B45-AD22-A265-670C-916076AEDD74</generatorID>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<referedAttribute>48F74AE5-514D-772A-B4C8-8A327286D354</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="liczba_ukończonych_części" id="BA241B75-E102-2C95-DB20-6364479C4060">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:50:31 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="status" id="9074D7BB-7CC0-6487-625D-64E07A89C57D">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:51:16 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ocena" id="4B6D42B1-EF4E-9C7F-140A-E6B0D322DDCE">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:51:11 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="uwagi" id="449FFB0F-6DC0-DF68-B790-6D2BEA6DE535">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:51:19 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data_rozpoczęcia" id="76DDBDBA-B41E-F323-3B8B-60BE10A689E3">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 15:46:51 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data_ukończenia" id="41E2E8E8-214C-648E-A867-16579CE2F3E1">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 15:46:58 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="4B4D6DA5-7E90-1E2C-BFD4-3D50C0A8388B" name="Medium użytkownika PK">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:12:49 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>FFC0C4DB-BAD1-F907-2E02-FC55B3288BC0</attributeRef>
+<attributeRef>A8659F4B-C636-A5B3-9513-95BDB877AEEB</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="F5DD0782-463A-1335-A7C5-0377A294EABE" mainViewID="FD1ABECF-4024-D502-5C3A-2D98A41093FD">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:08:26 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

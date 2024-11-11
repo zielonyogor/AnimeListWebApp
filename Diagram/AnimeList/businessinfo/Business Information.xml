@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="DAFF2BD4-C5B6-25E0-EB1E-DEA881152926">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:08:26 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>

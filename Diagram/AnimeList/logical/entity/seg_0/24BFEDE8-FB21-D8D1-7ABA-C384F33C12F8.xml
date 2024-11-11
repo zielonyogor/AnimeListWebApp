@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="24BFEDE8-FB21-D8D1-7ABA-C384F33C12F8" name="Recenzja">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:16:25 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_medium" id="7C549CA2-764C-23A4-53ED-13507F5310A1">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:13:24 UTC</createdTime>
+<generatorID>95AAF6C7-1FED-4E96-363A-74F4D951EB25</generatorID>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<referedAttribute>F4273FAC-E1F0-F217-D926-380955AAB22C</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="adres_email" id="1DA9DFD0-6C65-013A-F7E3-252CC43163B1">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:22:43 UTC</createdTime>
+<generatorID>89A41F03-503A-1FB9-0F5A-D11766904944</generatorID>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<referedAttribute>48F74AE5-514D-772A-B4C8-8A327286D354</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="opis" id="8C615438-4A32-33E6-0D68-C1F2E588C8F3">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:24:16 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="odczucia" id="57B4D00F-2333-2BCE-97BC-8D86AF56DF83">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:24:23 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data_wystawienia" id="D5CCBDD9-0619-394D-E616-C1E34D58BB5A">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 15:06:13 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9BD2426F-4778-7502-60FA-5963F4C422BA" name="Recenzja PK">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:12:49 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>7C549CA2-764C-23A4-53ED-13507F5310A1</attributeRef>
+<attributeRef>1DA9DFD0-6C65-013A-F7E3-252CC43163B1</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

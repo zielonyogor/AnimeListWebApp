@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="AnimeList" id="5F261156-C72A-8764-51E6-2D84F21B8E42" version="3.5">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:08:26 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>5F261156-C72A-8764-51E6-2D84F21B8E42</designId>
+</OSDM_Design>

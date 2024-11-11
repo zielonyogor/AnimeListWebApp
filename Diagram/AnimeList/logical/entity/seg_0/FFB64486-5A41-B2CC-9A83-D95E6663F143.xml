@@ -1,0 +1,42 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="FFB64486-5A41-B2CC-9A83-D95E6663F143" name="Anime">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 13:16:37 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<hierarchicalParent>1D88D4A2-6358-B008-E4AC-DE5C9A8D6D12</hierarchicalParent>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="liczba_odcinków" id="996E3C18-263A-85BD-61C9-CD6391ECCA94">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:25:37 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nazwa" id="15978D39-549B-4F21-CA3C-1B809190D870">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:40:34 UTC</createdTime>
+<generatorID>8EA8F04C-E174-39E0-A3DD-1AA56B59506B</generatorID>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<referedAttribute>E47A7DE8-2813-33BB-2593-5B35C974D227</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

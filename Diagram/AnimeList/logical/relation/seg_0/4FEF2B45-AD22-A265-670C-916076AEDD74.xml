@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Relation_17" directorySegmentName="seg_0" id="4FEF2B45-AD22-A265-670C-916076AEDD74">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-11 14:23:25 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<sourcePk>DA9A2772-8A76-073A-D900-CFA84F212F5F</sourcePk>
+<identifying>true</identifying>
+<nameOnSource>zawiera</nameOnSource>
+<nameOnTarget>należy do</nameOnTarget>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>85A3C1AB-3B30-5764-FD6D-3E605C132346</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>96D92C7C-61EF-1E72-64D8-F7AB43ED4F96</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>
