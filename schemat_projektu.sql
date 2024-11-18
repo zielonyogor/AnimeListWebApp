@@ -56,6 +56,7 @@ CREATE TABLE media(
     nazwa VARCHAR(30) NOT NULL,
     status_wydania VARCHAR2(14) DEFAULT 'nieskonczone'
     CONSTRAINT chk_status_medium CHECK(status_wydania IN ('nieskonczone', 'skonczone', 'zapowiedziane')),
+    ilosc NUMBER(4) DEFAULT 0 NOT NULL,
     plakat VARCHAR(300) NULL,
     data_wydania DATE DEFAULT CURRENT_DATE,
     opis VARCHAR(1000) NULL,
@@ -148,7 +149,6 @@ CREATE TABLE postacie_uzytkownikow(
 
     CONSTRAINT pk_postacie_uzytkownikow PRIMARY KEY (adres_email_uzytkownika, id_postaci)
 );
-
 
 -------------------------------------------------------------------------------------------------------------
 --USUWANIE BAZY:
