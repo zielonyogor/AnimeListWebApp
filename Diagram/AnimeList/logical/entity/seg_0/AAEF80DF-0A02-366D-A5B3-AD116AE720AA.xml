@@ -16,16 +16,6 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="liczba_rozdziałów" id="6CC3ECED-A8C9-2022-DB05-40F5F07EC792">
-<createdBy>Frostyl</createdBy>
-<createdTime>2024-11-11 14:24:50 UTC</createdTime>
-<ownerDesignName>AnimeList</ownerDesignName>
-<engineerTo>
-<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="id_autora" id="391E2E41-2CA8-7C33-E696-89771DD0FE72">
 <createdBy>Frostyl</createdBy>
 <createdTime>2024-11-11 14:40:22 UTC</createdTime>
@@ -35,6 +25,16 @@
 <item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
 </engineerTo>
 <referedAttribute>AA4F2C84-FC6A-6523-FF39-DA14EB38FDA1</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="typ_mangi" id="44C83BBE-141E-11F6-7765-41DC91CF0BD4">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-18 11:23:39 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

@@ -16,16 +16,6 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="liczba_odcinków" id="996E3C18-263A-85BD-61C9-CD6391ECCA94">
-<createdBy>Frostyl</createdBy>
-<createdTime>2024-11-11 14:25:37 UTC</createdTime>
-<ownerDesignName>AnimeList</ownerDesignName>
-<engineerTo>
-<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="nazwa" id="15978D39-549B-4F21-CA3C-1B809190D870">
 <createdBy>Frostyl</createdBy>
 <createdTime>2024-11-11 14:40:34 UTC</createdTime>
@@ -38,5 +28,26 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="typ_anime" id="57AD28F2-6AB6-EBAC-3FD1-0B0256595C42">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-18 11:24:22 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="96318787-506B-9D61-4B26-4BC36D843807" name="Anime PK">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-18 11:24:09 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<pk>true</pk>
+</identifier>
+</identifiers>
 </Entity>

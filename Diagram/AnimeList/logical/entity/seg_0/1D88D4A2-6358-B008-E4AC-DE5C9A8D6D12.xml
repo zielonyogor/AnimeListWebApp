@@ -45,6 +45,16 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="liczba_odcinków/rozdziałów" id="126BFFEE-F45B-4454-9BE7-6C844D4733B9">
+<createdBy>Frostyl</createdBy>
+<createdTime>2024-11-18 11:26:26 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="plakat" id="11C203CC-E667-7988-FEC7-144A2B62F5AA">
 <createdBy>Frostyl</createdBy>
 <createdTime>2024-11-11 14:13:01 UTC</createdTime>
