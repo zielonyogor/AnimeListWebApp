@@ -1,173 +1,175 @@
-CREATE TABLE odznaki(
-    nazwa VARCHAR2(20) NOT NULL CONSTRAINT pk_odznaki PRIMARY KEY,
-    kolor_tla VARCHAR2(20) DEFAULT 'ffffff' NOT NULL,
-    kolor_nazwy VARCHAR2(20) DEFAULT '000000' NOT NULL,
-    opis VARCHAR(100)
+CREATE TABLE Badge(
+    Name VARCHAR2(20) NOT NULL CONSTRAINT pkBadge PRIMARY KEY,
+    BackgroundColor VARCHAR2(20) DEFAULT 'ffffff' NOT NULL,
+    NameColor VARCHAR2(20) DEFAULT '000000' NOT NULL,
+    Description VARCHAR(100)
 );
 
-CREATE TABLE konta(
-    adres_email VARCHAR2(50) NOT NULL CONSTRAINT pk_konto PRIMARY KEY,
-    nazwa_uzytkownika VARCHAR2(20) NOT NULL UNIQUE,
-    haslo VARCHAR2(20) NOT NULL,
-    data_zalozenia DATE DEFAULT CURRENT_DATE,
-    zdjecie VARCHAR(300) NULL,
-    opis VARCHAR2(500) NULL
+CREATE TABLE Account(
+    AccountId NUMBER(10)  GENERATED ALWAYS AS IDENTITY CONSTRAINT pkAccount PRIMARY KEY,
+    EmailAddress VARCHAR2(50) NOT NULL UNIQUE,
+    Username VARCHAR2(20) NOT NULL UNIQUE,
+    Password VARCHAR2(20) NOT NULL,
+    CreateDate DATE DEFAULT CURRENT_DATE,
+    ImageLink VARCHAR(300) NULL,
+    Description VARCHAR2(500) NULL,
+    AccountPrivilege VARCHAR2(1) DEFAULT 'n' NOT NULL,
+    CONSTRAINT chkAccountPrivilege CHECK(AccountPrivilege in ('n', 'm', 'a')) --none or moderator or admin
 );
 
-CREATE TABLE admini(
-    adres_email VARCHAR2(50) NOT NULL CONSTRAINT pk_admini PRIMARY KEY,
-    CONSTRAINT fk_adres_email FOREIGN KEY(adres_email) REFERENCES konta(adres_email)
+CREATE TABLE UserBadge(
+    AccountId CONSTRAINT fkUserBadge REFERENCES Account(AccountId),
+    BadgeName VARCHAR2(20) NOT NULL CONSTRAINT fkBadgeUser REFERENCES Badge(Name),
+
+    CONSTRAINT pkUserBadge PRIMARY KEY(AccountId, BadgeName)
 );
 
-CREATE TABLE uzytkownicy(
-    adres_email VARCHAR2(50) NOT NULL,
-    uprawnienia VARCHAR2(1) DEFAULT 'n' NOT NULL,
+CREATE TABLE Friend(
+    AccountId1 CONSTRAINT fkUser1 REFERENCES Account(AccountId),
+    AccountId2 CONSTRAINT fkUser2 REFERENCES Account(AccountId),
+
+    CONSTRAINT pkFriend PRIMARY KEY(AccountId1, AccountId2),
+    CONSTRAINT chkFriendPair CHECK (AccountId1 != AccountId2)
+);
+
+CREATE TABLE Author(
+    Id NUMBER(5) GENERATED ALWAYS AS IDENTITY CONSTRAINT pkAuthor PRIMARY KEY,
+    Name VARCHAR2(30) NOT NULL,
+    Image VARCHAR2(300) NULL,
+    WikipediaLink VARCHAR2(100) NULL
+);
+
+CREATE TABLE Studio(
+    Name VARCHAR2(20) NOT NULL CONSTRAINT pkStudio PRIMARY KEY,
+    WikipediaLink VARCHAR2(100) NULL
+);
+
+CREATE TABLE Genre(
+    Name VARCHAR(24) NOT NULL CONSTRAINT pkGenre PRIMARY KEY
+);
+
+CREATE TABLE Medium(
+    Id NUMBER(10) GENERATED ALWAYS AS IDENTITY CONSTRAINT pkMedium PRIMARY KEY,
+    Name VARCHAR(30) NOT NULL,
+    Status VARCHAR2(14) DEFAULT 'Not finished'
+    CONSTRAINT chkMediumStatus CHECK(Status IN ('Not finished', 'Finished', 'To be released')),
+    Count NUMBER(4) DEFAULT 0 NOT NULL,
+    Poster VARCHAR(300) NULL,
+    PublishDate DATE DEFAULT CURRENT_DATE,
+    Description VARCHAR(1000) NULL,
+    Type VARCHAR2(1) NOT NULL CONSTRAINT chkMediumType CHECK(Type IN ('M', 'A')) -- m - manga, a - anime
+);
+
+CREATE TABLE MediumConnection(
+    IdMedium1 NUMBER(10) NOT NULL,
+    IdMedium2 NUMBER(10) NOT NULL,
     
-    CONSTRAINT pk_uzytkownicy PRIMARY KEY (adres_email),
-    CONSTRAINT fk_adres_email_uzytkownik FOREIGN KEY(adres_email) REFERENCES konta(adres_email),
-    CONSTRAINT chk_uprawnienia CHECK(uprawnienia in ('n', 'm')) --none or moderator
-);
-
-CREATE TABLE znajomi(
-    adres_email_uzytkownika_1 CONSTRAINT fk_uzytkownik_1 REFERENCES uzytkownicy(adres_email),
-    adres_email_uzytkownika_2 CONSTRAINT fk_uzytkownik_2 REFERENCES uzytkownicy(adres_email),
-
-    CONSTRAINT pk_znajomi PRIMARY KEY(adres_email_uzytkownika_1, adres_email_uzytkownika_2)
-);
-
-CREATE TABLE autorzy(
-    id_autora NUMBER(5) GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_autorzy PRIMARY KEY,
-    nazwa_autora VARCHAR2(30) NOT NULL,
-    zdjecie VARCHAR2(300) NULL,
-    link_wikipedia VARCHAR2(100) NULL
-);
-
-CREATE TABLE studia(
-    nazwa_studia VARCHAR2(20) NOT NULL CONSTRAINT pk_studia PRIMARY KEY,
-    link_wikipedia VARCHAR2(100) NULL
-);
-
-CREATE TABLE gatunki(
-    nazwa VARCHAR(24) NOT NULL CONSTRAINT pk_nazwa_gatunku PRIMARY KEY
-);
-
-CREATE TABLE media(
-    id_medium NUMBER(10) GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_medium PRIMARY KEY,
-    nazwa VARCHAR(30) NOT NULL,
-    status_wydania VARCHAR2(14) DEFAULT 'nieskonczone'
-    CONSTRAINT chk_status_medium CHECK(status_wydania IN ('nieskonczone', 'skonczone', 'zapowiedziane')),
-    ilosc NUMBER(4) DEFAULT 0 NOT NULL,
-    plakat VARCHAR(300) NULL,
-    data_wydania DATE DEFAULT CURRENT_DATE,
-    opis VARCHAR(1000) NULL,
-    rodzaj_medium VARCHAR2(1) NOT NULL CONSTRAINT chk_rodzaj_medium CHECK(rodzaj_medium IN ('m', 'a')) -- m - manga, a - anime
-);
-
-CREATE TABLE media_powiazania(
-    id_medium_1 NOT NULL,
-    id_medium_2 NOT NULL,
+    CONSTRAINT fkMediumConnection1 FOREIGN KEY(IdMedium1) REFERENCES Medium(Id),
+    CONSTRAINT fkMediumConnection2 FOREIGN KEY(IdMedium2) REFERENCES Medium(Id),
+    CONSTRAINT pkMediumConnection PRIMARY KEY (IdMedium1, IdMedium2),
     
-    CONSTRAINT fk_media_powiazania_1 FOREIGN KEY(id_medium_1) REFERENCES media(id_medium),
-    CONSTRAINT fk_media_powiazania_2 FOREIGN KEY(id_medium_2) REFERENCES media(id_medium),
-    CONSTRAINT pk_media_powiazania PRIMARY KEY (id_medium_1, id_medium_2)
+    CONSTRAINT chkMediumConnection CHECK (IdMedium1 != IdMedium2)
 );
 
-CREATE TABLE media_gatunki(
-    id_medium CONSTRAINT fk_media_gatunki REFERENCES media(id_medium),
-    nazwa_gatunku CONSTRAINT fk_gatunki_media REFERENCES gatunki(nazwa),
+CREATE TABLE MediumGenre(
+    IdMedium CONSTRAINT fkMediumGenre REFERENCES Medium(Id),
+    GenreName CONSTRAINT fkGenreMedium REFERENCES Genre(Name),
 
-    CONSTRAINT pk_media_gatunki PRIMARY KEY (id_medium, nazwa_gatunku)
+    CONSTRAINT pkMediumGenre PRIMARY KEY (IdMedium, GenreName)
 );
 
-CREATE TABLE manga(
-    id_medium NUMBER(10) 
-    CONSTRAINT fk_id_manga REFERENCES media(id_medium)
-    CONSTRAINT pk_id_manga PRIMARY KEY,
+CREATE TABLE Manga(
+    MediumId NUMBER(10) 
+    CONSTRAINT fkMangaId REFERENCES Medium(Id)
+    CONSTRAINT pkMangaId PRIMARY KEY,
 
-    typ VARCHAR2(10) DEFAULT 'manga' CONSTRAINT chk_typ_mangi CHECK (typ IN ('manga', 'light novel', 'oneshot')),
-    id_autora NUMBER(5) NOT NULL CONSTRAINT fk_id_autora REFERENCES autorzy(id_autora)
+    Type VARCHAR2(10) DEFAULT 'Manga' CONSTRAINT chkMangaType CHECK (Type IN ('Manga', 'Light novel', 'Oneshot')),
+    AuthorId NUMBER(5) NOT NULL CONSTRAINT fkAuthorId REFERENCES Author(Id)
 );
 
-CREATE TABLE anime(
-    id_medium NUMBER(10) 
-    CONSTRAINT fk_id_anime REFERENCES media(id_medium)
-    CONSTRAINT pk_id_anime PRIMARY KEY,
+CREATE TABLE Anime(
+    MediumId NUMBER(10) 
+    CONSTRAINT fkAnimeId REFERENCES Medium(Id)
+    CONSTRAINT pkAnimeId PRIMARY KEY,
 
-    typ VARCHAR2(10) DEFAULT 'tv' CONSTRAINT chk_typ_anime CHECK (typ IN ('tv', 'film', 'ova')),
-    nazwa_studia VARCHAR2(20) NOT NULL CONSTRAINT fk_nazwa_studia REFERENCES studia(nazwa_studia)
+    Type VARCHAR2(5) DEFAULT 'TV', CONSTRAINT chkAnimeType CHECK (Type IN ('TV', 'Movie', 'OVA')),
+    StudioName VARCHAR2(20) NOT NULL CONSTRAINT fkNameStudio REFERENCES Studio(Name)
 );
 
-CREATE TABLE elementy_listy(
-    adres_email_uzytkownika CONSTRAINT fk_lista_uzytkownik REFERENCES konta(adres_email) ON DELETE CASCADE,
-    id_medium NUMBER(10) CONSTRAINT fk_lista_medium REFERENCES media(id_medium),
-
-    liczba_ukonczonych_czesci NUMBER(4) DEFAULT 0 CONSTRAINT chk_ukonczone CHECK(liczba_ukonczonych_czesci >= 0),
-    status VARCHAR(14) DEFAULT 'w trakcie' NOT NULL CONSTRAINT chk_status_elementu
-    CHECK(status IN ('skonczone', 'w planach', 'wstrzymane', 'porzucone', 'w trakcie')),
-    ocena NUMBER(2) DEFAULT NULL CONSTRAINT chk_ocena CHECK(ocena BETWEEN 0 AND 10),
-    uwagi VARCHAR(200) NULL,
-    data_rozpoczecia DATE DEFAULT CURRENT_DATE,
-    data_ukonczenia DATE NULL,
-
-    CONSTRAINT pk_element_listy PRIMARY KEY (adres_email_uzytkownika, id_medium),
-    --jeśli 'w planach' to nie można dać oceny ani mieć postępu
-    CONSTRAINT chk_w_planach CHECK(
-        status != 'w planach' OR (ocena IS NULL and liczba_ukonczonych_czesci = 0)
+CREATE TABLE ListElement (
+    AccountId NUMBER(10) NOT NULL CONSTRAINT fkElementAccountId REFERENCES Account(AccountId) ON DELETE CASCADE,
+    MediumId NUMBER(10) NOT NULL CONSTRAINT fkElementMedium REFERENCES Medium(Id),
+    FinishedNumber NUMBER(4) DEFAULT 0 CONSTRAINT chkFinished CHECK (FinishedNumber >= 0),
+    Status VARCHAR2(13) DEFAULT 'Watching' NOT NULL CONSTRAINT chkElementStatus CHECK (Status IN ('Completed', 'Plan to watch', 'On-hold', 'Dropped', 'Watching')),
+    Rating NUMBER(2) DEFAULT NULL CONSTRAINT chkRating CHECK (Rating BETWEEN 0 AND 10),
+    MediumComment VARCHAR2(200),
+    StartDate DATE DEFAULT CURRENT_DATE,
+    FinishDate DATE,
+    
+    CONSTRAINT pkListElement PRIMARY KEY (AccountId, MediumId),
+    CONSTRAINT chkPlanToWatch CHECK (
+        Status != 'Plan to watch' OR (Rating IS NULL AND FinishedNumber = 0)
     )
 );
 
-CREATE TABLE recenzja (
-    adres_email_uzytkownika VARCHAR2(50),
-    id_medium NUMBER(10) CONSTRAINT fk_recenzja_medium REFERENCES media(id_medium),
+CREATE TABLE Review(
+    AccountId NUMBER(10) NOT NULL,
+    MediumId NUMBER(10) CONSTRAINT fkReviewMedium REFERENCES Medium(Id),
     
-    opis VARCHAR2(500) NOT NULL,
-    odczucia VARCHAR2(17) DEFAULT 'polecam' NOT NULL 
-        CONSTRAINT chk_odczucia CHECK (odczucia IN ('polecam', 'nie polecam', 'mieszane odczucia')),
-    data_wystawienia DATE DEFAULT CURRENT_DATE NOT NULL,
+    Description VARCHAR2(500) NOT NULL,
+    Feeling VARCHAR2(17) DEFAULT 'Recommended' NOT NULL 
+        CONSTRAINT chkFeeling CHECK (Feeling IN ('Recommended', 'Not recommended', 'Mixed feelings')),
+    PostDate DATE DEFAULT CURRENT_DATE NOT NULL,
     
-    CONSTRAINT fk_recenzja_uzytkownik FOREIGN KEY (adres_email_uzytkownika) REFERENCES konta(adres_email),
-    CONSTRAINT pk_recenzja PRIMARY KEY (adres_email_uzytkownika, id_medium)
+    CONSTRAINT fkUserReview FOREIGN KEY (AccountId) REFERENCES Account(AccountId),
+    CONSTRAINT pkReview PRIMARY KEY (AccountId, MediumId)
 );
 
-CREATE TABLE postacie(
-    id_postaci NUMBER(12) GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_postacie PRIMARY KEY,
-    nazwa_postaci VARCHAR2(30) NOT NULL,
-    zdjecie VARCHAR(300) NULL,
-    opis VARCHAR2(500) NULL
+CREATE TABLE Character(
+    Id NUMBER(12) GENERATED ALWAYS AS IDENTITY CONSTRAINT pkCharacter PRIMARY KEY,
+    Name VARCHAR2(30) NOT NULL,
+    Image VARCHAR(300) NULL,
+    Description VARCHAR2(500) NULL
 );
 
-CREATE TABLE media_postacie(
-    id_medium CONSTRAINT fk_media_postacie REFERENCES media(id_medium),
-    id_postaci CONSTRAINT fk_postacie_media REFERENCES postacie(id_postaci),
+CREATE TABLE MediumCharacter(s
+    MediumId CONSTRAINT fkMediumCharacter REFERENCES Medium(Id),
+    CharacterId CONSTRAINT fkCharacterMedium REFERENCES Character(Id),
 
-    CONSTRAINT pk_media_postacie PRIMARY KEY (id_medium, id_postaci)
+    CONSTRAINT pkMediumCharacter PRIMARY KEY (MediumId, CharacterId)
 );
 
-CREATE TABLE postacie_uzytkownikow(
-    adres_email_uzytkownika CONSTRAINT fk_uzytkownicy_postacie REFERENCES konta(adres_email),
-    id_postaci CONSTRAINT fk_postacie_uzytkownicy REFERENCES postacie(id_postaci),
+CREATE TABLE UserCharacter(
+    AccountId CONSTRAINT fkUserCharacter REFERENCES Account(AccountId),
+    CharacterId CONSTRAINT fkCharacterUser REFERENCES Character(Id),
 
-    CONSTRAINT pk_postacie_uzytkownikow PRIMARY KEY (adres_email_uzytkownika, id_postaci)
+    CONSTRAINT pkUserCharacter PRIMARY KEY (AccountId, CharacterId)
 );
+
+COMMIT;
 
 -------------------------------------------------------------------------------------------------------------
 --USUWANIE BAZY:
 
-DROP TABLE postacie_uzytkownikow CASCADE CONSTRAINTS;
-DROP TABLE media_postacie CASCADE CONSTRAINTS;
-DROP TABLE postacie CASCADE CONSTRAINTS;
-DROP TABLE recenzja CASCADE CONSTRAINTS;
-DROP TABLE elementy_listy CASCADE CONSTRAINTS;
-DROP TABLE anime CASCADE CONSTRAINTS;
-DROP TABLE manga CASCADE CONSTRAINTS;
-DROP TABLE media_gatunki CASCADE CONSTRAINTS;
-DROP TABLE media_powiazania CASCADE CONSTRAINTS;
-DROP TABLE media CASCADE CONSTRAINTS;
-DROP TABLE gatunki CASCADE CONSTRAINTS;
-DROP TABLE studia CASCADE CONSTRAINTS;
-DROP TABLE autorzy CASCADE CONSTRAINTS;
-DROP TABLE znajomi CASCADE CONSTRAINTS;
-DROP TABLE uzytkownicy CASCADE CONSTRAINTS;
-DROP TABLE admini CASCADE CONSTRAINTS;
-DROP TABLE konta CASCADE CONSTRAINTS;
-DROP TABLE odznaki CASCADE CONSTRAINTS;
+-- DROP TABLE UserCharacter CASCADE CONSTRAINTS;
+-- DROP TABLE MediumCharacter CASCADE CONSTRAINTS;
+-- DROP TABLE Character CASCADE CONSTRAINTS;
+-- DROP TABLE Review CASCADE CONSTRAINTS;
+-- DROP TABLE ListElement CASCADE CONSTRAINTS;
+-- DROP TABLE Anime CASCADE CONSTRAINTS;
+-- DROP TABLE Manga CASCADE CONSTRAINTS;
+-- DROP TABLE MediumGenre CASCADE CONSTRAINTS;
+-- DROP TABLE MediumConnection CASCADE CONSTRAINTS;
+-- DROP TABLE Medium CASCADE CONSTRAINTS;
+-- DROP TABLE Genre CASCADE CONSTRAINTS;
+-- DROP TABLE Studio CASCADE CONSTRAINTS;
+-- DROP TABLE Author CASCADE CONSTRAINTS;
+-- DROP TABLE Friend CASCADE CONSTRAINTS;
+-- DROP TABLE UserBadge CASCADE CONSTRAINTS;
+-- DROP TABLE Account CASCADE CONSTRAINTS;
+-- DROP TABLE Badge CASCADE CONSTRAINTS;
+
+INSERT INTO Medium(Name, Type) VALUES('Chainsaw Man', 'A'); 
+INSERT INTO Studio(Name) VALUES('Mappa');
+INSERT INTO Anime(MediumId, StudioName) VALUES((SELECT Id FROM Medium WHERE Name='Chainsaw Man' AND Type='A'), 'Mappa'); 
+COMMIT;
