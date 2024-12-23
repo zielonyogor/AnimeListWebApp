@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Application.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Application.Controllers;
 public class AccountController : Controller
@@ -20,6 +21,48 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+	[Authorize]
+	public async Task<IActionResult> Index(string username)
+    {
+        var user = await _userManager.FindByNameAsync(username);
+
+        if (user != null)
+        {
+            var model = new UserInfoViewModel   
+            {
+                UserName = username,
+                Imagelink = user.Imagelink,
+                Description = user.Description,
+                Createdate = String.Format("{0:dd/MM/yyyy}", user.Createdate),
+            };
+            ViewData["Title"] = $"{username} info";
+            return View(model);
+        }
+        return RedirectToAction("Index", "Home");
+    }
+
+	[Authorize]
+	[HttpGet]
+	public async Task<IActionResult> Edit()
+	{
+		var user = await _userManager.GetUserAsync(User);
+		if (user == null)
+		{
+			return RedirectToAction("Login", "Account");
+		}
+
+		var model = new RegisterViewModel
+		{
+			UserName = user.UserName,
+			Email = user.Email,
+			Imagelink = user.Imagelink,
+			Description = user.Description
+		};
+
+		return View(model);
+	}
+
+	[HttpGet]
     public IActionResult Login()
     {
         return View();
@@ -53,7 +96,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-	public async Task<IActionResult> Register(UserViewModel model, IFormFile? profilePicture)
+	public async Task<IActionResult> Register(RegisterViewModel model, IFormFile? profilePicture)
 	{
         if (!ModelState.IsValid)
             return View(model);
@@ -93,6 +136,13 @@ public class AccountController : Controller
         }
 
         return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]

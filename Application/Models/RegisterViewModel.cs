@@ -2,7 +2,7 @@
 
 namespace Application.Models
 {
-	public class UserViewModel
+	public class RegisterViewModel
 	{
 		[Required]
 		[EmailAddress]
