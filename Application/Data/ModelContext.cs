@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Application.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Models;
+namespace Application.Data;
 
-public partial class ModelContext : DbContext
+public partial class ModelContext : IdentityDbContext<Account, IdentityRole<int>, int>
 {
     public ModelContext()
     {
@@ -37,27 +40,28 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Studio> Studios { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder
-            .HasDefaultSchema("SBD155910")
             .UseCollation("USING_NLS_COMP");
 
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Accountid).HasName("PKACCOUNT");
+            entity.HasKey(e => e.Id).HasName("PKACCOUNT");
 
             entity.ToTable("ACCOUNT");
 
-            entity.HasIndex(e => e.Emailaddress, "SYS_C00191762").IsUnique();
+            entity.HasIndex(e => e.Email, "SYS_C00191762").IsUnique();
 
-            entity.HasIndex(e => e.Username, "SYS_C00191763").IsUnique();
+            entity.HasIndex(e => e.UserName, "SYS_C00191763").IsUnique();
 
-            entity.Property(e => e.Accountid)
+            entity.Property(e => e.Id)
                 .HasPrecision(10)
-                .HasColumnName("ACCOUNTID");
+                .HasColumnName("Id");
             entity.Property(e => e.Accountprivilege)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -71,22 +75,35 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Emailaddress)
+            entity.Property(e => e.Email)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("EMAILADDRESS");
+                .HasColumnName("Email");
             entity.Property(e => e.Imagelink)
                 .HasMaxLength(300)
                 .IsUnicode(false)
                 .HasColumnName("IMAGELINK");
-            entity.Property(e => e.Password)
+            entity.Property(e => e.UserName)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasColumnName("PASSWORD");
-            entity.Property(e => e.Username)
+                .HasColumnName("UserName");
+            entity.Property(e => e.NormalizedUserName)
+                .HasMaxLength(256)
+                .IsUnicode(false)
+                .HasColumnName("NormalizedUserName");
+            entity.Property(e => e.NormalizedEmail)
+                .HasMaxLength(256)
+                .IsUnicode(false)
+                .HasColumnName("NormalizedEmail");
+            entity.Property(e => e.PasswordHash)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasColumnName("USERNAME");
+                .HasColumnName("PasswordHash");
+            entity.Property(e => e.SecurityStamp)
+                .HasColumnName("SecurityStamp");
+            entity.Property(e => e.ConcurrencyStamp)
+                .HasColumnName("ConcurrencyStamp");
+
 
             entity.HasMany(d => d.Accountid1s).WithMany(p => p.Accountid2s)
                 .UsingEntity<Dictionary<string, object>>(

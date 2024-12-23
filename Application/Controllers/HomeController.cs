@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Application.Models;
+using Application.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Controllers;
 
@@ -10,10 +12,15 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly ModelContext _context;
 
-    public HomeController(ILogger<HomeController> logger, ModelContext context) // 
+    private readonly SignInManager<Account> _signInManager;
+    private readonly UserManager<Account> _userManager;
+
+    public HomeController(ILogger<HomeController> logger, ModelContext context, SignInManager<Account> signInManager, UserManager<Account> userManager) // 
     {
         _logger = logger;
         _context = context;
+        _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     public IActionResult Index()
@@ -25,7 +32,21 @@ public class HomeController : Controller
         {
             Console.WriteLine(anime.Studioname);
         }
-        return View();
+
+        if (_signInManager.IsSignedIn(User))
+        {
+            Console.WriteLine("user is signed in");
+            var user = _userManager.GetUserAsync(User).Result;
+            ViewData["UserName"] = user.UserName;
+            ViewData["Email"] = user.Email;
+            ViewData["Description"] = user.Description;
+            ViewData["ImageLink"] = user.Imagelink;
+            return View();
+        }
+        else
+        {
+            return RedirectToAction("Login", "Account");
+        }
     }
 
     public IActionResult Privacy()
@@ -36,6 +57,13 @@ public class HomeController : Controller
     public IActionResult UserInfo()
     {
         return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Login", "Account");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,18 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Application.Models;
 
-public partial class Account
+public partial class Account : IdentityUser<int>
 {
-    public int Accountid { get; set; }
-
-    public string Emailaddress { get; set; } = null!;
-
-    public string Username { get; set; } = null!;
-
-    public string Password { get; set; } = null!;
-
     public DateTime? Createdate { get; set; }
 
     public string? Imagelink { get; set; }
@@ -20,6 +15,9 @@ public partial class Account
     public string? Description { get; set; }
 
     public string Accountprivilege { get; set; } = null!;
+
+    [Required]
+    public override string? PasswordHash { get; set; } = null!;
 
     public virtual ICollection<Listelement> Listelements { get; set; } = new List<Listelement>();
 
@@ -32,4 +30,27 @@ public partial class Account
     public virtual ICollection<Badge> Badgenames { get; set; } = new List<Badge>();
 
     public virtual ICollection<Character> Characters { get; set; } = new List<Character>();
+
+
+
+    [NotMapped]
+    public override bool TwoFactorEnabled { get; set; }
+
+    [NotMapped]
+    public override string? PhoneNumber { get; set; }
+
+    [NotMapped]
+    public override bool LockoutEnabled { get; set; }
+
+    [NotMapped]
+    public override bool PhoneNumberConfirmed { get; set; }
+
+    [NotMapped]
+    public override bool EmailConfirmed { get; set; }
+
+    [NotMapped]
+    public override DateTimeOffset? LockoutEnd { get; set; }
+
+    [NotMapped]
+    public override int AccessFailedCount { get; set; }
 }

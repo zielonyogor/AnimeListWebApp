@@ -1,0 +1,78 @@
+﻿@{
+	ViewData["Title"] = "Register your account";
+}
+
+@model Application.Models.UserViewModel
+
+<form asp-action="Register" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" id="username" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ProfilePicture">Profile Picture</label>
+        <input type="file" name="ProfilePicture" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+
+<script>
+    let debounceTimeout;
+    document.getElementById('username').addEventListener('input', function () {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(async () => {
+            const username = this.value;
+            const feedback = document.getElementById('username-feedback');
+
+            if (username.length < 3) {
+                feedback.textContent = "Username must be at least 3 characters long.";
+                feedback.style.color = "red";
+                return;
+            }
+
+            const response = await fetch(`/Account/IsUsernameAvailable?username=${encodeURIComponent(username)}`);
+            const data = await response.json();
+
+            if (data.isValid) {
+                feedback.textContent = data.message;
+                feedback.style.color = "green";
+            } else {
+                feedback.textContent = data.message;
+                feedback.style.color = "red";
+            }
+        }, 300);
+    });
+
+</script>
