@@ -2,17 +2,17 @@
     ViewData["Title"] = "edit account";
 }
 
-@model Application.Models.RegisterViewModel
+@model Application.Models.UserEditViewModel
 
 <h1>Edit Your Profile</h1>
 
+<p>@TempData["SuccessMessage"]</p>
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="form-group">
         <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <input asp-for="Email" class="form-control" readonly />
     </div>
 
     <div class="form-group">
@@ -30,6 +30,24 @@
     <div class="form-group">
         <label asp-for="Imagelink"></label>
         <input asp-for="Imagelink" type="file" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CurrentPassword">Current Password</label>
+        <input asp-for="CurrentPassword" type="password" class="form-control" />
+        <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password">New Password (optional)</label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConfirmPassword">Confirm New Password</label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
 
     <br />

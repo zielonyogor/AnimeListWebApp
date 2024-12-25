@@ -3,6 +3,37 @@ using Microsoft.EntityFrameworkCore;
 using Application.Data;
 using Microsoft.AspNetCore.Identity;
 using Application.Models;
+using Microsoft.Extensions.DependencyInjection;
+
+async Task SeedRoles(IServiceProvider serviceProvider)
+{
+	var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+	var userManager = serviceProvider.GetRequiredService<UserManager<Account>>();
+
+	// Adds roles, delete this later probably
+	if (!await roleManager.RoleExistsAsync("Admin"))
+	{
+		await roleManager.CreateAsync(new IdentityRole<int>("Admin"));
+	}
+
+	if (!await roleManager.RoleExistsAsync("Moderator"))
+	{
+		await roleManager.CreateAsync(new IdentityRole<int>("Moderator"));
+	}
+
+    // Delete this later
+	var adminUser = await userManager.FindByNameAsync("superguy44");
+	if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, "Admin"))
+	{
+		await userManager.AddToRoleAsync(adminUser, "Admin");
+	}
+    var modUser = await userManager.FindByNameAsync("asdfgh");
+    if (modUser != null && !await userManager.IsInRoleAsync(modUser, "Moderator"))
+    {
+        await userManager.AddToRoleAsync(modUser, "Moderator");
+    }
+}
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,5 +76,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+	await SeedRoles(scope.ServiceProvider);
+}
 
 app.Run();

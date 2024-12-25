@@ -51,7 +51,7 @@ public class AccountController : Controller
 			return RedirectToAction("Login", "Account");
 		}
 
-		var model = new RegisterViewModel
+		var model = new UserEditViewModel
 		{
 			UserName = user.UserName,
 			Email = user.Email,
@@ -62,7 +62,106 @@ public class AccountController : Controller
 		return View(model);
 	}
 
-	[HttpGet]
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Edit(UserEditViewModel model, IFormFile? profilePicture)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+        if (!isPasswordValid)
+        {
+            ModelState.AddModelError("CurrentPassword", "The current password is incorrect.");
+            return View(model);
+        }
+
+        bool changesMade = false;
+
+        if (model.UserName != user.UserName)
+        {
+            var existingUser = await _userManager.FindByNameAsync(model.UserName);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("UserName", "This username is already taken.");
+                return View(model);
+            }
+
+            user.UserName = model.UserName;
+            changesMade = true;
+        }
+
+        if (model.Description != user.Description)
+        {
+            user.Description = model.Description;
+            changesMade = true;
+        }
+        if (profilePicture != null)
+        {
+            var filePath = Path.Combine("wwwroot/images", profilePicture.FileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await profilePicture.CopyToAsync(stream);
+            }
+            user.Imagelink = $"/images/{profilePicture.FileName}";
+            changesMade = true;
+        }
+
+
+        if (!string.IsNullOrWhiteSpace(model.Password))
+        {
+            var passwordValidator = new PasswordValidator<Account>();
+            var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, model.Password);
+
+            if (!passwordValidationResult.Succeeded)
+            {
+                foreach (var error in passwordValidationResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
+            var updatePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.Password);
+            if (!updatePasswordResult.Succeeded)
+            {
+                foreach (var error in updatePasswordResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
+
+            changesMade = true;
+        }
+
+
+        if (!changesMade)
+        {
+            return RedirectToAction(nameof(Edit));
+        }
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (updateResult.Succeeded)
+        {
+            TempData["SuccessMessage"] = "Profile has updated";
+            return RedirectToAction(nameof(Edit));
+        }
+
+        foreach (var error in updateResult.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return View(model);
+    }
+
+
+
+    [HttpGet]
     public IActionResult Login()
     {
         return View();
@@ -145,6 +244,11 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    public IActionResult AccessDenied(string ReturnUrl)
+    {
+        return View();
+    }
+
     [HttpGet]
     public async Task<IActionResult> IsUsernameAvailable(string username)
     {
@@ -165,5 +269,4 @@ public class AccountController : Controller
 
         return Json(new { isValid = true, message = "Username is available." });
     }
-
 }

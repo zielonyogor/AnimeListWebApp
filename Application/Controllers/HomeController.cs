@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Models;
 using Application.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Application.Controllers;
 
@@ -53,12 +54,6 @@ public class HomeController : Controller
     {
         return View();
     }
-
-    public IActionResult UserInfo()
-    {
-        return View();
-    }
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
