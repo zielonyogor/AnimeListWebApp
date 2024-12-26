@@ -2,6 +2,8 @@
 {
     public class AnimeViewModel
     {
+        // People are not supposed to write ID into POST request, but it is useful for GET
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
 
         public string? Status { get; set; }
@@ -18,8 +20,8 @@
 
         public string Studioname { get; set; } = null!;
 
-        public virtual ICollection<Genre> Genrenames { get; set; } = new List<Genre>();
+        public virtual List<string> Genrenames { get; set; } = new List<string>();
 
-        public virtual ICollection<Medium> Connections { get; set; } = new List<Medium>();
+        public virtual List<int> Connections { get; set; } = new List<int>();
     }
 }

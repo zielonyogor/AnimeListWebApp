@@ -26,22 +26,10 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        List<Anime> animeList = _context.Animes.ToList();
-        Console.WriteLine(animeList.Count);
-
-        foreach (Anime anime in animeList)
-        {
-            Console.WriteLine(anime.Studioname);
-        }
-
         if (_signInManager.IsSignedIn(User))
         {
-            Console.WriteLine("user is signed in");
             var user = _userManager.GetUserAsync(User).Result;
             ViewData["UserName"] = user.UserName;
-            ViewData["Email"] = user.Email;
-            ViewData["Description"] = user.Description;
-            ViewData["ImageLink"] = user.Imagelink;
             return View();
         }
         else

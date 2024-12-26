@@ -20,6 +20,7 @@ public class AccountController : Controller
         _context = context;
     }
 
+    // GET: account/username123
     [HttpGet]
 	[Authorize]
 	public async Task<IActionResult> Index(string username)
@@ -41,7 +42,8 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-	[Authorize]
+    // GET: account/edit
+    [Authorize]
 	[HttpGet]
 	public async Task<IActionResult> Edit()
 	{
@@ -62,6 +64,7 @@ public class AccountController : Controller
 		return View(model);
 	}
 
+    // POST: account/edit
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> Edit(UserEditViewModel model, IFormFile? profilePicture)
@@ -160,13 +163,15 @@ public class AccountController : Controller
     }
 
 
-
+    // GET: account/login
     [HttpGet]
     public IActionResult Login()
     {
         return View();
     }
 
+
+    // POST: account/login
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
@@ -188,12 +193,14 @@ public class AccountController : Controller
         return View(model);
     }
 
+    // GET: account/register
     [HttpGet]
     public IActionResult Register()
     {
         return View();
     }
 
+    // POST: account/register
     [HttpPost]
 	public async Task<IActionResult> Register(RegisterViewModel model, IFormFile? profilePicture)
 	{
@@ -237,6 +244,7 @@ public class AccountController : Controller
         return View(model);
     }
 
+    // POST: account/logout
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -249,6 +257,7 @@ public class AccountController : Controller
         return View();
     }
 
+    // GET: account/isUsernameAvailable?username=username123 - like this just to have this in /account/
     [HttpGet]
     public async Task<IActionResult> IsUsernameAvailable(string username)
     {

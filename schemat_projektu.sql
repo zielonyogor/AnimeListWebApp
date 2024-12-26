@@ -6,7 +6,7 @@ CREATE TABLE Badge(
 );
 
 CREATE TABLE Account(
-    AccountId NUMBER(10)  GENERATED ALWAYS AS IDENTITY CONSTRAINT pkAccount PRIMARY KEY,
+    Id NUMBER(10)  GENERATED ALWAYS AS IDENTITY CONSTRAINT pkAccount PRIMARY KEY,
     EmailAddress VARCHAR2(50) NOT NULL UNIQUE,
     Username VARCHAR2(20) NOT NULL UNIQUE,
     Password VARCHAR2(20) NOT NULL,
@@ -18,15 +18,15 @@ CREATE TABLE Account(
 );
 
 CREATE TABLE UserBadge(
-    AccountId CONSTRAINT fkUserBadge REFERENCES Account(AccountId),
-    BadgeName VARCHAR2(20) NOT NULL CONSTRAINT fkBadgeUser REFERENCES Badge(Name),
+    AccountId CONSTRAINT fkUserBadge REFERENCES Account(AccountId) ON DELETE CASCADE,
+    BadgeName VARCHAR2(20) NOT NULL CONSTRAINT fkBadgeUser REFERENCES Badge(Name) ON DELETE CASCADE,
 
     CONSTRAINT pkUserBadge PRIMARY KEY(AccountId, BadgeName)
 );
 
 CREATE TABLE Friend(
-    AccountId1 CONSTRAINT fkUser1 REFERENCES Account(AccountId),
-    AccountId2 CONSTRAINT fkUser2 REFERENCES Account(AccountId),
+    AccountId1 CONSTRAINT fkUser1 REFERENCES Account(AccountId) ON DELETE CASCADE,
+    AccountId2 CONSTRAINT fkUser2 REFERENCES Account(AccountId) ON DELETE CASCADE,
 
     CONSTRAINT pkFriend PRIMARY KEY(AccountId1, AccountId2),
     CONSTRAINT chkFriendPair CHECK (AccountId1 != AccountId2)
@@ -64,16 +64,16 @@ CREATE TABLE MediumConnection(
     IdMedium1 NUMBER(10) NOT NULL,
     IdMedium2 NUMBER(10) NOT NULL,
     
-    CONSTRAINT fkMediumConnection1 FOREIGN KEY(IdMedium1) REFERENCES Medium(Id),
-    CONSTRAINT fkMediumConnection2 FOREIGN KEY(IdMedium2) REFERENCES Medium(Id),
+    CONSTRAINT fkMediumConnection1 FOREIGN KEY(IdMedium1) REFERENCES Medium(Id)  ON DELETE CASCADE,
+    CONSTRAINT fkMediumConnection2 FOREIGN KEY(IdMedium2) REFERENCES Medium(Id)  ON DELETE CASCADE,
     CONSTRAINT pkMediumConnection PRIMARY KEY (IdMedium1, IdMedium2),
     
     CONSTRAINT chkMediumConnection CHECK (IdMedium1 != IdMedium2)
 );
 
 CREATE TABLE MediumGenre(
-    IdMedium CONSTRAINT fkMediumGenre REFERENCES Medium(Id),
-    GenreName CONSTRAINT fkGenreMedium REFERENCES Genre(Name),
+    IdMedium CONSTRAINT fkMediumGenre REFERENCES Medium(Id) ON DELETE CASCADE,
+    GenreName CONSTRAINT fkGenreMedium REFERENCES Genre(Name) ON DELETE CASCADE,
 
     CONSTRAINT pkMediumGenre PRIMARY KEY (IdMedium, GenreName)
 );
@@ -132,16 +132,16 @@ CREATE TABLE Character(
     Description VARCHAR2(500) NULL
 );
 
-CREATE TABLE MediumCharacter(s
-    MediumId CONSTRAINT fkMediumCharacter REFERENCES Medium(Id),
-    CharacterId CONSTRAINT fkCharacterMedium REFERENCES Character(Id),
+CREATE TABLE MediumCharacter(
+    MediumId CONSTRAINT fkMediumCharacter REFERENCES Medium(Id) ON DELETE CASCADE,
+    CharacterId CONSTRAINT fkCharacterMedium REFERENCES Character(Id) ON DELETE CASCADE,
 
     CONSTRAINT pkMediumCharacter PRIMARY KEY (MediumId, CharacterId)
 );
 
 CREATE TABLE UserCharacter(
-    AccountId CONSTRAINT fkUserCharacter REFERENCES Account(AccountId),
-    CharacterId CONSTRAINT fkCharacterUser REFERENCES Character(Id),
+    AccountId CONSTRAINT fkUserCharacter REFERENCES Account(Id) ON DELETE CASCADE,
+    CharacterId CONSTRAINT fkCharacterUser REFERENCES Character(Id) ON DELETE CASCADE,
 
     CONSTRAINT pkUserCharacter PRIMARY KEY (AccountId, CharacterId)
 );

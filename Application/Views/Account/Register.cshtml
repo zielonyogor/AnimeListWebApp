@@ -22,13 +22,13 @@
 
     <div class="form-group">
         <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
+        <input asp-for="Password" type="password" class="form-control" id="password" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirm-password"/>
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
 
@@ -45,14 +45,13 @@
 
     <br />
 
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" class="btn btn-primary" id="submit-btn">Register</button>
 </form>
 
 
 <script>
     let debounceTimeout;
     document.getElementById('username').addEventListener('input', function () {
-        console.log("input");
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(async () => {
             const username = this.value;
@@ -70,6 +69,7 @@
             if (data.isValid) {
                 feedback.textContent = data.message;
                 feedback.style.color = "green";
+
             } else {
                 feedback.textContent = data.message;
                 feedback.style.color = "red";
