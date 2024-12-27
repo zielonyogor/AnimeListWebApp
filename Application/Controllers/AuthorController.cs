@@ -4,6 +4,7 @@ using Application.Data;
 using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Application.Misc;
+using System.Xml.Linq;
 
 namespace Application.Controllers
 {
@@ -20,16 +21,36 @@ namespace Application.Controllers
 
         // GET: api/Author
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<object>>> GetAuthors()
         {
-            return await _context.Authors.ToListAsync();
+            var authors = await _context.Authors
+                .Select(a => new
+                {
+                    a.Id,
+                    a.Name,
+                    a.Image,
+                    a.Wikipedialink,
+                    Manga = a.Mangas.Select(m => m.Mediumid).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(authors);
         }
 
         // GET: api/Author/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(short id)
+        public async Task<ActionResult<object>> GetAuthor(short id)
         {
-            var author = await _context.Authors.FindAsync(id);
+            var author = await _context.Authors
+                .Select(a => new
+                {
+                    a.Id,
+                    a.Name,
+                    a.Image,
+                    a.Wikipedialink,
+                    Manga = a.Mangas.Select(m => m.Mediumid).ToList()
+                })
+                .FirstOrDefaultAsync(a => a.Id == id);
 
             if (author == null)
             {
@@ -60,6 +81,8 @@ namespace Application.Controllers
 
             if (!String.IsNullOrWhiteSpace(author.Image) && author.Image != databaseAuthor.Image)
             {
+                Helper.DeleteImage(databaseAuthor.Image);
+
                 var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
                 var filename = $"author_{author.Id}_{Helper.RemoveWhitespace(author.Name)}{Path.GetExtension(author.Image)}";
@@ -140,15 +163,7 @@ namespace Application.Controllers
             }
 
             // Deletes also image
-            if (!String.IsNullOrWhiteSpace(author.Image))
-            {
-                // Path.Combine() works weirdly so that's the best way for it
-                var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                var imageFileName = Path.GetFileName(author.Image);
-                var imagePath = Path.Combine(wwwrootPath, imageFileName);
-
-                System.IO.File.Delete(imagePath);
-            }
+            Helper.DeleteImage(author.Image);
 
             _context.Authors.Remove(author);
             await _context.SaveChangesAsync();

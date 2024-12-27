@@ -3,6 +3,7 @@ using System;
 using Application.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace Application.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    partial class ModelContextModelSnapshot : ModelSnapshot
+    [Migration("20241227120730_UserBadgeDate")]
+    partial class UserBadgeDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,6 +35,15 @@ namespace Application.Migrations
                         .HasColumnName("Id");
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Accountprivilege")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(1)
+                        .IsUnicode(false)
+                        .HasColumnType("VARCHAR2(1)")
+                        .HasColumnName("ACCOUNTPRIVILEGE")
+                        .HasDefaultValueSql("'n' ");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

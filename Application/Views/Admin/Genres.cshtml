@@ -1,0 +1,90 @@
+﻿@{
+	ViewData["Title"] = "Genres Panel";
+}
+
+<div class="text-center">
+	<h1>All genres are here</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Genres</h4>
+            <ul id="genres-list" class="list-group">
+                <!-- Automatically load here -->
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <h4 id="form-title">Add Genre</h4>
+            <form id="genre-form">
+                <div class="form-group">
+                    <label for="genre-name">Genre Name</label>
+                    <input type="text" id="genre-name" name="name" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiBaseUrl = "/api/Genre";
+        const genreList = document.getElementById("genres-list");
+        const genreForm = document.getElementById("genre-form");
+        const genreNameInput = document.getElementById("genre-name");
+
+        async function loadGenres() {
+            const response = await fetch(apiBaseUrl);
+            const genres = await response.json();
+            genreList.innerHTML = "";
+
+            genres.forEach(genre => {
+                const listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                            <span>${genre.name}</span>
+                            <div>
+                                <button class="btn btn-sm btn-danger delete-btn" data-name="${genre.name}">Delete</button>
+                            </div>
+                        `;
+                genreList.appendChild(listItem);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const deleteButtons = document.querySelectorAll(".delete-btn");
+            deleteButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    deleteGenre(name);
+                })
+            );
+        }
+
+        genreForm.addEventListener("submit", async event => {
+            event.preventDefault();
+            const name = genreNameInput.value;
+            const response = await fetch(apiBaseUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name }),
+            });
+            genreNameInput.value = "";
+            await loadGenres();
+        });
+
+        async function deleteGenre(name) {
+            const response = await fetch(`${apiBaseUrl}/${name}`, {
+                method: "DELETE",
+            });
+            await loadGenres();
+        }
+
+        loadGenres();
+    });
+</script>

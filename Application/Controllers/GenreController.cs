@@ -4,7 +4,7 @@ using Application.Data;
 using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Application
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,16 +19,30 @@ namespace Application
 
         // GET: api/Genre
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
+        public async Task<ActionResult<IEnumerable<object>>> GetGenres()
         {
-            return await _context.Genres.ToListAsync();
+            var genres = await _context.Genres
+                .Select(g => new
+                {
+                    g.Name,
+                    Media = g.Idmedia.Select(m => m.Id).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(genres);
         }
 
         // GET: api/Genre/shonen
         [HttpGet("{name}")]
-        public async Task<ActionResult<Genre>> GetGenre(string name)
+        public async Task<ActionResult<object>> GetGenre(string name)
         {
-            var genre = await _context.Genres.FindAsync(name);
+            var genre = await _context.Genres
+                .Select(g => new
+                {
+                    g.Name,
+                    Media = g.Idmedia.Select(m => m.Id).ToList()
+                })
+                .FirstOrDefaultAsync(g => g.Name == name);
 
             if (genre == null)
             {

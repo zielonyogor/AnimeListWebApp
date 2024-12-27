@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Application.Data;
 using Application.Models;
@@ -83,6 +78,7 @@ namespace Application.Controllers
 
         // PUT: api/Anime/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<IActionResult> PutAnime(int id, AnimeViewModel model)
         {
             if (id != model.Id || !ModelState.IsValid)
@@ -163,6 +159,8 @@ namespace Application.Controllers
 
                 if (!String.IsNullOrWhiteSpace(model.Poster) && model.Poster != databaseMedium.Poster)
                 {
+                    Helper.DeleteImage(databaseMedium.Poster);
+
                     var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
                     var filename = $"anime_{model.Id}_{Helper.RemoveWhitespace(model.Name)}{Path.GetExtension(model.Poster)}";
@@ -201,8 +199,8 @@ namespace Application.Controllers
 
         // POST: api/Anime
         [HttpPost]
-        //[Authorize(Roles = "Admin,Moderator")]
-        public async Task<ActionResult<Anime>> PostAnime(AnimeViewModel model)
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<ActionResult<AnimeViewModel>> PostAnime(AnimeViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -292,6 +290,7 @@ namespace Application.Controllers
 
         // DELETE: api/Anime/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<IActionResult> DeleteAnime(int id)
         {
             var databaseMedium = await _context.Media.FindAsync(id);
@@ -303,14 +302,7 @@ namespace Application.Controllers
             }
 
             // Deletes also image
-            if (!String.IsNullOrWhiteSpace(databaseMedium.Poster))
-            {
-                var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                var imageFileName = Path.GetFileName(databaseMedium.Poster);
-                var imagePath = Path.Combine(wwwrootPath, imageFileName);
-
-                System.IO.File.Delete(imagePath);
-            }
+            Helper.DeleteImage(databaseMedium.Poster);
 
             _context.Animes.Remove(databaseAnime);
             _context.Media.Remove(databaseMedium);

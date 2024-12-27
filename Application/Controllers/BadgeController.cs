@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Data;
 using Application.Models;
 
-namespace Application
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,16 +18,36 @@ namespace Application
 
         // GET: api/Badge
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Badge>>> GetBadges()
+        public async Task<ActionResult<IEnumerable<object>>> GetBadges()
         {
-            return await _context.Badges.ToListAsync();
+            var badges = await _context.Badges
+                .Select(b => new
+                {
+                    b.Name,
+                    b.Namecolor,
+                    b.Backgroundcolor,
+                    b.Description,
+                    Accounts = b.Accounts.Select(a => a.Id).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(badges);
         }
 
         // GET: api/Badge/beginner
         [HttpGet("{name}")]
-        public async Task<ActionResult<Badge>> GetBadge(string name)
+        public async Task<ActionResult<object>> GetBadge(string name)
         {
-            var badge = await _context.Badges.FindAsync(name);
+            var badge = await _context.Badges
+                .Select(b => new
+                {
+                    b.Name,
+                    b.Namecolor,
+                    b.Backgroundcolor,
+                    b.Description,
+                    Accounts = b.Accounts.Select(a => a.Id).ToList()
+                })
+                .FirstOrDefaultAsync(b => b.Name == name);
 
             if (badge == null)
             {

@@ -62,11 +62,6 @@ public partial class ModelContext : IdentityDbContext<Account, IdentityRole<int>
             entity.Property(e => e.Id)
                 .HasPrecision(10)
                 .HasColumnName("Id");
-            entity.Property(e => e.Accountprivilege)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .HasDefaultValueSql("'n' ")
-                .HasColumnName("ACCOUNTPRIVILEGE");
             entity.Property(e => e.Createdate)
                 .HasDefaultValueSql("CURRENT_DATE")
                 .HasColumnType("DATE")

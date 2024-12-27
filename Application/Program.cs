@@ -7,26 +7,26 @@ using Microsoft.Extensions.DependencyInjection;
 
 async Task SeedRoles(IServiceProvider serviceProvider)
 {
-	var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-	var userManager = serviceProvider.GetRequiredService<UserManager<Account>>();
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    var userManager = serviceProvider.GetRequiredService<UserManager<Account>>();
 
-	// Adds roles, delete this later probably
-	if (!await roleManager.RoleExistsAsync("Admin"))
-	{
-		await roleManager.CreateAsync(new IdentityRole<int>("Admin"));
-	}
+    // Adds roles, delete this later probably
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole<int>("Admin"));
+    }
 
-	if (!await roleManager.RoleExistsAsync("Moderator"))
-	{
-		await roleManager.CreateAsync(new IdentityRole<int>("Moderator"));
-	}
+    if (!await roleManager.RoleExistsAsync("Moderator"))
+    {
+        await roleManager.CreateAsync(new IdentityRole<int>("Moderator"));
+    }
 
     // Delete this later
-	var adminUser = await userManager.FindByNameAsync("superguy44");
-	if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, "Admin"))
-	{
-		await userManager.AddToRoleAsync(adminUser, "Admin");
-	}
+    var adminUser = await userManager.FindByNameAsync("superguy44");
+    if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, "Admin"))
+    {
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+    }
     var modUser = await userManager.FindByNameAsync("asdfgh");
     if (modUser != null && !await userManager.IsInRoleAsync(modUser, "Moderator"))
     {
@@ -54,14 +54,47 @@ builder.Services.AddIdentity<Account, IdentityRole<int>>(options =>
     .AddEntityFrameworkStores<ModelContext>()
     .AddDefaultTokenProviders();
 
-var app = builder.Build();
+// For returning StatusCodes for API and Redirecting for Views
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("{\"message\": \"Access Denied\"}");
+        }
+        else
+        {
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        }
+    };
 
+    options.Events.OnRedirectToLogin = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("{\"message\": \"Authentication required\"}");
+        }
+        else
+        {
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        }
+    };
+});
+
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -79,7 +112,7 @@ app.MapControllerRoute(
 
 using (var scope = app.Services.CreateScope())
 {
-	await SeedRoles(scope.ServiceProvider);
+    await SeedRoles(scope.ServiceProvider);
 }
 
 app.Run();

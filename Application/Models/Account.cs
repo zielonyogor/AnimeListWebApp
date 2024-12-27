@@ -14,8 +14,6 @@ public partial class Account : IdentityUser<int>
 
     public string? Description { get; set; }
 
-    public string Accountprivilege { get; set; } = null!;
-
     [Required]
     public override string? PasswordHash { get; set; } = null!;
 

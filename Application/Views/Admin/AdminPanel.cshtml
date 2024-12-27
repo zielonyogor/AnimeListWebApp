@@ -1,0 +1,66 @@
+﻿@{
+	ViewData["Title"] = "Admin Panel";
+}
+
+@model IEnumerable<dynamic>
+
+<div class="text-center">
+	<h1>Admin Panel here</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h5>Add New Moderator</h5>
+        <form method="post" asp-action="AddModerator" asp-controller="Admin" class="form-inline">
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Username" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary ml-2">Add Moderator</button>
+		</form>
+
+		<h5>Moderators</h5>
+
+        <ul>
+            @foreach (var moderator in Model)
+            {
+                <li class="list-group-item">
+                    <strong>@moderator.UserName</strong> - @moderator.Email
+                    <form method="post" asp-action="RemoveModerator" asp-controller="Admin">
+                        <input type="hidden" name="userId" value="@moderator.Id" />
+                        <button class="btn btn-danger btn-sm" title="Remove Moderator">
+                            X
+                        </button>
+                    </form>
+                </li>
+           }
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+		<h5>Manager</h5>
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Users">
+			Users
+		</a>
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Badges">
+			Badges
+		</a>
+		<a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Genres">
+			Genres
+		</a>
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Characters">
+            Characters
+        </a>
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Studios">
+            Studios
+        </a>
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Authors">
+            Authors
+        </a>
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Anime">
+            Anime
+        </a>
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Mangas">
+            Mangas
+        </a>
+    </div>
+</div>

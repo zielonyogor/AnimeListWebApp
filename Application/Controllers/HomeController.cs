@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Models;
 using Application.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Application.Controllers;
 

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using Application.Models;
+using System.Text.RegularExpressions;
 
 namespace Application.Misc
 {
@@ -18,10 +19,25 @@ namespace Application.Misc
             {
                 return -1;
             }
-            var imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+            var imageBytes = await httpClient.GetByteArrayAsync(imagePath);
             await File.WriteAllBytesAsync(filenamePath, imageBytes);
 
             return 0;
+        }
+
+        public static void DeleteImage(string? path)
+        {
+            // delete previous image
+            if (!String.IsNullOrWhiteSpace(path))
+            {
+                var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                var imageFileName = Path.GetFileName(path);
+                var imagePath = Path.Combine(wwwrootPath, imageFileName);
+                Console.WriteLine($"{imagePath}");
+
+                System.IO.File.Delete(imagePath);
+            }
         }
     }
 }

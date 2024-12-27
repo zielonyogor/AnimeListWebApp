@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Authors Panel";
+}
+
+<div class="text-center">
+    <h1>All genres are here</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Authors</h4>
+        <ul id="authors-list" class="list-group">
+            <!-- Automatically load here -->
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4 id="form-title">Add Author</h4>
+        <form id="author-form">
+			<div class="form-group">
+				<input type="hidden" id="author-id" />
+                <label for="author-name">Author Name</label>
+                <input type="text" id="author-name" name="name" class="form-control" required />
+                <label for="author-image">Author Image</label>
+                <img id="author-image-preview" style="width: 100px; aspect-ratio: 1/1;"/>
+                <input type="text" id="author-image" name="image" class="form-control" />
+                <label for="author-wikipediaLink">Author's Wikipedia Link</label>
+                <input type="text" id="author-wikipediaLink" name="wikipediaLink" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" id="cancel-edit" class="btn btn-secondary" style="display: none;">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiBaseUrl = "/api/Author";
+        const authorList = document.getElementById("authors-list");
+        
+        const cancelEditButton = document.getElementById("cancel-edit");
+        const formTitle = document.getElementById("form-title");
+
+        const authorForm = document.getElementById("author-form");
+        const authorIdInput = document.getElementById("author-id");
+        const authorNameInput = document.getElementById("author-name");
+        const authorImagePreview = document.getElementById("author-image-preview");
+        const authorImageInput = document.getElementById("author-image");
+        const authorWikipediaLinkInput = document.getElementById("author-wikipediaLink");
+
+        async function loadAuthors() {
+            const response = await fetch(apiBaseUrl);
+            const authors = await response.json();
+            authorList.innerHTML = "";
+
+            authors.forEach(author => {
+                const listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                                <span>${author.name}</span>
+                            <div>
+                                <button class="btn btn-sm btn-warning edit-btn" data-id="${author.id}" data-name="${author.name}"" data-image="${author.image}" data-wikipediaLink="${author.wikipedialink}">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn" data-name="${author.id}">Delete</button>
+                            </div>
+                        `;
+                authorList.appendChild(listItem);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const deleteButtons = document.querySelectorAll(".delete-btn");
+            const editButtons = document.querySelectorAll(".edit-btn");
+            deleteButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    deleteAuthor(name);
+                })
+            );
+            editButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const id = event.target.getAttribute("data-id");
+                    const name = event.target.getAttribute("data-name");
+                    const image = event.target.getAttribute("data-image");
+                    const wikipediaLink = event.target.getAttribute("data-wikipediaLink");
+                    startEditAuthor(id, name, image, wikipediaLink);
+                })
+            );
+        }
+
+        authorForm.addEventListener("submit", async event => {
+            event.preventDefault();
+            const id = authorIdInput.value;
+            const name = authorNameInput.value;
+            const image = authorImageInput.value;
+            const wikipedialink = authorWikipediaLinkInput.value;
+
+            try {
+                let response;
+                if(!id) {
+                    response = await fetch(apiBaseUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ name, image, wikipedialink }),
+                    });
+                }
+                else {
+                    response = await fetch(`${apiBaseUrl}/${id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ id, name, image, wikipedialink }),
+                    });
+                }
+
+                if (!response.ok) throw new Error(`Failed to ${id ? "edit" : "add"} author.`);
+                await loadAuthors();
+                resetForm();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        async function deleteAuthor(id) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/${id}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) throw new Error("Failed to delete author.");
+                await loadAuthors();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function startEditAuthor(id, name, image, wikipediaLink) {
+            formTitle.textContent = "Edit Author";
+            authorIdInput.value = id;
+            authorNameInput.value = name;
+            authorImagePreview.src = image;
+            authorWikipediaLinkInput.value = wikipediaLink;
+            cancelEditButton.style.display = "inline-block";
+        }
+        function resetForm() {
+            formTitle.textContent = "Add Author";
+            authorIdInput.value = "";
+            authorNameInput.value = "";
+            authorImageInput.value = "";
+            authorImagePreview.src = "";
+            authorWikipediaLinkInput.value = "";
+            cancelEditButton.style.display = "none";
+        }
+
+        cancelEditButton.addEventListener("click", () => {
+            resetForm();
+        });
+
+        loadAuthors();
+    });
+</script>

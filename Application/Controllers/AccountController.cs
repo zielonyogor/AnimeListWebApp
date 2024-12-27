@@ -225,8 +225,7 @@ public class AccountController : Controller
             PasswordHash = _userManager.PasswordHasher.HashPassword(null!, model.Password),
             Createdate = DateTime.UtcNow,
             Imagelink = imageUrl,
-            Description = model.Description,
-            Accountprivilege = "n"
+            Description = model.Description
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);

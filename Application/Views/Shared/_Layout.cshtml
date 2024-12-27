@@ -33,7 +33,13 @@
 							@if (User.IsInRole("Admin"))
 							{
 								<li class="nav-item">
-									<a class="nav-link" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+									<a class="nav-link" asp-controller="Admin" asp-action="AdminPanel">Admin Panel</a>
+								</li>
+							}
+                            else if (User.IsInRole("Moderator"))
+							{
+								<li class="nav-item">
+									<a class="nav-link" asp-controller="Admin" asp-action="ModPanel">Moderator Panel</a>
 								</li>
 							}
                             <li class="nav-item">
@@ -60,7 +66,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - Application
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
