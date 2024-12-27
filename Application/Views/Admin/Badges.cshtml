@@ -1,3 +1,158 @@
 ﻿@{
     ViewData["Title"] = "Badges Panel";
 }
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Badges</h4>
+        <ul id="badges-list" class="list-group">
+            <!-- Automatically load here -->
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4 id="form-title">Add Badge</h4>
+        <form id="badge-form">
+            <div class="form-group">
+                <label for="badge-name">Badge Name</label>
+                <input type="text" id="badge-name" name="name" class="form-control" required />
+                <label for="badge-description">Badge Description</label>
+                <input type="text" id="badge-description" name="description" class="form-control" />
+                <label for="badge-nameColor">Badge Name Color</label>
+                <input type="text" id="badge-nameColor" name="nameColor" class="form-control" />
+                <label for="badge-backgroundColor">Badge Background Color</label>
+                <input type="text" id="badge-backgroundColor" name="backgroundColor" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" id="cancel-edit" class="btn btn-secondary" style="display: none;">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    let isUpdating = false;
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiBaseUrl = "/api/Badge";
+        const badgeList = document.getElementById("badges-list");
+
+        const cancelEditButton = document.getElementById("cancel-edit");
+        const formTitle = document.getElementById("form-title");
+
+        const badgeForm = document.getElementById("badge-form");
+        const badgeNameInput = document.getElementById("badge-name");
+        const badgeDescriptionInput = document.getElementById("badge-description");
+        const badgeNameColorInput = document.getElementById("badge-nameColor");
+        const badgeBackgroundColorInput = document.getElementById("badge-backgroundColor");
+
+
+        async function loadBadges() {
+            const response = await fetch(apiBaseUrl);
+            const badges = await response.json();
+            badgeList.innerHTML = "";
+
+            badges.forEach(badge => {
+                const listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                                <span>${badge.name}</span>
+                            <div>
+                                <button class="btn btn-sm btn-warning edit-btn"  data-name="${badge.name}"" data-description="${badge.description}" data-nameColor="${badge.nameColor}" data-backgroundColor="${badge.backgroundColor}">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn" data-name="${badge.name}">Delete</button>
+                            </div>
+                        `;
+                badgeList.appendChild(listItem);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const deleteButtons = document.querySelectorAll(".delete-btn");
+            const editButtons = document.querySelectorAll(".edit-btn");
+            deleteButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    deleteBadge(name);
+                })
+            );
+            editButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    const description = event.target.getAttribute("data-description");
+                    const nameColor = event.target.getAttribute("data-nameColor");
+                    const backgroundColor = event.target.getAttribute("data-backgroundColor");
+                    startEditBadge(name, description, nameColor, backgroundColor);
+                })
+            );
+        }
+
+        badgeForm.addEventListener("submit", async event => {
+            event.preventDefault();
+            const Name = badgeNameInput.value;
+            const Description = badgeDescriptionInput.value;
+            const NameColor = badgeNameColorInput.value;
+            const BackgroundColor = badgeBackgroundColorInput.value;
+
+            try {
+                const url = isUpdating ? `${apiBaseUrl}/${id}` : apiBaseUrl;
+                const method = isUpdating ? "PUT" : "POST";
+                console.log(url + " i " + method);
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ Name, NameColor, BackgroundColor, Description }),
+                });
+
+                console.log(JSON.stringify({ Name, NameColor, BackgroundColor, Description }));
+
+                if (!response.ok) throw new Error(`Failed to ${isUpdating ? "edit" : "add"} badge.`);
+                await loadBadges();
+                resetForm();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        async function deleteBadge(name) {
+            try {
+                console.log(name);
+                const response = await fetch(`${apiBaseUrl}/${name}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) throw new Error("Failed to delete badge.");
+                await loadBadges();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function startEditBadge(name, description, nameColor, backgroundColor) {
+            formTitle.textContent = "Edit Badge";
+            badgeNameInput.value = name;
+            badgeDescriptionInput.value = description;
+            badgeNameColorInput.value = nameColor;
+            badgeBackgroundColorInput.value = backgroundColor;
+            cancelEditButton.style.display = "inline-block";
+            isUpdating = true;
+        }
+        function resetForm() {
+            formTitle.textContent = "Add Badge";
+            badgeNameInput.value = "";
+            badgeDescriptionInput.value = "";
+            badgeNameColorInput.value = "";
+            badgeBackgroundColorInput.value = "";
+            cancelEditButton.style.display = "none";
+        }
+
+        cancelEditButton.addEventListener("click", () => {
+            isUpdating = false;
+            resetForm();
+        });
+
+        loadBadges();
+    });
+</script>

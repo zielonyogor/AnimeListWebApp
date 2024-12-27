@@ -57,7 +57,7 @@ namespace Application.Controllers
         // PUT: api/Studio/Mappa
         [HttpPut("{name}")]
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<IActionResult> PutStudio(string name, Studio studio)
+        public async Task<IActionResult> PutStudio(string name, [FromBody] Studio studio)
         {
             Console.WriteLine(name);
             if (name != studio.Name)
@@ -89,8 +89,13 @@ namespace Application.Controllers
         // POST: api/Studio
         [HttpPost]
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<ActionResult<Studio>> PostStudio(Studio studio)
+        public async Task<ActionResult<Studio>> PostStudio([FromBody] Studio studio)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Console.WriteLine("aaaaaaaa\n\n\n\n\n");
             _context.Studios.Add(studio);
             try
             {

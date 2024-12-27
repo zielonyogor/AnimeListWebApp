@@ -1,3 +1,55 @@
 ﻿@{
     ViewData["Title"] = "Users Panel";
 }
+
+@model IEnumerable<AccountViewModel>
+
+<div class="container mt-4">
+    <h1>Manage Accounts</h1>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Preview</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in Model)
+            {
+                <tr>
+                    <form asp-action="EditAccount" method="post">
+                        <input type="hidden" name="Id" value="@account.Id" />
+                    <td>@account.Id</td>
+                    <td>
+                        <input type="text" name="UserName" class="form-control" value="@account.UserName" />
+                    </td>
+                    <td>@account.Email</td>
+                    <td>
+                        <textarea name="Description" class="form-control" placeholder="Description">@account.Description</textarea>
+                    </td>
+                    <td>
+                        <input type="text" name="Imagelink" class="form-control" value="@account.Imagelink"
+                               oninput="document.getElementById('preview-@account.Id').src = this.value;" />
+                    </td>
+                    <td>
+                        <img id="preview-@account.Id" src="@account.Imagelink" alt="Preview" style="width: 50px; height: 50px;" />
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure?');" style="display: inline;">
+                            <input type="hidden" name="Id" value="@account.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                    </form>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

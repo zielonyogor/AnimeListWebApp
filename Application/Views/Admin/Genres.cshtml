@@ -2,29 +2,24 @@
 	ViewData["Title"] = "Genres Panel";
 }
 
-<div class="text-center">
-	<h1>All genres are here</h1>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Genres</h4>
-            <ul id="genres-list" class="list-group">
-                <!-- Automatically load here -->
-            </ul>
-        </div>
-
-        <div class="col-md-6">
-            <h4 id="form-title">Add Genre</h4>
-            <form id="genre-form">
-                <div class="form-group">
-                    <label for="genre-name">Genre Name</label>
-                    <input type="text" id="genre-name" name="name" class="form-control" required />
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </form>
-        </div>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Genres</h4>
+        <ul id="genres-list" class="list-group">
+            <!-- Automatically load here -->
+        </ul>
     </div>
 
+    <div class="col-md-6">
+        <h4 id="form-title">Add Genre</h4>
+        <form id="genre-form">
+            <div class="form-group">
+                <label for="genre-name">Genre Name</label>
+                <input type="text" id="genre-name" name="name" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
 </div>
 
 <script>

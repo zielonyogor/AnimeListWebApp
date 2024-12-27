@@ -91,6 +91,9 @@ namespace Application.Controllers
         [HttpPost]
         public async Task<ActionResult<Badge>> PostBadge(Badge badge)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid data");
+
             _context.Badges.Add(badge);
             try
             {

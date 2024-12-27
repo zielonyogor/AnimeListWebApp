@@ -2,10 +2,6 @@
     ViewData["Title"] = "Authors Panel";
 }
 
-<div class="text-center">
-    <h1>All genres are here</h1>
-</div>
-
 <div class="row">
     <div class="col-md-6">
         <h4>Authors</h4>
@@ -92,10 +88,10 @@
 
         authorForm.addEventListener("submit", async event => {
             event.preventDefault();
-            const id = authorIdInput.value;
-            const name = authorNameInput.value;
-            const image = authorImageInput.value;
-            const wikipedialink = authorWikipediaLinkInput.value;
+            const Id = authorIdInput.value;
+            const Name = authorNameInput.value;
+            const Image = authorImageInput.value;
+            const Wikipedialink = authorWikipediaLinkInput.value;
 
             try {
                 let response;
@@ -105,20 +101,20 @@
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ name, image, wikipedialink }),
+                        body: JSON.stringify({ Name, Image, Wikipedialink }),
                     });
                 }
                 else {
-                    response = await fetch(`${apiBaseUrl}/${id}`, {
+                    response = await fetch(`${apiBaseUrl}/${Id}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ id, name, image, wikipedialink }),
+                        body: JSON.stringify({ Id, Name, Image, Wikipedialink }),
                     });
                 }
 
-                if (!response.ok) throw new Error(`Failed to ${id ? "edit" : "add"} author.`);
+                if (!response.ok) throw new Error(`Failed to ${Id ? "edit" : "add"} author.`);
                 await loadAuthors();
                 resetForm();
             } catch (error) {

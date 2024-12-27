@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Controllers
 {
@@ -61,12 +62,6 @@ namespace Application.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-		public IActionResult Users()
-		{
-			return View();
-		}
-
-        [Authorize(Roles = "Admin")]
         public IActionResult Badges()
         {
             return View();
@@ -94,6 +89,68 @@ namespace Application.Controllers
         public IActionResult Mangas()
         {
             return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Users()
+        {
+            var accounts = await _userManager.Users
+                .Select(u => new AccountViewModel
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    Createdate = u.Createdate,
+                    Imagelink = u.Imagelink,
+                    Description = u.Description
+                })
+                .ToListAsync();
+
+            return View(accounts);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAccount(AccountViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (user == null)
+                return NotFound("User not found");
+
+            if (string.IsNullOrWhiteSpace(model.UserName))
+            {
+                ModelState.AddModelError("", "Username cannot be empty");
+                return RedirectToAction("Accounts");
+            }
+
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+            user.Description = model.Description;
+            user.Imagelink = model.Imagelink;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to update account details");
+            }
+
+            return RedirectToAction("Accounts");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAccount(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+                return NotFound("User not found");
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to delete user");
+            }
+
+            return RedirectToAction("Accounts");
         }
     }
 }

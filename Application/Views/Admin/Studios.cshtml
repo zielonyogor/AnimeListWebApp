@@ -1,3 +1,173 @@
 ﻿@{
     ViewData["Title"] = "Studios Panel";
 }
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Studios</h4>
+        <ul id="studios-list" class="list-group">
+            <!-- Automatically load here -->
+        </ul>
+    </div>
+
+	<div class="col-md-6">
+		<div id="error-summary" class="alert alert-danger mt-3" style="display: none;"></div>
+        <h4 id="form-title">Add Studio</h4>
+        <form id="studio-form">
+            <div class="form-group">
+                <label for="studio-name">Studio Name</label>
+                <input type="text" id="studio-name" name="name" class="form-control" required />
+                <label for="studio-wikipediaLink">Studio Wikipedia Link</label>
+                <input type="text" id="studio-wikipediaLink" name="wikipediaLink" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" id="cancel-edit" class="btn btn-secondary" style="display: none;">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    let isUpdating = false;
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiBaseUrl = "/api/Studio";
+        const studioList = document.getElementById("studios-list");
+
+        const cancelEditButton = document.getElementById("cancel-edit");
+        const formTitle = document.getElementById("form-title");
+
+        const studioForm = document.getElementById("studio-form");
+        const studioNameInput = document.getElementById("studio-name");
+        const studioWikipediaInput = document.getElementById("studio-wikipediaLink");
+
+
+        async function loadStudios() {
+            const response = await fetch(apiBaseUrl);
+            const studios = await response.json();
+            studioList.innerHTML = "";
+
+            studios.forEach(studio => {
+                const listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                                <span>${studio.name}</span>
+                            <div>
+                                <button class="btn btn-sm btn-warning edit-btn"  data-name="${studio.name}"" data-wikipediaLink="${studio.wikipedialink}" >Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn" data-name="${studio.name}">Delete</button>
+                            </div>
+                        `;
+                studioList.appendChild(listItem);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const deleteButtons = document.querySelectorAll(".delete-btn");
+            const editButtons = document.querySelectorAll(".edit-btn");
+            deleteButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    deleteStudio(name);
+                })
+            );
+            editButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    const wikipediaLink = event.target.getAttribute("data-wikipediaLink");
+                    startEditStudio(name, wikipediaLink);
+                })
+            );
+        }
+
+        studioForm.addEventListener("submit", async event => {
+            event.preventDefault();
+            const Name = studioNameInput.value;
+            const WikipediaLink = studioWikipediaInput.value;
+
+            try {
+                const url = isUpdating ? `${apiBaseUrl}/${Name}` : apiBaseUrl;
+                const method = isUpdating ? "PUT" : "POST";
+                console.log(url + " i " + method);
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ Name, WikipediaLink }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (response.status === 400) {
+                        displayValidationErrors(errorData);
+                    } else {
+                        throw new Error(`Failed to ${isUpdating ? "edit" : "add"} studio.`);
+                    }
+                    return;
+                }
+
+                await loadStudios();
+                resetForm();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        function displayValidationErrors(errors) {
+            const errorSummary = document.getElementById("error-summary") || document.createElement("div");
+            errorSummary.id = "error-summary";
+            errorSummary.style = "";
+            errorSummary.className = "alert alert-danger mt-3";
+            errorSummary.innerHTML = "";
+
+            if (errors && errors.errors) {
+                Object.keys(errors.errors).forEach(field => {
+                    console.log("skibidi");
+                    errors.errors[field].forEach(errorMessage => {
+                        const errorItem = document.createElement("div");
+                        errorItem.textContent = errorMessage;
+                        errorSummary.appendChild(errorItem);
+                    });
+                });
+            }
+
+            studioForm.prepend(errorSummary);
+        }
+
+        async function deleteStudio(name) {
+            try {
+                console.log(name);
+                const response = await fetch(`${apiBaseUrl}/${name}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) throw new Error("Failed to delete studio.");
+                await loadStudios();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function startEditStudio(name, wikipediaLink) {
+            formTitle.textContent = "Edit Studio";
+            studioNameInput.value = name;
+            studioWikipediaInput.value = wikipediaLink;
+            cancelEditButton.style.display = "inline-block";
+            isUpdating = true;
+        }
+        function resetForm() {
+            formTitle.textContent = "Add Studio";
+            studioNameInput.value = "";
+            studioWikipediaInput.value = "";
+            cancelEditButton.style.display = "none";
+        }
+
+        cancelEditButton.addEventListener("click", () => {
+            isUpdating = false;
+            resetForm();
+        });
+
+        loadStudios();
+    });
+</script>
