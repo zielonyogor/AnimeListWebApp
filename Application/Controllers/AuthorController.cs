@@ -19,11 +19,12 @@ namespace Application.Controllers
             _context = context;
         }
 
-        // GET: api/Author
+        // GET: api/Author?search=
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<object>>> GetAuthors([FromQuery] string? search)
         {
             var authors = await _context.Authors
+                .Where(a => string.IsNullOrEmpty(search) || a.Name.ToLower().StartsWith(search.ToLower()))
                 .Select(a => new
                 {
                     a.Id,

@@ -19,9 +19,10 @@ namespace Application.Controllers
 
         // GET: api/Genre
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetGenres()
+        public async Task<ActionResult<IEnumerable<object>>> GetGenres([FromQuery] string? search)
         {
             var genres = await _context.Genres
+                .Where(g => string.IsNullOrEmpty(search) || g.Name.ToLower().StartsWith(search.ToLower()))
                 .Select(g => new
                 {
                     g.Name,

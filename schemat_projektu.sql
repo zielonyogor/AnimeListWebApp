@@ -21,6 +21,8 @@ CREATE TABLE UserBadge(
     AccountId CONSTRAINT fkUserBadge REFERENCES Account(AccountId) ON DELETE CASCADE,
     BadgeName VARCHAR2(20) NOT NULL CONSTRAINT fkBadgeUser REFERENCES Badge(Name) ON DELETE CASCADE,
 
+    AquireDate DATE DEFAULT CURRENT_DATE NOT NULL,
+
     CONSTRAINT pkUserBadge PRIMARY KEY(AccountId, BadgeName)
 );
 
@@ -64,8 +66,8 @@ CREATE TABLE MediumConnection(
     IdMedium1 NUMBER(10) NOT NULL,
     IdMedium2 NUMBER(10) NOT NULL,
     
-    CONSTRAINT fkMediumConnection1 FOREIGN KEY(IdMedium1) REFERENCES Medium(Id)  ON DELETE CASCADE,
-    CONSTRAINT fkMediumConnection2 FOREIGN KEY(IdMedium2) REFERENCES Medium(Id)  ON DELETE CASCADE,
+    CONSTRAINT fkMediumConnection1 FOREIGN KEY(IdMedium1) REFERENCES Medium(Id) ON DELETE CASCADE,
+    CONSTRAINT fkMediumConnection2 FOREIGN KEY(IdMedium2) REFERENCES Medium(Id) ON DELETE CASCADE,
     CONSTRAINT pkMediumConnection PRIMARY KEY (IdMedium1, IdMedium2),
     
     CONSTRAINT chkMediumConnection CHECK (IdMedium1 != IdMedium2)
@@ -80,7 +82,7 @@ CREATE TABLE MediumGenre(
 
 CREATE TABLE Manga(
     MediumId NUMBER(10) 
-    CONSTRAINT fkMangaId REFERENCES Medium(Id)
+    CONSTRAINT fkMangaId REFERENCES Medium(Id) ON DELETE CASCADE
     CONSTRAINT pkMangaId PRIMARY KEY,
 
     Type VARCHAR2(10) DEFAULT 'Manga' CONSTRAINT chkMangaType CHECK (Type IN ('Manga', 'Light novel', 'Oneshot')),
@@ -89,7 +91,7 @@ CREATE TABLE Manga(
 
 CREATE TABLE Anime(
     MediumId NUMBER(10) 
-    CONSTRAINT fkAnimeId REFERENCES Medium(Id)
+    CONSTRAINT fkAnimeId REFERENCES Medium(Id) ON DELETE CASCADE
     CONSTRAINT pkAnimeId PRIMARY KEY,
 
     Type VARCHAR2(5) DEFAULT 'TV', CONSTRAINT chkAnimeType CHECK (Type IN ('TV', 'Movie', 'OVA')),
@@ -98,13 +100,14 @@ CREATE TABLE Anime(
 
 CREATE TABLE ListElement (
     AccountId NUMBER(10) NOT NULL CONSTRAINT fkElementAccountId REFERENCES Account(AccountId) ON DELETE CASCADE,
-    MediumId NUMBER(10) NOT NULL CONSTRAINT fkElementMedium REFERENCES Medium(Id),
+    MediumId NUMBER(10) NOT NULL CONSTRAINT fkElementMedium REFERENCES Medium(Id) ON DELETE CASCADE,
     FinishedNumber NUMBER(4) DEFAULT 0 CONSTRAINT chkFinished CHECK (FinishedNumber >= 0),
     Status VARCHAR2(13) DEFAULT 'Watching' NOT NULL CONSTRAINT chkElementStatus CHECK (Status IN ('Completed', 'Plan to watch', 'On-hold', 'Dropped', 'Watching')),
     Rating NUMBER(2) DEFAULT NULL CONSTRAINT chkRating CHECK (Rating BETWEEN 0 AND 10),
     MediumComment VARCHAR2(200),
     StartDate DATE DEFAULT CURRENT_DATE,
     FinishDate DATE,
+    PostDate DATE DEFAULT CURRENT_DATE NOT NULL,
     
     CONSTRAINT pkListElement PRIMARY KEY (AccountId, MediumId),
     CONSTRAINT chkPlanToWatch CHECK (

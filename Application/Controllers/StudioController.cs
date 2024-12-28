@@ -17,11 +17,12 @@ namespace Application.Controllers
             _context = context;
         }
 
-        // GET: api/Studio
+        // GET: api/Studio?search=
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetStudios()
+        public async Task<ActionResult<IEnumerable<object>>> GetStudios([FromQuery] string? search)
         {
             var studios = await _context.Studios
+                .Where(s => string.IsNullOrEmpty(search) || s.Name.ToLower().StartsWith(search.ToLower()))
                 .Select(s => new
                 {
                     s.Name,

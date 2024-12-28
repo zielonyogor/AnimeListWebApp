@@ -119,7 +119,7 @@ namespace Application.Controllers
             if (string.IsNullOrWhiteSpace(model.UserName))
             {
                 ModelState.AddModelError("", "Username cannot be empty");
-                return RedirectToAction("Accounts");
+                return RedirectToAction("Users");
             }
 
             user.UserName = model.UserName;
@@ -133,7 +133,7 @@ namespace Application.Controllers
                 ModelState.AddModelError("", "Failed to update account details");
             }
 
-            return RedirectToAction("Accounts");
+            return RedirectToAction("Users");
         }
 
 
@@ -150,7 +150,7 @@ namespace Application.Controllers
                 ModelState.AddModelError("", "Failed to delete user");
             }
 
-            return RedirectToAction("Accounts");
+            return RedirectToAction("Users");
         }
     }
 }

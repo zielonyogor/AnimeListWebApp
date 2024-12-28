@@ -5,7 +5,7 @@ using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Application.Misc;
 
-namespace Application
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -81,7 +81,7 @@ namespace Application
             databaseCharacter.Name = character.Name;
             databaseCharacter.Description = character.Description;
 
-            if (!String.IsNullOrWhiteSpace(character.Image) && character.Image != databaseCharacter.Image)
+            if (!string.IsNullOrWhiteSpace(character.Image) && character.Image != databaseCharacter.Image)
             {
                 Helper.DeleteImage(databaseCharacter.Image);
 
@@ -124,7 +124,7 @@ namespace Application
         [Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<CharacterViewModel>> PostCharacter(CharacterViewModel model)
         {
-            if (model == null || String.IsNullOrWhiteSpace(model.Name))
+            if (model == null || string.IsNullOrWhiteSpace(model.Name))
             {
                 return BadRequest("Invalid data");
             }
@@ -141,7 +141,7 @@ namespace Application
                 Media = media
             };
 
-            if (!String.IsNullOrWhiteSpace(model.Image))
+            if (!string.IsNullOrWhiteSpace(model.Image))
             {
                 var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 

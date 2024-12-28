@@ -1,3 +1,479 @@
 ﻿@{
     ViewData["Title"] = "Anime Panel";
 }
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Animes</h4>
+        <ul id="animes-list" class="list-group">
+            <!-- Automatically load here -->
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4 id="form-title">Add Anime</h4>
+        <form id="anime-form">
+            <div class="form-group">
+                <input type="hidden" id="anime-id" />
+                <label for="anime-name">Anime Name</label>
+                <input type="text" id="anime-name" name="name" class="form-control" required />
+
+                <label for="anime-status">Anime Status</label>
+                <select id="anime-status" class="form-select">
+                    <option value="Not finished" selected="selected">Not finished</option>
+                    <option value="Finished">Finished</option>
+                    <option value="To be released">To be released</option>
+                </select>
+
+                <label for="anime-publishDate">Anime Publish date</label>
+                <input type="date" id="anime-publishDate" name="publishDate" class="form-control" />
+
+                <label for="anime-count">Anime Count</label>
+                <input type="number" id="anime-count" name="count" class="form-control" min="0" step="1" max="9999" />
+
+                <label for="anime-type">Anime Type</label>
+                <select id="anime-type" class="form-select">
+                    <option value="TV">TV</option>
+                    <option value="Movie">Movie</option>
+                    <option value="OVA">OVA</option>
+                </select>
+
+                <div class="form-group position-relative">
+                    <label for="anime-studio">Studio</label>
+                    <input type="text"  id="anime-studio" class="form-control" placeholder="Start typing to search studios..." />
+                    <ul id="anime-studio-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+                        <!-- Space for suggestions for studios -->
+                    </ul>
+                </div>
+
+
+                <label for="anime-poster">Anime Poster</label>
+                <img id="anime-poster-preview" style="width: 100px; aspect-ratio: 1/1;" />
+                <input type="text" id="anime-poster" name="poster" class="form-control" />
+
+                <label for="anime-description">Anime Description</label>
+                <textarea id="anime-description" name="description" class="form-control" style="min-height: 100px;"></textarea>
+
+                <div class="form-group position-relative mb-3">
+                    <label for="anime-genres">Genres</label>
+                    <input type="text" id="anime-genres-input" class="form-control" placeholder="Start typing to search genres..." />
+                    <ul id="anime-genres-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+                        <!-- Suggestions will be dynamically added here -->
+                    </ul>
+                    <div id="anime-selected-genres" class="mt-2">
+                        <!-- Selected genres will be shown as tags -->
+                    </div>
+                </div>
+
+                <div class="form-group position-relative mb-3">
+                    <label for="anime-connections-input">Connections</label>
+                    <input type="text" id="anime-connections-input" class="form-control" placeholder="Start typing to search connections..." />
+                    <ul id="anime-connections-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+                        <!-- Suggestions will be dynamically added here -->
+                    </ul>
+                    <div id="anime-selected-connections" class="mt-2">
+                        <!-- Selected connections will be shown as tags -->
+                    </div>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" id="cancel-edit" class="btn btn-secondary" style="display: none;">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiBaseUrl = "/api/Anime";
+        const animeList = document.getElementById("animes-list");
+
+        const cancelEditButton = document.getElementById("cancel-edit");
+        const formTitle = document.getElementById("form-title");
+
+        const animeForm = document.getElementById("anime-form");
+        const animeIdInput = document.getElementById("anime-id");
+        const animeNameInput = document.getElementById("anime-name");
+        const animeStatusInput = document.getElementById("anime-status");
+        const animePublishDateInput = document.getElementById("anime-publishDate");
+        animePublishDateInput.valueAsDate = new Date();
+
+        const animeCountInput = document.getElementById("anime-count");
+        const animeTypeInput = document.getElementById("anime-type");
+
+        const animeStudioInput = document.getElementById("anime-studio");
+        const studioSuggestions = document.getElementById("anime-studio-suggestions");
+        const apiStudioUrl = "/api/Studio";
+        let selectedStudio = null;
+
+        animeStudioInput.addEventListener("input", async (event) => {
+            const query = event.target.value;
+
+            if (query.length < 2) {
+                studioSuggestions.style.display = "none";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiStudioUrl}?search=${query}`);
+                const studios = await response.json();
+                console.log(studios);
+
+                studioSuggestions.innerHTML = "";
+                studios.forEach((studio) => {
+                    const listItem = document.createElement("li");
+                    listItem.className = "dropdown-item";
+                    listItem.textContent = studio.name;
+                    listItem.addEventListener("click", () => {
+                        animeStudioInput.value = studio.name;
+                        selectedStudio = studio;
+                        studioSuggestions.style.display = "none";
+                    });
+                    studioSuggestions.appendChild(listItem);
+                });
+
+                studioSuggestions.style.display = "block";
+            } catch (error) {
+                console.error("Error fetching studios:", error);
+            }
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!studioSuggestions.contains(event.target) && event.target !== animeStudioInput) {
+                studioSuggestions.style.display = "none";
+            }
+        });
+
+        // -----------------------GENRES-----------------------------
+        const animeGenresInput = document.getElementById("anime-genres-input");
+        const genresSuggestions = document.getElementById("anime-genres-suggestions");
+        const selectedGenresContainer = document.getElementById("anime-selected-genres");
+        const apiGenreUrl = "/api/Genre";
+
+        const selectedGenres = new Set();
+
+        async function fetchGenres(query) {
+            try {
+                const response = await fetch(`${apiGenreUrl}?search=${query}`);
+                if (!response.ok) throw new Error("Error fetching genres");
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        function renderSuggestions(genres) {
+            genresSuggestions.innerHTML = "";
+            genres.forEach(genre => {
+                const suggestionItem = document.createElement("li");
+                suggestionItem.className = "dropdown-item";
+                suggestionItem.textContent = genre.name;
+                suggestionItem.addEventListener("click", () => {
+                    addGenre(genre.name);
+                });
+                genresSuggestions.appendChild(suggestionItem);
+            });
+            genresSuggestions.style.display = genres.length > 0 ? "block" : "none";
+        }
+
+        function addGenre(genreName) {
+            if (selectedGenres.has(genreName)) return;
+            selectedGenres.add(genreName);
+
+            const genreTag = document.createElement("span");
+            genreTag.className = "badge bg-primary me-1";
+            genreTag.textContent = genreName;
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "btn-close btn-close-white ms-1";
+            removeButton.style.fontSize = "0.8em";
+            removeButton.addEventListener("click", () => {
+                selectedGenres.delete(genreName);
+                genreTag.remove();
+            });
+
+            genreTag.appendChild(removeButton);
+            selectedGenresContainer.appendChild(genreTag);
+
+            animeGenresInput.value = "";
+            genresSuggestions.style.display = "none";
+        }
+
+        animeGenresInput.addEventListener("input", async () => {
+            const query = animeGenresInput.value.trim();
+            if (query.length < 2) {
+                genresSuggestions.style.display = "none";
+                return;
+            }
+
+            const genres = await fetchGenres(query);
+            renderSuggestions(genres);
+        });
+
+        // ----------------CONNECTIONS--------------------------
+        const animeConnectionsInput = document.getElementById("anime-connections-input");
+        const connectionsSuggestions = document.getElementById("anime-connections-suggestions");
+        const selectedConnectionsContainer = document.getElementById("anime-selected-connections");
+        const apiMediaUrl = "/api/Media";
+
+        const selectedConnections = new Set();
+
+        async function fetchConnections(query) {
+            try {
+                const response = await fetch(`${apiMediaUrl}?search=${query}`);
+                if (!response.ok) throw new Error("Error fetching connections");
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        function renderConnectionSuggestions(connections) {
+            connectionsSuggestions.innerHTML = "";
+            connections.forEach(connection => {
+                const suggestionItem = document.createElement("li");
+                suggestionItem.className = "dropdown-item";
+                suggestionItem.textContent = `${connection.name} (${connection.type}, ${new Date(connection.publishdate).getFullYear()})`;
+                suggestionItem.addEventListener("click", () => {
+                    addConnection(connection.id, `${connection.name} (${connection.type}, ${new Date(connection.publishdate).getFullYear()})`);
+                });
+                connectionsSuggestions.appendChild(suggestionItem);
+            });
+            connectionsSuggestions.style.display = connections.length > 0 ? "block" : "none";
+        }
+
+        function addConnection(id, displayText) {
+            if (selectedConnections.has(id)) return;
+            selectedConnections.add(id);
+
+            const connectionTag = document.createElement("span");
+            connectionTag.className = "badge bg-secondary me-1";
+            connectionTag.textContent = displayText;
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "btn-close btn-close-white ms-1";
+            removeButton.style.fontSize = "0.8em";
+            removeButton.addEventListener("click", () => {
+                selectedConnections.delete(id);
+                connectionTag.remove();
+            });
+
+            connectionTag.appendChild(removeButton);
+            selectedConnectionsContainer.appendChild(connectionTag);
+
+            animeConnectionsInput.value = "";
+            connectionsSuggestions.style.display = "none";
+        }
+
+        animeConnectionsInput.addEventListener("input", async () => {
+            const query = animeConnectionsInput.value.trim();
+            if (query.length < 2) {
+                connectionsSuggestions.style.display = "none";
+                return;
+            }
+
+            const connections = await fetchConnections(query);
+            renderConnectionSuggestions(connections);
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!connectionsSuggestions.contains(event.target) && event.target !== animeConnectionsInput) {
+                connectionsSuggestions.style.display = "none";
+            }
+        });
+
+        //-------------------OTHER---------------------------
+        const animePosterPreview = document.getElementById("anime-poster-preview");
+        const animePosterInput = document.getElementById("anime-poster");
+
+        const animeDescriptionInput = document.getElementById("anime-description");
+
+
+        //-------------------------FUNCTIONS---------------------
+        async function loadAnimes() {
+            const response = await fetch(apiBaseUrl);
+            const animes = await response.json();
+            animeList.innerHTML = "";
+
+            animes.forEach(anime => {
+                const listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                            <div class="flex-fill me-md-4" >
+                                <span>${anime.name}</span> <span class="float-end text-secondary">${anime.type}</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-warning edit-btn" data-id="${anime.id}" data-name="${anime.name}"" data-poster="${anime.poster}"
+                                            data-status="${anime.status}" data-publishDate="${anime.publishdate}" data-count="${anime.count}" data-type="${anime.type}"
+                                            data-studio="${anime.studioname}" data-description="${anime.description}" data-genres="${anime.genrenames}" data-connections="${anime.connections}">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn" data-name="${anime.id}">Delete</button>
+                            </div>
+                        `;
+                animeList.appendChild(listItem);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const deleteButtons = document.querySelectorAll(".delete-btn");
+            const editButtons = document.querySelectorAll(".edit-btn");
+            deleteButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    deleteAnime(name);
+                })
+            );
+            editButtons.forEach(button =>
+                button.addEventListener("click", async event => {
+                    const id = event.target.getAttribute("data-id");
+                    const name = event.target.getAttribute("data-name");
+                    const status = event.target.getAttribute("data-status");
+                    const type = event.target.getAttribute("data-type");
+                    const publishDate = event.target.getAttribute("data-publishDate");
+                    const count = event.target.getAttribute("data-count");
+                    const studio = event.target.getAttribute("data-studio");
+                    const poster = event.target.getAttribute("data-poster");
+                    const description = event.target.getAttribute("data-description");
+                    const genres = event.target.getAttribute("data-genres");
+                    const connections = event.target.getAttribute("data-connections");
+                    await startEditAnime(id, name, status, type, publishDate, count, studio, poster, description, genres, connections);
+                })
+            );
+        }
+
+        animeForm.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const Id = animeIdInput.value;
+            const Name = animeNameInput.value;
+            const Status = animeStatusInput.value;
+            const Publishdate = animePublishDateInput.value;
+            const Count = animeCountInput.valueAsNumber;
+            const Type = animeTypeInput.value;
+            const Studioname = animeStudioInput.value;
+            const Poster = animePosterInput.value;
+            const Description = animeDescriptionInput.value;
+
+            const Genrenames = Array.from(selectedGenres);
+            // cause values get messed up somewhere to string
+            const Connections = Array.from(selectedConnections).map(item => parseInt(item, 10));
+
+            try {
+                let response;
+                if(!Id) {
+                    console.log(JSON.stringify({ Name, Status, Type, Publishdate, Count, Studioname, Poster, Description, Genrenames }));
+                    response = await fetch(apiBaseUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ Name, Status, Type, Publishdate, Count, Studioname, Poster, Description, Genrenames }),
+                    });
+                }
+                else {
+                    response = await fetch(`${apiBaseUrl}/${Id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ Id, Name, Status, Type, Publishdate, Count, Studioname, Poster, Description, Genrenames }),
+                    });
+                }
+
+                if (!response.ok) throw new Error(`Failed to ${Id ? "edit" : "add"} anime.`);
+                await loadAnimes();
+                resetForm();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        async function deleteAnime(id) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/${id}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) throw new Error("Failed to delete anime.");
+                await loadAnimes();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function startEditAnime(id, name, status, type, publishDate, count, studio, poster, description, genres, connections) {
+            formTitle.textContent = "Edit Anime";
+            animeIdInput.value = id;
+            animeNameInput.value = name;
+            animePosterPreview.src = poster !== "null" ? poster : "";
+            animeStatusInput.value = status;
+            animePublishDateInput.valueAsDate = new Date(publishDate);
+            animeCountInput.value = count;
+            animeTypeInput.value = type;
+            animeStudioInput.value = studio;
+            animeDescriptionInput.value = description !== "null" ? description : "";
+            cancelEditButton.style.display = "inline-block";
+
+            selectedGenresContainer.innerHTML = "";
+            selectedGenres.clear();
+            if (genres) {
+                const genreList = genres.split(',');
+                genreList.forEach(genre => {
+                    addGenre(genre.trim());
+                });
+            }
+
+            selectedConnectionsContainer.innerHTML = "";
+            selectedConnections.clear();
+            if (connections) {
+                const connectionList = connections.split(',');
+                // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                await renderConnections(connectionList);
+            }
+        }
+
+        async function renderConnections(connections) {
+            for (const conn of connections) {
+                try {
+                    const response = await fetch(`${apiMediaUrl}/${conn}`);
+                    if (!response.ok) throw new Error("Error fetching connection info");
+                    const data = await response.json();
+                    addConnection(conn, `${data.name} (${data.type}, ${new Date(data.publishdate).getFullYear()})`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+
+        function resetForm() {
+            formTitle.textContent = "Add Anime";
+            animeIdInput.value = "";
+            animeNameInput.value = "";
+            animePosterInput.value = "";
+            animePosterPreview.src = "";
+            animeStatusInput.value = "Not Finished";
+            animePublishDateInput.valueAsDate = new Date();
+            animeCountInput.value = "0";
+            animeTypeInput.value = "TV";
+            animeStudioInput.value = "";
+            animeDescriptionInput.value = "";
+
+            selectedGenresContainer.innerHTML = "";
+            selectedGenres.clear();
+            selectedConnectionsContainer.innerHTML = "";
+            selectedConnections.clear();
+
+            cancelEditButton.style.display = "none";
+        }
+
+        cancelEditButton.addEventListener("click", () => {
+            resetForm();
+        });
+
+        loadAnimes();
+    });
+</script>

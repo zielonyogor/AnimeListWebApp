@@ -18,13 +18,15 @@ namespace Application.Controllers
             _context = context;
         }
 
-        // GET: api/Anime
+        // GET: api/Anime?search=
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AnimeViewModel>>> GetAnimes()
+        public async Task<ActionResult<IEnumerable<AnimeViewModel>>> GetAnimes([FromQuery] string? search)
         {
+            Console.WriteLine(search);
             var animes = await _context.Animes
             .Include(a => a.Medium)
             .ThenInclude(m => m.Genrenames)
+            .Where(a => string.IsNullOrEmpty(search) || a.Medium.Name.ToLower().StartsWith(search.ToLower()))
             .Select(a => new AnimeViewModel
             {
                 Id = a.Mediumid,
@@ -34,7 +36,7 @@ namespace Application.Controllers
                 Poster = a.Medium.Poster,
                 Publishdate = a.Medium.Publishdate,
                 Description = a.Medium.Description,
-                Type = a.Medium.Type,
+                Type = a.Type,
                 Studioname = a.Studioname,
                 Genrenames = a.Medium.Genrenames.Select(g => g.Name).ToList(),
                 Connections = a.Medium.Idmedium1s.Select(m => m.Id).Union(a.Medium.Idmedium2s.Select(m => m.Id)).ToList()
@@ -199,9 +201,11 @@ namespace Application.Controllers
 
         // POST: api/Anime
         [HttpPost]
-        [Authorize(Roles = "Admin,Moderator")]
+        //[Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<AnimeViewModel>> PostAnime(AnimeViewModel model)
         {
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n\n\n\n\n\n");
+            Console.WriteLine($"MODEL: \n\n{ModelState.IsValid}\n{model.Name}");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 

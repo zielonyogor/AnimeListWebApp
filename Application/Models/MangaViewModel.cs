@@ -8,7 +8,7 @@
 
         public string? Status { get; set; }
 
-        public byte Count { get; set; }
+        public int Count { get; set; }
 
         public string? Poster { get; set; }
 
