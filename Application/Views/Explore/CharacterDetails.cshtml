@@ -1,0 +1,34 @@
+﻿@model Character
+
+@{
+	ViewData["Title"] = $"{Model.Name} - Info";
+}
+
+<h1>@Model.Name</h1>
+<div class="row align-content-between">
+	<div class="col-4">
+		<img src="@Model.Image" alt="@Model.Name poster" style="width:60%;" />
+	</div>
+	<div class="col-6">
+		<div class="row">
+			<div class="d-flex justify-content-end align-items-center">
+				<span class="me-2">Add to favs:</span>
+				<button class="btn btn-outline-danger">
+					<i class="bi bi-heart"></i>
+				</button>
+			</div>
+		</div>
+		<div class="row">
+		<p>@Model.Description</p>
+
+		<p><strong>Media:</strong> </p>
+		@foreach(var medium in Model.Media)
+		{
+			<div>
+				<img src="@medium.Poster" style="min-height: 5vh; max-height: 10vh;" alt="Medium poster"/>
+				<p><strong>@medium.Name</strong> (@medium.Type)</p>
+			</div>
+		}
+		</div>
+	</div>
+</div>

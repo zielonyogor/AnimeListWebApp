@@ -24,8 +24,8 @@
             @foreach (var moderator in Model)
             {
                 <li class="list-group-item">
-                    <strong>@moderator.UserName</strong> - @moderator.Email
-                    <form method="post" asp-action="RemoveModerator" asp-controller="Admin">
+                    <span class="d-inline-block"><strong>@moderator.UserName</strong> - @moderator.Email</span>
+                    <form class="d-inline-block float-end" method="post" asp-action="RemoveModerator" asp-controller="Admin">
                         <input type="hidden" name="userId" value="@moderator.Id" />
                         <button class="btn btn-danger btn-sm" title="Remove Moderator">
                             X

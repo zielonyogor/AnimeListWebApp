@@ -15,6 +15,7 @@ namespace Application.Misc
         public static async Task<int> SaveImage(string imagePath, string filenamePath)
         {
             var response = await httpClient.GetAsync(imagePath);
+            Console.WriteLine(response.Content);
             if (!response.IsSuccessStatusCode)
             {
                 return -1;

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Application.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -23,7 +24,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Explore" asp-action="Index">Explore</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -57,6 +58,11 @@
                 </div>
             </div>
         </nav>
+        @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Explore")
+        {
+            @Html.Partial("_ExploreNavbar")
+        }
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">

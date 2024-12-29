@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Explore Manga";
+}
+
+<h1>Manga List</h1>
+
+<div class="search-bar">
+    <input id="searchInput" type="text" placeholder="Search manga..." class="form-control mb-3" />
+</div>
+
+<div id="mangaList" class="row">
+    <!-- Manga list will be dynamically populated -->
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const mangaList = document.getElementById("mangaList");
+        const searchInput = document.getElementById("searchInput");
+
+        async function fetchManga(search = "") {
+            const response = await fetch(`/api/Manga?search=${encodeURIComponent(search)}`);
+            const data = await response.json();
+            renderMangaList(data);
+        }
+
+        function renderMangaList(manga) {
+            mangaList.innerHTML = ""; // Clear existing content
+            manga.forEach(a => {
+                const mangaCard = document.createElement("div");
+                mangaCard.classList.add("col-md-4", "mb-3");
+                mangaCard.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">${a.name}</h5>
+                            <p class="card-text">${a.description || "No description available."}</p>
+                            <a href="/Explore/MangaDetails?id=${a.id}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                `;
+                mangaList.appendChild(mangaCard);
+            });
+        }
+
+        searchInput.addEventListener("input", () => {
+            fetchManga(searchInput.value);
+        });
+
+        // Initial fetch
+        fetchManga();
+    });
+</script>

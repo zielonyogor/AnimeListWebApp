@@ -20,7 +20,7 @@ public class AccountController : Controller
         _context = context;
     }
 
-    // GET: account/username123
+    // GET: account?username=username123
     [HttpGet]
 	[Authorize]
 	public async Task<IActionResult> Index(string username)

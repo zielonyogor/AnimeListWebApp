@@ -52,8 +52,10 @@ namespace Application.Controllers
         {
             var anime = await _context.Animes
                 .Include(a => a.Medium)
-                .ThenInclude(m => m.Genrenames)
-                .FirstOrDefaultAsync(a => a.Mediumid == id);
+				.ThenInclude(m => m.Idmedium1s)
+				.ThenInclude(m => m.Idmedium2s)
+				.ThenInclude(m => m.Genrenames)
+				.FirstOrDefaultAsync(a => a.Mediumid == id);
 
             if (anime == null)
             {
@@ -69,7 +71,7 @@ namespace Application.Controllers
                 Poster = anime.Medium.Poster,
                 Publishdate = anime.Medium.Publishdate,
                 Description = anime.Medium.Description,
-                Type = anime.Medium.Type,
+                Type = anime.Type,
                 Studioname = anime.Studioname,
                 Genrenames = anime.Medium.Genrenames.Select(g => g.Name).ToList(),
                 Connections = anime.Medium.Idmedium1s.Select(m => m.Id).Union(anime.Medium.Idmedium2s.Select(m => m.Id)).ToList()
@@ -86,6 +88,12 @@ namespace Application.Controllers
             if (id != model.Id || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            var errors = ValidationCheck(model);
+            if (errors != null)
+            {
+                return BadRequest(errors);
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -204,10 +212,14 @@ namespace Application.Controllers
         //[Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<AnimeViewModel>> PostAnime(AnimeViewModel model)
         {
-            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n\n\n\n\n\n");
-            Console.WriteLine($"MODEL: \n\n{ModelState.IsValid}\n{model.Name}");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var errors = ValidationCheck(model);
+            if (errors != null)
+            {
+                return BadRequest(errors);
+            }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -313,6 +325,58 @@ namespace Application.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+        private static ValidationProblemDetails? ValidationCheck(AnimeViewModel model)
+        {
+            ValidationProblemDetails result = new ValidationProblemDetails
+            {
+                Title = "One or more validation errors occurred.",
+                Status = StatusCodes.Status400BadRequest
+            };
+
+            if (model.Status == "To be released")
+            {
+                if (model.Count != 0)
+                {
+                    result.Errors.Add("Count", ["Not published Anime can't have chapters"]);
+
+                }
+                if (model.Publishdate <= DateTime.Now)
+                {
+                    result.Errors.Add("Publishdate", ["Not published Anime must have future publish date"]);
+                }
+            }
+            else if (model.Status == "Finished")
+            {
+                if (model.Count == 0)
+                {
+                    result.Errors.Add("Count", ["Finished Anime must have chapters"]);
+                }
+                if (model.Publishdate >= DateTime.Now)
+                {
+                    result.Errors.Add("Publishdate", ["Finished Anime can't have future publish date"]);
+                }
+            }
+            else if (model.Status == "Not finished")
+            {   
+                if (model.Count == 0)
+                {
+                    result.Errors.Add("Count", ["Not finished Anime must have chapters"]);
+                }
+                if (model.Publishdate >= DateTime.Now)
+                {
+                    result.Errors.Add("Publishdate", ["Not finished Anime can't have future publish date"]);
+                }
+            }
+
+            if ((model.Type == "Movie" || model.Type == "OVA") && model.Count != 0)
+            {
+                result.Errors.Add("Type", ["Movies/OVAs can only have one chapter"]);
+            }
+
+            if (result.Errors.Count == 0)
+                return null;
+            return result;
         }
     }
 }

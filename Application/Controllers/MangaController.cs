@@ -50,8 +50,10 @@ namespace Application.Controllers
         public async Task<ActionResult<MangaViewModel>> GetManga(int id)
         {
             var manga = await _context.Mangas
-                .Include(a => a.Medium)
-                .ThenInclude(m => m.Genrenames)
+				.Include(m => m.Medium)
+		        .ThenInclude(m => m.Idmedium1s)
+		        .ThenInclude(m => m.Idmedium2s)
+				.ThenInclude(m => m.Genrenames)
                 .FirstOrDefaultAsync(a => a.Mediumid == id);
 
             if (manga == null)
@@ -68,11 +70,16 @@ namespace Application.Controllers
                 Poster = manga.Medium.Poster,
                 Publishdate = manga.Medium.Publishdate,
                 Description = manga.Medium.Description,
-                Type = manga.Medium.Type,
+                Type = manga.Type,
                 AuthorId = manga.Authorid,
                 Genrenames = manga.Medium.Genrenames.Select(g => g.Name).ToList(),
                 Connections = manga.Medium.Idmedium1s.Select(m => m.Id).Union(manga.Medium.Idmedium2s.Select(m => m.Id)).ToList()
             };
+
+            var author = await _context.Authors
+                .FirstOrDefaultAsync(a => a.Id == mangaModel.AuthorId);
+            if(author != null)
+                mangaModel.AuthorName = author.Name;
 
             return Ok(mangaModel);
         }
@@ -85,6 +92,12 @@ namespace Application.Controllers
             if (id != model.Id || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            var errors = ValidationCheck(model);
+            if (errors != null)
+            {
+                return BadRequest(errors);
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -202,25 +215,10 @@ namespace Application.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if(model.Status == "To be released")
+            var errors = ValidationCheck(model);
+            if(errors != null)
             {
-                if (model.Count != 0)
-                {
-                    var problemDetails = new ValidationProblemDetails
-                    {
-                        Title = "One or more validation errors occurred.",
-                        Status = StatusCodes.Status400BadRequest
-                    };
-
-                    problemDetails.Errors.Add("Count", new[] { "Not published Mangas can't have chapters" });
-
-                    return BadRequest(problemDetails);
-                }
-                if(model.Publishdate <= DateTime.Now)
-                {
-                    ModelState.AddModelError("Publishdate", "Not published Mangas must have future date");
-                    return BadRequest(ModelState);
-                }
+                return BadRequest(errors);
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -329,6 +327,61 @@ namespace Application.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private static ValidationProblemDetails? ValidationCheck(MangaViewModel model)
+        {
+            ValidationProblemDetails result = new ValidationProblemDetails
+            {
+                Title = "One or more validation errors occurred.",
+                Status = StatusCodes.Status400BadRequest
+            };
+
+            if (model.Status == "To be released")
+            {
+                if (model.Count != 0)
+                {
+                    result.Errors.Add("Count", ["Not published Mangas can't have chapters"]);
+
+                }
+                if (model.Publishdate <= DateTime.Now)
+                {
+                    result.Errors.Add("Publishdate", ["Not published Mangas must have future publish date"]);
+                }
+            }
+            else if (model.Status == "Finished")
+            {
+                if (model.Count == 0)
+                {
+                    result.Errors.Add("Count", ["Finished Mangas must have chapters"]);
+                }
+                if(model.Publishdate >= DateTime.Now)
+                {
+                    result.Errors.Add("Publishdate", ["Finished Mangas can't have future publish date"]);
+                }
+            }
+            else if (model.Status == "Not finished")
+            {
+                Console.WriteLine("Is notfinished, making checks");
+                Console.WriteLine($"{model.Publishdate}");
+                if (model.Count == 0)
+                {
+                    result.Errors.Add("Count", ["Not finished Mangas must have chapters"]);
+                }
+                if (model.Publishdate >= DateTime.Now)
+                {
+                    result.Errors.Add("Publishdate", ["Not finished Mangas can't have future publish date"]);
+                }
+            }
+
+            if(model.Type == "Oneshot" && model.Count != 0)
+            {
+                result.Errors.Add("Type", ["Oneshot can only have one chapter"]);
+            }
+
+            if (result.Errors.Count == 0)
+                return null;
+            return result;
         }
     }
 }

@@ -1,0 +1,58 @@
+﻿@model AnimeViewModel
+
+@{
+	ViewData["Title"] = $"{Model.Name} - Info";
+}
+
+<h1>@Model.Name</h1>
+<div class="row align-content-between">
+	<div class="col-4">
+		<img src="@Model.Poster" alt="@Model.Name poster" style="width:60%;" />
+
+		<p><strong>Status:</strong> @Model.Status</p>
+		<p><strong>Published:</strong> @Model.Publishdate?.ToString("yyyy-MM-dd")</p>
+		<p><strong>Type:</strong> @Model.Type</p>
+		<p><strong>Studio:</strong> @Model.Studioname</p>
+	</div>
+	<div class="col-6">
+		<p>@Model.Description</p>
+		<p>Genres:</p>
+		@foreach (var genre in Model.Genrenames)
+		{
+			<span class="badge bg-secondary me-1 p-2">@genre</span>
+		}
+		<div class="row">
+			<p>Related media:</p>
+			<div id="media-connections">
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", async () => {
+		const mediaConnections = document.getElementById("media-connections");
+		const apiMediaUrl = "/api/Media";
+		const connections = @Html.Raw(Json.Serialize(Model.Connections)); // cause otherwise doesnt work
+
+		for (const conn of connections) {
+			try {
+				const response = await fetch(`${apiMediaUrl}/${conn}`);
+				if (!response.ok) throw new Error("Error fetching connection info");
+				const data = await response.json();
+				addConnection(data.name, data.type, data.publishdate, data.poster);
+			} catch (error) {
+				console.error(error);
+			}
+		}
+
+		function addConnection(name, type, publishDate, poster) {
+			const connection = document.createElement("div");
+			connection.innerHTML = `
+					<img src="${poster}" style="min-height: 5vh; max-height: 10vh;" alt="Medium poster"/>
+					<p><strong>${name}</strong> (${type})</p>
+				`;
+			mediaConnections.appendChild(connection);
+		}
+	});
+</script>

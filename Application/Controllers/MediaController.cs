@@ -49,7 +49,8 @@ namespace Application.Controllers
                     m.Id,
                     m.Name,
                     Type = m.Type == "A" ? "Anime" : "Manga",
-                    m.Publishdate
+                    m.Publishdate,
+                    m.Poster
                 })
                 .FirstOrDefaultAsync(m => m.Id == id);
 

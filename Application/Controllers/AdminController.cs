@@ -1,4 +1,5 @@
-﻿using Application.Models;
+﻿using Application.Data;
+using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,13 @@ namespace Application.Controllers
 	{
 		private readonly UserManager<Account> _userManager;
 		private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly ModelContext _context;
 
-		public AdminController(UserManager<Account> userManager, RoleManager<IdentityRole<int>> roleManager)
+		public AdminController(UserManager<Account> userManager, RoleManager<IdentityRole<int>> roleManager, ModelContext context)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
+            _context = context;
 		}
 
 		[Authorize(Roles ="Admin")]
@@ -137,20 +140,37 @@ namespace Application.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteAccount(int id)
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAccount([FromQuery] int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
-                return NotFound("User not found");
+                return NotFound(new { Message = "User not found" });
 
-            var result = await _userManager.DeleteAsync(user);
-            if (!result.Succeeded)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                ModelState.AddModelError("", "Failed to delete user");
+                var identityResult = await _userManager.DeleteAsync(user);
+                if (!identityResult.Succeeded)
+                {
+                    foreach (var error in identityResult.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return BadRequest(new { Message = "Failed to delete user from identity", Errors = identityResult.Errors });
+                }
+                
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, new { Message = "An error occurred while deleting the user", Details = ex.Message });
             }
 
             return RedirectToAction("Users");
         }
+
     }
 }

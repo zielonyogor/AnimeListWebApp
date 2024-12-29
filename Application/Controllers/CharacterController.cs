@@ -20,10 +20,11 @@ namespace Application.Controllers
 
         // GET: api/Character
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CharacterViewModel>>> GetCharacters()
+        public async Task<ActionResult<IEnumerable<CharacterViewModel>>> GetCharacters([FromQuery] string? search)
         {
             var characters = await _context.Characters
             .Include(c => c.Media)
+            .Where(c => string.IsNullOrEmpty(search) || c.Name.ToLower().StartsWith(search.ToLower()))
             .Select(c => new CharacterViewModel
             {
                 Id = c.Id,
@@ -59,7 +60,7 @@ namespace Application.Controllers
                 Connections = character.Media.Select(m => m.Id).ToList()
             };
 
-            return Ok(character);
+            return Ok(characterModel);
         }
 
         // PUT: api/Character/5

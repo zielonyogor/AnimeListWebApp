@@ -25,8 +25,9 @@ namespace Application.Models
 
         [Range(0, short.MaxValue, ErrorMessage = "Author is required.")]
         public short AuthorId { get; set; }
+		public string? AuthorName { get; set; } // I use this only for manga details, the easiest approach rn
 
-        public virtual List<string> Genrenames { get; set; } = new List<string>();
+		public virtual List<string> Genrenames { get; set; } = new List<string>();
 
         public virtual List<int> Connections { get; set; } = new List<int>();
     }

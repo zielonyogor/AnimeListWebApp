@@ -50,6 +50,7 @@ builder.Services.AddIdentity<Account, IdentityRole<int>>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
+    options.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<ModelContext>()
     .AddDefaultTokenProviders();
@@ -86,6 +87,11 @@ builder.Services.ConfigureApplicationCookie(options =>
             return Task.CompletedTask;
         }
     };
+});
+
+builder.Services.AddHttpClient("Application", c =>
+{
+    c.BaseAddress = new Uri("http://localhost:5074");
 });
 
 

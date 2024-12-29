@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Explore Characters";
+}
+
+<h1>Character List</h1>
+
+<div class="search-bar">
+    <input id="searchInput" type="text" placeholder="Search character..." class="form-control mb-3" />
+</div>
+
+<div id="characterList" class="row">
+    <!-- Character list will be dynamically populated -->
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const characterList = document.getElementById("characterList");
+        const searchInput = document.getElementById("searchInput");
+
+        async function fetchCharacter(search = "") {
+            const response = await fetch(`/api/Character?search=${encodeURIComponent(search)}`);
+            const data = await response.json();
+            renderCharacterList(data);
+        }
+
+        function renderCharacterList(character) {
+            characterList.innerHTML = "";
+            character.forEach(a => {
+                const characterCard = document.createElement("div");
+                characterCard.classList.add("col-md-4", "mb-3");
+                characterCard.innerHTML = `
+                    <div class="card">
+                        <img src="${a.image}" class="card-img-top" alt="Character image">
+                        <div class="card-body">
+                            <h5 class="card-title">${a.name}</h5>
+                            <p class="card-text">${a.description || "No description available."}</p>
+                            <a href="/Explore/CharacterDetails?id=${a.id}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                `;
+                characterList.appendChild(characterCard);
+            });
+        }
+
+        searchInput.addEventListener("input", () => {
+            fetchCharacter(searchInput.value);
+        });
+
+        // Initial fetch
+        fetchCharacter();
+    });
+</script>

@@ -1,3 +1,319 @@
 ﻿@{
     ViewData["Title"] = "Characters Panel";
 }
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Characters</h4>
+        <ul id="characters-list" class="list-group">
+            <!-- Automatically load here -->
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4 id="form-title">Add Character</h4>
+        <div id="error-summary" class="alert alert-danger mt-3" style="display: none;"></div>
+        <form id="character-form">
+            <div class="form-group">
+                <input type="hidden" id="character-id" />
+                <label for="character-name">Character Name</label>
+                <input type="text" id="character-name" name="name" class="form-control" required />
+
+                <label for="character-image">Character Image</label>
+                <img id="character-image-preview" style="width: 100px; aspect-ratio: 1/1;" />
+                <input type="text" id="character-image" name="image" class="form-control" />
+
+                <label for="character-description">Character Description</label>
+                <textarea id="character-description" name="description" class="form-control" style="min-height: 100px;"></textarea>
+
+                <div class="form-group position-relative mb-3">
+                    <label for="character-connections-input">Connections</label>
+                    <input type="text" id="character-connections-input" class="form-control" placeholder="Start typing to search connections..." />
+                    <ul id="character-connections-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+                        <!-- Suggestions will be dynamically added here -->
+                    </ul>
+                    <div id="character-selected-connections" class="mt-2">
+                        <!-- Selected connections will be shown as tags -->
+                    </div>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" id="cancel-edit" class="btn btn-secondary" style="display: none;">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiBaseUrl = "/api/Character";
+        const characterList = document.getElementById("characters-list");
+
+        const cancelEditButton = document.getElementById("cancel-edit");
+        const formTitle = document.getElementById("form-title");
+
+        const characterForm = document.getElementById("character-form");
+        const characterIdInput = document.getElementById("character-id");
+        const characterNameInput = document.getElementById("character-name");
+
+        // ----------------CONNECTIONS--------------------------
+        const characterConnectionsInput = document.getElementById("character-connections-input");
+        const connectionsSuggestions = document.getElementById("character-connections-suggestions");
+        const selectedConnectionsContainer = document.getElementById("character-selected-connections");
+        const apiMediaUrl = "/api/Media";
+
+        const selectedConnections = new Set();
+
+        async function fetchConnections(query) {
+            try {
+                const response = await fetch(`${apiMediaUrl}?search=${query}`);
+                if (!response.ok) throw new Error("Error fetching connections");
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        function renderConnectionSuggestions(connections) {
+            connectionsSuggestions.innerHTML = "";
+            connections.forEach(connection => {
+                const suggestionItem = document.createElement("li");
+                suggestionItem.className = "dropdown-item";
+                suggestionItem.textContent = `${connection.name} (${connection.type}, ${new Date(connection.publishdate).getFullYear()})`;
+                suggestionItem.addEventListener("click", () => {
+                    addConnection(connection.id, `${connection.name} (${connection.type}, ${new Date(connection.publishdate).getFullYear()})`);
+                });
+                connectionsSuggestions.appendChild(suggestionItem);
+            });
+            connectionsSuggestions.style.display = connections.length > 0 ? "block" : "none";
+        }
+
+        function addConnection(id, displayText) {
+            if (selectedConnections.has(id)) return;
+            selectedConnections.add(id);
+
+            const connectionTag = document.createElement("span");
+            connectionTag.className = "badge bg-secondary me-1";
+            connectionTag.textContent = displayText;
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "btn-close btn-close-white ms-1";
+            removeButton.style.fontSize = "0.8em";
+            removeButton.addEventListener("click", () => {
+                selectedConnections.delete(id);
+                connectionTag.remove();
+            });
+
+            connectionTag.appendChild(removeButton);
+            selectedConnectionsContainer.appendChild(connectionTag);
+
+            characterConnectionsInput.value = "";
+            connectionsSuggestions.style.display = "none";
+        }
+
+        characterConnectionsInput.addEventListener("input", async () => {
+            const query = characterConnectionsInput.value.trim();
+            if (query.length < 2) {
+                connectionsSuggestions.style.display = "none";
+                return;
+            }
+
+            const connections = await fetchConnections(query);
+            renderConnectionSuggestions(connections);
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!connectionsSuggestions.contains(event.target) && event.target !== characterConnectionsInput) {
+                connectionsSuggestions.style.display = "none";
+            }
+        });
+
+        //-------------------OTHER---------------------------
+        const characterImagePreview = document.getElementById("character-image-preview");
+        const characterImageInput = document.getElementById("character-image");
+
+        const characterDescriptionInput = document.getElementById("character-description");
+
+
+        //-------------------------FUNCTIONS---------------------
+        async function loadCharacters() {
+            const response = await fetch(apiBaseUrl);
+            const characters = await response.json();
+            characterList.innerHTML = "";
+
+            characters.forEach(character => {
+                const listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                            <div class="flex-fill me-md-4" >
+                                <span>${character.name}</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-warning edit-btn" data-id="${character.id}" data-name="${character.name}"" data-image="${character.image}"
+                                            data-description="${character.description}" data-connections="${character.connections}">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn" data-name="${character.id}">Delete</button>
+                            </div>
+                        `;
+                characterList.appendChild(listItem);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const deleteButtons = document.querySelectorAll(".delete-btn");
+            const editButtons = document.querySelectorAll(".edit-btn");
+            deleteButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    deleteCharacter(name);
+                })
+            );
+            editButtons.forEach(button =>
+                button.addEventListener("click", async event => {
+                    const id = event.target.getAttribute("data-id");
+                    const name = event.target.getAttribute("data-name");
+                    const image = event.target.getAttribute("data-image");
+                    const description = event.target.getAttribute("data-description");
+                    const connections = event.target.getAttribute("data-connections");
+                    await startEditCharacter(id, name, image, description, connections);
+                })
+            );
+        }
+
+        characterForm.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const Id = characterIdInput.value;
+            const Name = characterNameInput.value;
+            const Image = characterImageInput.value;
+            const Description = characterDescriptionInput.value;
+
+            // cause values get messed up somewhere to string
+            const Connections = Array.from(selectedConnections).map(item => parseInt(item, 10));
+
+            try {
+                let response;
+                if(!Id) {
+                    response = await fetch(apiBaseUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ Name, Image, Description,Connections }),
+                    });
+                }
+                else {
+                    response = await fetch(`${apiBaseUrl}/${Id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ Id, Name, Image, Description, Connections }),
+                    });
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (response.status === 400) {
+                        displayValidationErrors(errorData);
+                    } else {
+                        throw new Error(`Failed to ${Id ? "edit" : "add"} character.`);
+                    }
+                    return;
+                }
+                errorSummary.style.display = "none";
+                await loadCharacters();
+                resetForm();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        async function deleteCharacter(id) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/${id}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) throw new Error("Failed to delete character.");
+                await loadCharacters();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function startEditCharacter(id, name, image, description, connections) {
+            errorSummary.style.display = "none";
+
+            formTitle.textContent = "Edit Character";
+            characterIdInput.value = id;
+            characterNameInput.value = name;
+            characterImagePreview.src = image !== "null" ? image : "";
+            characterDescriptionInput.value = description !== "null" ? description : "";
+            cancelEditButton.style.display = "inline-block";
+
+            selectedConnectionsContainer.innerHTML = "";
+            selectedConnections.clear();
+            if (connections) {
+                const connectionList = connections.split(',');
+                await renderConnections(connectionList);
+            }
+        }
+
+        async function renderConnections(connections) {
+            for (const conn of connections) {
+                try {
+                    const response = await fetch(`${apiMediaUrl}/${conn}`);
+                    if (!response.ok) throw new Error("Error fetching connection info");
+                    const data = await response.json();
+                    addConnection(conn, `${data.name} (${data.type}, ${new Date(data.publishdate).getFullYear()})`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+
+        function resetForm() {
+            formTitle.textContent = "Add Character";
+            characterIdInput.value = "";
+            characterNameInput.value = "";
+            characterImageInput.value = "";
+            characterImagePreview.src = "";
+            characterDescriptionInput.value = "";
+
+            selectedConnectionsContainer.innerHTML = "";
+            selectedConnections.clear();
+
+            cancelEditButton.style.display = "none";
+        }
+
+        cancelEditButton.addEventListener("click", () => {
+            resetForm();
+        });
+
+        loadCharacters();
+
+        //------------------------ERROR-HANDLING-------------
+        const errorSummary = document.getElementById("error-summary");
+        function displayValidationErrors(errors) {
+            console.log("Errors: ", errors);
+            errorSummary.style.display = "block";
+            errorSummary.innerHTML = "";
+
+            if (errors && errors.errors) {
+                Object.keys(errors.errors).forEach(field => {
+                    errors.errors[field].forEach(errorMessage => {
+                        const errorItem = document.createElement("div");
+                        errorItem.textContent = errorMessage;
+                        errorSummary.appendChild(errorItem);
+                    });
+                });
+            }
+
+            characterForm.prepend(errorSummary);
+        }
+    });
+</script>
