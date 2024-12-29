@@ -1,3 +1,529 @@
 ﻿@{
 	ViewData["Title"] = "Mangas Panel";
 }
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Mangas</h4>
+        <ul id="mangas-list" class="list-group">
+            <!-- Automatically load here -->
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4 id="form-title">Add Manga</h4>
+        <div id="error-summary" class="alert alert-danger mt-3" style="display: none;"></div>
+        <form id="manga-form">
+            <div class="form-group">
+                <input type="hidden" id="manga-id" />
+                <label for="manga-name">Manga Name</label>
+                <input type="text" id="manga-name" name="name" class="form-control" />
+
+                <label for="manga-status">Manga Status</label>
+                <select id="manga-status" class="form-select">
+                    <option value="Not finished" selected="selected">Not finished</option>
+                    <option value="Finished">Finished</option>
+                    <option value="To be released">To be released</option>
+                </select>
+
+                <label for="manga-publishDate">Manga Publish date</label>
+                <input type="date" id="manga-publishDate" name="publishDate" class="form-control" />
+
+                <label for="manga-count">Manga Count</label>
+                <input type="number" id="manga-count" name="count" class="form-control" min="0" step="1" max="9999" value="0" />
+
+                <label for="manga-type">Manga Type</label>
+                <select id="manga-type" class="form-select">
+                    <option value="Manga">Manga</option>
+                    <option value="Oneshot">Oneshot</option>
+                    <option value="Light novel">Light novel</option>
+                </select>
+
+                <div class="form-group position-relative">
+                    <label for="manga-author">Author</label>
+                    <input type="text" id="manga-author" class="form-control" placeholder="Start typing to search authors..." />
+                    <ul id="manga-author-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+                        <!-- Space for suggestions for authors -->
+                    </ul>
+                </div>
+
+
+                <label for="manga-poster">Manga Poster</label>
+                <img id="manga-poster-preview" style="width: 100px; aspect-ratio: 1/1;" />
+                <input type="text" id="manga-poster" name="poster" class="form-control" />
+
+                <label for="manga-description">Manga Description</label>
+                <textarea id="manga-description" name="description" class="form-control" style="min-height: 100px;"></textarea>
+
+                <div class="form-group position-relative mb-3">
+                    <label for="manga-genres">Genres</label>
+                    <input type="text" id="manga-genres-input" class="form-control" placeholder="Start typing to search genres..." />
+                    <ul id="manga-genres-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+                        <!-- Suggestions will be dynamically added here -->
+                    </ul>
+                    <div id="manga-selected-genres" class="mt-2">
+                        <!-- Selected genres will be shown as tags -->
+                    </div>
+                </div>
+
+                <div class="form-group position-relative mb-3">
+                    <label for="manga-connections-input">Connections</label>
+                    <input type="text" id="manga-connections-input" class="form-control" placeholder="Start typing to search connections..." />
+                    <ul id="manga-connections-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+                        <!-- Suggestions will be dynamically added here -->
+                    </ul>
+                    <div id="manga-selected-connections" class="mt-2">
+                        <!-- Selected connections will be shown as tags -->
+                    </div>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" id="cancel-edit" class="btn btn-secondary" style="display: none;">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiBaseUrl = "/api/Manga";
+        const mangaList = document.getElementById("mangas-list");
+
+        const cancelEditButton = document.getElementById("cancel-edit");
+        const formTitle = document.getElementById("form-title");
+
+        const mangaForm = document.getElementById("manga-form");
+        const mangaIdInput = document.getElementById("manga-id");
+        const mangaNameInput = document.getElementById("manga-name");
+        const mangaStatusInput = document.getElementById("manga-status");
+        const mangaPublishDateInput = document.getElementById("manga-publishDate");
+        mangaPublishDateInput.valueAsDate = new Date();
+
+        const mangaCountInput = document.getElementById("manga-count");
+        const mangaTypeInput = document.getElementById("manga-type");
+
+
+        //----------------------------AUTHORS-------------------------------
+        const mangaAuthorInput = document.getElementById("manga-author");
+        const authorSuggestions = document.getElementById("manga-author-suggestions");
+        const apiAuthorUrl = "/api/Author";
+        let selectedAuthor = null;
+
+        mangaAuthorInput.addEventListener("input", async (event) => {
+            const query = event.target.value;
+
+            if (query.length < 2) {
+                authorSuggestions.style.display = "none";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiAuthorUrl}?search=${query}`);
+                const authors = await response.json();
+                console.log(authors);
+
+                authorSuggestions.innerHTML = "";
+                authors.forEach((author) => {
+                    const listItem = document.createElement("li");
+                    listItem.className = "dropdown-item";
+                    listItem.textContent = author.name;
+                    listItem.addEventListener("click", () => {
+                        mangaAuthorInput.value = author.name;
+                        selectedAuthor = author;
+                        authorSuggestions.style.display = "none";
+                    });
+                    authorSuggestions.appendChild(listItem);
+                });
+
+                authorSuggestions.style.display = "block";
+            } catch (error) {
+                console.error("Error fetching authors:", error);
+            }
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!authorSuggestions.contains(event.target) && event.target !== mangaAuthorInput) {
+                authorSuggestions.style.display = "none";
+            }
+        });
+
+        // -----------------------GENRES-----------------------------
+        const mangaGenresInput = document.getElementById("manga-genres-input");
+        const genresSuggestions = document.getElementById("manga-genres-suggestions");
+        const selectedGenresContainer = document.getElementById("manga-selected-genres");
+        const apiGenreUrl = "/api/Genre";
+
+        const selectedGenres = new Set();
+
+        async function fetchGenres(query) {
+            try {
+                const response = await fetch(`${apiGenreUrl}?search=${query}`);
+                if (!response.ok) throw new Error("Error fetching genres");
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        function renderSuggestions(genres) {
+            genresSuggestions.innerHTML = "";
+            genres.forEach(genre => {
+                const suggestionItem = document.createElement("li");
+                suggestionItem.className = "dropdown-item";
+                suggestionItem.textContent = genre.name;
+                suggestionItem.addEventListener("click", () => {
+                    addGenre(genre.name);
+                });
+                genresSuggestions.appendChild(suggestionItem);
+            });
+            genresSuggestions.style.display = genres.length > 0 ? "block" : "none";
+        }
+
+        function addGenre(genreName) {
+            if (selectedGenres.has(genreName)) return;
+            selectedGenres.add(genreName);
+
+            const genreTag = document.createElement("span");
+            genreTag.className = "badge bg-primary me-1";
+            genreTag.textContent = genreName;
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "btn-close btn-close-white ms-1";
+            removeButton.style.fontSize = "0.8em";
+            removeButton.addEventListener("click", () => {
+                selectedGenres.delete(genreName);
+                genreTag.remove();
+            });
+
+            genreTag.appendChild(removeButton);
+            selectedGenresContainer.appendChild(genreTag);
+
+            mangaGenresInput.value = "";
+            genresSuggestions.style.display = "none";
+        }
+
+        mangaGenresInput.addEventListener("input", async () => {
+            const query = mangaGenresInput.value.trim();
+            if (query.length < 2) {
+                genresSuggestions.style.display = "none";
+                return;
+            }
+
+            const genres = await fetchGenres(query);
+            renderSuggestions(genres);
+        });
+
+        // ----------------CONNECTIONS--------------------------
+        const mangaConnectionsInput = document.getElementById("manga-connections-input");
+        const connectionsSuggestions = document.getElementById("manga-connections-suggestions");
+        const selectedConnectionsContainer = document.getElementById("manga-selected-connections");
+        const apiMediaUrl = "/api/Media";
+
+        const selectedConnections = new Set();
+
+        async function fetchConnections(query) {
+            try {
+                const response = await fetch(`${apiMediaUrl}?search=${query}`);
+                if (!response.ok) throw new Error("Error fetching connections");
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        function renderConnectionSuggestions(connections) {
+            connectionsSuggestions.innerHTML = "";
+            connections.forEach(connection => {
+                const suggestionItem = document.createElement("li");
+                suggestionItem.className = "dropdown-item";
+                suggestionItem.textContent = `${connection.name} (${connection.type}, ${new Date(connection.publishdate).getFullYear()})`;
+                suggestionItem.addEventListener("click", () => {
+                    addConnection(connection.id, `${connection.name} (${connection.type}, ${new Date(connection.publishdate).getFullYear()})`);
+                });
+                connectionsSuggestions.appendChild(suggestionItem);
+            });
+            connectionsSuggestions.style.display = connections.length > 0 ? "block" : "none";
+        }
+
+        function addConnection(id, displayText) {
+            if (selectedConnections.has(id)) return;
+            selectedConnections.add(id);
+
+            const connectionTag = document.createElement("span");
+            connectionTag.className = "badge bg-secondary me-1";
+            connectionTag.textContent = displayText;
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "btn-close btn-close-white ms-1";
+            removeButton.style.fontSize = "0.8em";
+            removeButton.addEventListener("click", () => {
+                selectedConnections.delete(id);
+                connectionTag.remove();
+            });
+
+            connectionTag.appendChild(removeButton);
+            selectedConnectionsContainer.appendChild(connectionTag);
+
+            mangaConnectionsInput.value = "";
+            connectionsSuggestions.style.display = "none";
+        }
+
+        mangaConnectionsInput.addEventListener("input", async () => {
+            const query = mangaConnectionsInput.value.trim();
+            if (query.length < 2) {
+                connectionsSuggestions.style.display = "none";
+                return;
+            }
+
+            const connections = await fetchConnections(query);
+            renderConnectionSuggestions(connections);
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!connectionsSuggestions.contains(event.target) && event.target !== mangaConnectionsInput) {
+                connectionsSuggestions.style.display = "none";
+            }
+        });
+
+        //-------------------OTHER---------------------------
+        const mangaPosterPreview = document.getElementById("manga-poster-preview");
+        const mangaPosterInput = document.getElementById("manga-poster");
+
+        const mangaDescriptionInput = document.getElementById("manga-description");
+
+
+        //-------------------------FUNCTIONS---------------------
+        async function loadMangas() {
+            const response = await fetch(apiBaseUrl);
+            const mangas = await response.json();
+            mangaList.innerHTML = "";
+
+            mangas.forEach(manga => {
+                const listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                            <div class="flex-fill me-md-4" >
+                                <span>${manga.name}</span> <span class="float-end text-secondary">${manga.type}</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-warning edit-btn" data-id="${manga.id}" data-name="${manga.name}"" data-poster="${manga.poster}"
+                                            data-status="${manga.status}" data-publishDate="${manga.publishdate}" data-count="${manga.count}" data-type="${manga.type}"
+                                            data-author="${manga.authorId}" data-description="${manga.description}" data-genres="${manga.genrenames}" data-connections="${manga.connections}">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn" data-name="${manga.id}">Delete</button>
+                            </div>
+                        `;
+                mangaList.appendChild(listItem);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const deleteButtons = document.querySelectorAll(".delete-btn");
+            const editButtons = document.querySelectorAll(".edit-btn");
+            deleteButtons.forEach(button =>
+                button.addEventListener("click", event => {
+                    const name = event.target.getAttribute("data-name");
+                    deleteManga(name);
+                })
+            );
+            editButtons.forEach(button =>
+                button.addEventListener("click", async event => {
+                    const id = event.target.getAttribute("data-id");
+                    const name = event.target.getAttribute("data-name");
+                    const status = event.target.getAttribute("data-status");
+                    const type = event.target.getAttribute("data-type");
+                    const publishDate = event.target.getAttribute("data-publishDate");
+                    const count = event.target.getAttribute("data-count");
+                    const author = event.target.getAttribute("data-author");
+                    const poster = event.target.getAttribute("data-poster");
+                    const description = event.target.getAttribute("data-description");
+                    const genres = event.target.getAttribute("data-genres");
+                    const connections = event.target.getAttribute("data-connections");
+                    await startEditManga(id, name, status, type, publishDate, count, author, poster, description, genres, connections);
+                })
+            );
+        }
+
+        //-------------------------SUBMIT-FUNCTION----------------------
+        mangaForm.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const Id = mangaIdInput.value;
+            const Name = mangaNameInput.value;
+            const Status = mangaStatusInput.value;
+            const Publishdate = mangaPublishDateInput.value;
+            const Count = mangaCountInput.valueAsNumber;
+            const Type = mangaTypeInput.value;
+            const AuthorId = selectedAuthor ? selectedAuthor.id : -1;
+            console.log(selectedAuthor);
+            const Poster = mangaPosterInput.value;
+            const Description = mangaDescriptionInput.value;
+
+            const Genrenames = selectedGenres ? Array.from(selectedGenres) : [];
+            // cause values get messed up somewhere to string
+            const Connections = selectedConnections ? Array.from(selectedConnections).map(item => parseInt(item, 10)) : [];
+
+            try {
+                let response;
+                if(!Id) {
+                    response = await fetch(apiBaseUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ Name, Status, Type, Publishdate, Count, Poster, Description, Genrenames, AuthorId, Connections }),
+                    });
+                }
+                else {
+                    response = await fetch(`${apiBaseUrl}/${Id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ Id, Name, Status, Type, Publishdate, Count, Poster, Description, Genrenames, AuthorId, Connections }),
+                    });
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (response.status === 400) {
+                        displayValidationErrors(errorData);
+                    } else {
+                        throw new Error(`Failed to ${Id ? "edit" : "add"} manga.`);
+                    }
+                    return;
+                }
+                errorSummary.style.display = "none";
+                await loadMangas();
+                resetForm();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        async function deleteManga(id) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/${id}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) throw new Error("Failed to delete manga.");
+                await loadMangas();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function startEditManga(id, name, status, type, publishDate, count, author, poster, description, genres, connections) {
+            errorSummary.style.display = "none";
+
+            formTitle.textContent = "Edit Manga";
+            mangaIdInput.value = id;
+            mangaNameInput.value = name;
+            mangaPosterPreview.src = poster !== "null" ? poster : "";
+            mangaStatusInput.value = status;
+            mangaPublishDateInput.valueAsDate = new Date(publishDate);
+            mangaCountInput.value = count;
+            mangaTypeInput.value = type;
+            mangaDescriptionInput.value = description !== "null" ? description : "";
+            cancelEditButton.style.display = "inline-block";
+
+            selectedGenresContainer.innerHTML = "";
+            selectedGenres.clear();
+            if (genres) {
+                const genreList = genres.split(',');
+                genreList.forEach(genre => {
+                    addGenre(genre.trim());
+                });
+            }
+
+            await renderAuthor(author);
+
+            selectedConnectionsContainer.innerHTML = "";
+            selectedConnections.clear();
+            if (connections) {
+                const connectionList = connections.split(',');
+                await renderConnections(connectionList);
+            }
+        }
+
+        async function renderAuthor(authorId) {
+            try {
+                const response = await fetch(`${apiAuthorUrl}/${authorId}`);
+                if (!response.ok) throw new Error("Error fetching connection info");
+                const data = await response.json();
+                mangaAuthorInput.value = data.name;
+                selectedAuthor = data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function renderConnections(connections) {
+            for (const conn of connections) {
+                try {
+                    const response = await fetch(`${apiMediaUrl}/${conn}`);
+                    if (!response.ok) throw new Error("Error fetching connection info");
+                    const data = await response.json();
+                    addConnection(conn, `${data.name} (${data.type}, ${new Date(data.publishdate).getFullYear()})`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+
+        function resetForm() {
+            formTitle.textContent = "Add Manga";
+            mangaIdInput.value = "";
+            mangaNameInput.value = "";
+            mangaPosterInput.value = "";
+            mangaPosterPreview.src = "";
+            mangaStatusInput.value = "Not Finished";
+            mangaPublishDateInput.valueAsDate = new Date();
+            mangaCountInput.value = "0";
+            mangaTypeInput.value = "TV";
+            mangaAuthorInput.value = "";
+            mangaDescriptionInput.value = "";
+
+            selectedGenresContainer.innerHTML = "";
+            selectedGenres.clear();
+            selectedConnectionsContainer.innerHTML = "";
+            selectedConnections.clear();
+
+            errorSummary.style.display = "none";
+
+            cancelEditButton.style.display = "none";
+        }
+
+        cancelEditButton.addEventListener("click", () => {
+            resetForm();
+        });
+
+        loadMangas();
+
+        //------------------------ERROR-HANDLING-------------
+        const errorSummary = document.getElementById("error-summary");
+        function displayValidationErrors(errors) {
+            console.log("Errors: ", errors);
+            errorSummary.style.display = "block";
+            errorSummary.innerHTML = "";
+
+            if (errors && errors.errors) {
+                Object.keys(errors.errors).forEach(field => {
+                    console.log("skibidi");
+                    errors.errors[field].forEach(errorMessage => {
+                        const errorItem = document.createElement("div");
+                        errorItem.textContent = errorMessage;
+                        errorSummary.appendChild(errorItem);
+                    });
+                });
+            }
+
+            mangaForm.prepend(errorSummary);
+        }
+    });
+</script>

@@ -24,7 +24,7 @@ namespace Application.Controllers
         public async Task<ActionResult<IEnumerable<object>>> GetAuthors([FromQuery] string? search)
         {
             var authors = await _context.Authors
-                .Where(a => string.IsNullOrEmpty(search) || a.Name.ToLower().StartsWith(search.ToLower()))
+                .Where(a => string.IsNullOrEmpty(search) || a.Name.ToLower().Contains(search.ToLower()))
                 .Select(a => new
                 {
                     a.Id,

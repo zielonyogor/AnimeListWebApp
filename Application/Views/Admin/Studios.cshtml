@@ -123,7 +123,6 @@
 
             if (errors && errors.errors) {
                 Object.keys(errors.errors).forEach(field => {
-                    console.log("skibidi");
                     errors.errors[field].forEach(errorMessage => {
                         const errorItem = document.createElement("div");
                         errorItem.textContent = errorMessage;

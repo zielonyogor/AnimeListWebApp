@@ -20,11 +20,12 @@ namespace Application.Controllers
 
         // GET: api/Manga
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MangaViewModel>>> GetMangas()
+        public async Task<ActionResult<IEnumerable<MangaViewModel>>> GetMangas([FromQuery] string? search)
         {
             var mangas = await _context.Mangas
             .Include(m => m.Medium)
             .ThenInclude(m => m.Genrenames)
+            .Where(m => string.IsNullOrEmpty(search) || m.Medium.Name.ToLower().StartsWith(search.ToLower()))
             .Select(m => new MangaViewModel
             {
                 Id = m.Mediumid,
@@ -34,7 +35,7 @@ namespace Application.Controllers
                 Poster = m.Medium.Poster,
                 Publishdate = m.Medium.Publishdate,
                 Description = m.Medium.Description,
-                Type = m.Medium.Type,
+                Type = m.Type,
                 AuthorId = m.Authorid,
                 Genrenames = m.Medium.Genrenames.Select(g => g.Name).ToList(),
                 Connections = m.Medium.Idmedium1s.Select(m => m.Id).Union(m.Medium.Idmedium2s.Select(m => m.Id)).ToList()
@@ -196,10 +197,31 @@ namespace Application.Controllers
         // POST: api/Manga
         [HttpPost]
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<ActionResult<MangaViewModel>> PostManga(MangaViewModel model)
+        public async Task<ActionResult<MangaViewModel>> PostManga([FromBody] MangaViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if(model.Status == "To be released")
+            {
+                if (model.Count != 0)
+                {
+                    var problemDetails = new ValidationProblemDetails
+                    {
+                        Title = "One or more validation errors occurred.",
+                        Status = StatusCodes.Status400BadRequest
+                    };
+
+                    problemDetails.Errors.Add("Count", new[] { "Not published Mangas can't have chapters" });
+
+                    return BadRequest(problemDetails);
+                }
+                if(model.Publishdate <= DateTime.Now)
+                {
+                    ModelState.AddModelError("Publishdate", "Not published Mangas must have future date");
+                    return BadRequest(ModelState);
+                }
+            }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
