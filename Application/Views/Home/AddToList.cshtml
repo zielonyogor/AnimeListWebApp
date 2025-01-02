@@ -1,0 +1,100 @@
+﻿@model ListElementViewModel
+
+@{
+    ViewData["Title"] = "Add New List Element";
+}
+
+<h1>Add New List Element</h1>
+
+<form asp-action="AddToList" method="post">
+    <div class="form-group position-relative">
+        <input asp-for="Mediumid" id="medium-id" class="form-control" hidden />
+
+        <label for="list-medium">Medium</label>
+        <input type="text" id="list-medium" class="form-control" placeholder="Start typing to search media..." autocomplete="off" />
+        <ul id="list-medium-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
+        </ul>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label">Status</label>
+        <select asp-for="Status" class="form-select">
+            <option>Completed</option>
+            <option>Plan to watch</option>
+            <option>On-hold</option>
+            <option>Dropped</option>
+            <option>Watching</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Finishednumber" class="form-label">Finished Number</label>
+        <input asp-for="Finishednumber" class="form-control" type="number" min="0" step="1" max="9999" value="0" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Startdate" class="form-label">Start date</label>
+        <input asp-for="Startdate" class="form-control" type="date" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Finishdate" class="form-label">Finish date</label>
+        <input asp-for="Finishdate" class="form-control" type="date" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Rating" class="form-label">Rating</label>
+        <input asp-for="Rating" type="number" class="form-control" min="0" max="10" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Mediumcomment" class="form-label">Comment</label>
+        <textarea asp-for="Mediumcomment" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<script>
+    const mediumId = document.getElementById("medium-id");
+    const mediumInput = document.getElementById("list-medium");
+    const mediumSuggestions = document.getElementById("list-medium-suggestions");
+    const apiMediaUrl = "/api/Media";
+
+    async function fetchConnections(query) {
+        try {
+            const response = await fetch(`${apiMediaUrl}?search=${query}`);
+            if (!response.ok) throw new Error("Error fetching connections");
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    function renderConnectionSuggestions(connections) {
+        mediumSuggestions.innerHTML = "";
+        connections.forEach(connection => {
+            const suggestionItem = document.createElement("li");
+            suggestionItem.className = "dropdown-item";
+            suggestionItem.textContent = `${connection.name} (${connection.type}, ${new Date(connection.publishdate).getFullYear()})`;
+            suggestionItem.addEventListener("click", () => {
+                mediumInput.value = connection.name;
+                mediumId.valueAsNumber = connection.id;
+                mediumSuggestions.style.display = "none";
+            });
+            mediumSuggestions.appendChild(suggestionItem);
+        });
+        mediumSuggestions.style.display = connections.length > 0 ? "block" : "none";
+    }
+
+    mediumInput.addEventListener("input", async () => {
+        const query = mediumInput.value.trim();
+        if (query.length < 2) {
+            mediumSuggestions.style.display = "none";
+            return;
+        }
+
+        const connections = await fetchConnections(query);
+        renderConnectionSuggestions(connections);
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!mediumSuggestions.contains(event.target) && event.target !== mediumInput) {
+            mediumSuggestions.style.display = "none";
+        }
+    });
+</script>

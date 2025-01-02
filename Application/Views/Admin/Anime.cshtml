@@ -17,7 +17,7 @@
             <div class="form-group">
                 <input type="hidden" id="anime-id" />
                 <label for="anime-name">Anime Name</label>
-                <input type="text" id="anime-name" name="name" class="form-control" required />
+                <input type="text" id="anime-name" name="name" class="form-control" required autocomplete="off" />
 
                 <label for="anime-status">Anime Status</label>
                 <select id="anime-status" class="form-select">
@@ -41,7 +41,7 @@
 
                 <div class="form-group position-relative">
                     <label for="anime-studio">Studio</label>
-                    <input type="text"  id="anime-studio" class="form-control" placeholder="Start typing to search studios..." />
+                    <input type="text" id="anime-studio" class="form-control" placeholder="Start typing to search studios..." autocomplete="off" />
                     <ul id="anime-studio-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
                         <!-- Space for suggestions for studios -->
                     </ul>
@@ -50,14 +50,14 @@
 
                 <label for="anime-poster">Anime Poster</label>
                 <img id="anime-poster-preview" style="width: 100px; aspect-ratio: 1/1;" />
-                <input type="text" id="anime-poster" name="poster" class="form-control" />
+                <input type="text" id="anime-poster" name="poster" class="form-control" autocomplete="off" />
 
                 <label for="anime-description">Anime Description</label>
                 <textarea id="anime-description" name="description" class="form-control" style="min-height: 100px;"></textarea>
 
                 <div class="form-group position-relative mb-3">
                     <label for="anime-genres">Genres</label>
-                    <input type="text" id="anime-genres-input" class="form-control" placeholder="Start typing to search genres..." />
+                    <input type="text" id="anime-genres-input" class="form-control" placeholder="Start typing to search genres..." autocomplete="off" />
                     <ul id="anime-genres-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
                         <!-- Suggestions will be dynamically added here -->
                     </ul>
@@ -68,7 +68,7 @@
 
                 <div class="form-group position-relative mb-3">
                     <label for="anime-connections-input">Connections</label>
-                    <input type="text" id="anime-connections-input" class="form-control" placeholder="Start typing to search connections..." />
+                    <input type="text" id="anime-connections-input" class="form-control" placeholder="Start typing to search connections..." autocomplete="off" />
                     <ul id="anime-connections-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
                         <!-- Suggestions will be dynamically added here -->
                     </ul>

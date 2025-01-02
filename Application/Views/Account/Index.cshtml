@@ -1,8 +1,4 @@
-﻿@{
-	//ViewData["Title"] = "User info";
-}
-
-@model UserInfoViewModel
+﻿@model UserInfoViewModel
 
 <div class="row">
 	<div class="col-4">
@@ -18,3 +14,27 @@
 	<p>@Model.Imagelink</p>
 </div>
 
+<div>
+    <a>Following</a>
+    <a>Followers</a>
+</div>
+
+<div class="mt-4">
+    <h3>Favorite Characters</h3>
+    @if (Model.Characters.Any())
+    {
+        <div class="row">
+            @foreach (var character in Model.Characters)
+            {
+                <div class="col-3 text-center">
+                    <img src="@character.Image" alt="@character.Name" class="img-fluid" style="height: 150px; object-fit: cover;" />
+                    <p>@character.Name</p>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No favorite characters found.</p>
+    }
+</div>

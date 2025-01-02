@@ -41,7 +41,7 @@ namespace Application.Controllers
 
         // GET: api/Media/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Medium>> GetMedium(int id)
+        public async Task<ActionResult<object>> GetMedium(int id)
         {
             var medium = await _context.Media
                 .Select(m => new
@@ -50,10 +50,12 @@ namespace Application.Controllers
                     m.Name,
                     Type = m.Type == "A" ? "Anime" : "Manga",
                     m.Publishdate,
-                    m.Poster
+                    m.Poster,
+                    m.Status,
+                    m.Count
                 })
                 .FirstOrDefaultAsync(m => m.Id == id);
-
+            Console.WriteLine($"{id}, {medium?.Name} \n\n\n");
             if (medium == null)
             {
                 return NotFound();

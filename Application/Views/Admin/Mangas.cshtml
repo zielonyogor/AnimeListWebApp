@@ -17,7 +17,7 @@
             <div class="form-group">
                 <input type="hidden" id="manga-id" />
                 <label for="manga-name">Manga Name</label>
-                <input type="text" id="manga-name" name="name" class="form-control" />
+                <input type="text" id="manga-name" name="name" class="form-control" autocomplete="off" />
 
                 <label for="manga-status">Manga Status</label>
                 <select id="manga-status" class="form-select">
@@ -41,7 +41,7 @@
 
                 <div class="form-group position-relative">
                     <label for="manga-author">Author</label>
-                    <input type="text" id="manga-author" class="form-control" placeholder="Start typing to search authors..." />
+                    <input type="text" id="manga-author" class="form-control" placeholder="Start typing to search authors..." autocomplete="off" />
                     <ul id="manga-author-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
                         <!-- Space for suggestions for authors -->
                     </ul>
@@ -57,7 +57,7 @@
 
                 <div class="form-group position-relative mb-3">
                     <label for="manga-genres">Genres</label>
-                    <input type="text" id="manga-genres-input" class="form-control" placeholder="Start typing to search genres..." />
+                    <input type="text" id="manga-genres-input" class="form-control" placeholder="Start typing to search genres..." autocomplete="off" />
                     <ul id="manga-genres-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
                         <!-- Suggestions will be dynamically added here -->
                     </ul>
@@ -68,7 +68,7 @@
 
                 <div class="form-group position-relative mb-3">
                     <label for="manga-connections-input">Connections</label>
-                    <input type="text" id="manga-connections-input" class="form-control" placeholder="Start typing to search connections..." />
+                    <input type="text" id="manga-connections-input" class="form-control" placeholder="Start typing to search connections..." autocomplete="off" />
                     <ul id="manga-connections-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
                         <!-- Suggestions will be dynamically added here -->
                     </ul>

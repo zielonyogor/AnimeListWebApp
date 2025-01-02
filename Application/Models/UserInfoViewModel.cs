@@ -12,5 +12,7 @@ namespace Application.Models
         public string? Imagelink { get; set; }
 
         public string? Description { get; set; }
-    }
+
+		public List<CharacterViewModel> Characters { get; set; } = new List<CharacterViewModel>();
+	}
 }

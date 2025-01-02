@@ -1,0 +1,146 @@
+﻿@model ListElementViewModel
+
+@{
+	ViewData["Title"] = "Edit element";
+}
+
+<h1>Edit List Element</h1>
+
+<form asp-action="EditElement" method="post">
+	<div class="form-group position-relative">
+		<input asp-for="Mediumid" id="medium-id" class="form-control" hidden value="@Model.Mediumid" />
+
+		<label for="list-medium">Medium</label>
+		<input type="text" id="list-medium" class="form-control" autocomplete="off" disabled/>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Status" class="form-label">Status</label>
+        <select asp-for="Status" id="status-select" class="form-select">
+			<option value="Completed" selected="@(Model.Status == "Completed" ? "selected" : null)">Completed</option>
+			<option value="Plan to watch" selected="@(Model.Status == "Plan to watch" ? "selected" : null)">Plan to watch</option>
+			<option value="On-hold" selected="@(Model.Status == "On-hold" ? "selected" : null)">On-hold</option>
+			<option value="Dropped" selected="@(Model.Status == "Dropped" ? "selected" : null)">Dropped</option>
+			<option value="Watching" selected="@(Model.Status == "Watching" ? "selected" : null)">Watching</option>
+		</select>
+
+	</div>
+	<div class="mb-3">
+		<label asp-for="Finishednumber" class="form-label">Count</label>
+		<input asp-for="Finishednumber" id="medium-number" class="form-control" type="number" min="0" step="1" max="9999" value="0" value="@Model.Finishednumber" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="Startdate" class="form-label">Start date</label>
+		<input asp-for="Startdate" id="medium-startDate" class="form-control" type="date" value="@(Model.Startdate?.ToString("yyyy-MM-dd"))" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="Finishdate" class="form-label">Finish date</label>
+		<input asp-for="Finishdate" id="medium-finishDate" class="form-control" type="date" value="@(Model.Finishdate?.ToString("yyyy-MM-dd"))" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="Rating" class="form-label">Rating</label>
+		<input asp-for="Rating" type="number" id="medium-rating" class="form-control" min="0" max="10" value="@Model.Rating" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="Mediumcomment" class="form-label">Comment</label>
+		<textarea asp-for="Mediumcomment" class="form-control" value="@Model.Mediumcomment"></textarea>
+	</div>
+	<button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<script>
+    const apiMediaUrl = "/api/Media";
+    const mediumInput = document.getElementById("list-medium");
+	const mediumFinishedNumber = document.getElementById("medium-number");
+	const mediumStartDate = document.getElementById("medium-startDate");
+	const mediumFinishDate = document.getElementById("medium-finishDate");
+    const statusSelect = document.getElementById("status-select");
+	const mediumRating = document.getElementById("medium-rating");
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const response = await fetch(`${apiMediaUrl}/${@Model.Mediumid}`);
+            if (!response.ok) throw new Error("Error fetching medium details");
+            const data = await response.json();
+
+            // Set medium name
+			mediumInput.value = data.name;
+			mediumFinishedNumber.max = data.count;
+
+			const formattedPublishDate = new Date(data.publishdate).toISOString().split("T")[0];
+			mediumStartDate.min = formattedPublishDate;
+			mediumFinishDate.min = formattedPublishDate;
+
+            if (data.status === "Not finished") {
+                const completedOption = Array.from(statusSelect.options).find(option => option.value === "Completed");
+                completedOption.disabled = true;
+            }
+            if (data.status === "To be released") {
+                Array.from(statusSelect.options).forEach(option => {
+                    option.disabled = option.value !== "Plan to watch";
+                });
+            }
+
+            statusSelect.addEventListener("change", () => {
+                if (statusSelect.value === "Plan to watch") {
+                    mediumFinishedNumber.value = 0;
+					mediumFinishedNumber.disabled = true;
+					mediumRating.value = 0;
+					mediumRating.disabled = true;
+					mediumStartDate.value = null;
+					mediumStartDate.disabled = true;
+					mediumFinishDate.value = null;
+					mediumFinishDate.disabled = true;
+                }
+				else if (statusSelect.value === "Watching"){
+					mediumFinishDate.value = null;
+					mediumFinishDate.disabled = true;
+					mediumFinishedNumber.disabled = false;
+					mediumRating.disabled = false;
+					mediumStartDate.disabled = false;
+				}
+				else if (statusSelect.value === "Dropped") {
+					mediumFinishDate.value = null;
+					mediumFinishDate.disabled = true;
+					mediumFinishedNumber.disabled = false;
+					mediumRating.disabled = false;
+					mediumStartDate.disabled = false;
+				}
+				else {
+					mediumFinishedNumber.disabled = false;
+					mediumRating.disabled = false;
+					mediumStartDate.disabled = false;
+					mediumFinishDate.disabled = false;
+                }
+            });
+
+			// Repeat for after loaded
+			if (statusSelect.value === "Plan to watch") {
+				mediumFinishedNumber.value = 0;
+				mediumFinishedNumber.disabled = true;
+				mediumRating.value = 0;
+				mediumRating.disabled = true;
+				mediumStartDate.value = null;
+				mediumStartDate.disabled = true;
+				mediumFinishDate.value = null;
+				mediumFinishDate.disabled = true;
+			}
+			else if (statusSelect.value === "Watching") {
+				mediumFinishDate.value = null;
+				mediumFinishDate.disabled = true;
+				mediumFinishedNumber.disabled = false;
+				mediumRating.disabled = false;
+				mediumStartDate.disabled = false;
+			}
+			else if (statusSelect.value === "Dropped") {
+				mediumFinishDate.value = null;
+				mediumFinishDate.disabled = true;
+				mediumFinishedNumber.disabled = false;
+				mediumRating.disabled = false;
+				mediumStartDate.disabled = false;
+			}
+
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>

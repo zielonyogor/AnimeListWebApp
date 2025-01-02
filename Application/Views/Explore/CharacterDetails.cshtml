@@ -13,9 +13,11 @@
 		<div class="row">
 			<div class="d-flex justify-content-end align-items-center">
 				<span class="me-2">Add to favs:</span>
-				<button class="btn btn-outline-danger">
-					<i class="bi bi-heart"></i>
-				</button>
+				<form asp-action="AddToFavorites" asp-route-characterId="@Model.Id" method="post">
+					<button class="btn btn-outline-danger" disabled="@(ViewBag.IsInFavorites ? "disabled" : null)">
+						<i class="bi bi-heart"></i>
+					</button>
+				</form>
 			</div>
 		</div>
 		<div class="row">
@@ -32,3 +34,13 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.btn-outline-danger:disabled {
+		background-color: #dc3545;
+		opacity: revert;
+		border-color: #dc3545;
+		color: white;
+		box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	}
+</style>

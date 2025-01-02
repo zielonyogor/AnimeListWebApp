@@ -29,12 +29,24 @@ public class AccountController : Controller
 
         if (user != null)
         {
+            var characters = await _context.Characters
+                .Where(c => c.Accounts.Any(a => a.Id == user.Id))
+                .Select(c => new CharacterViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Image = c.Image
+                })
+                .ToListAsync();
+
             var model = new UserInfoViewModel   
             {
                 UserName = username,
                 Imagelink = user.Imagelink,
                 Description = user.Description,
                 Createdate = String.Format("{0:dd/MM/yyyy}", user.Createdate),
+                Characters = characters
+
             };
             ViewData["Title"] = $"{username} info";
             return View(model);
@@ -68,8 +80,11 @@ public class AccountController : Controller
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> Edit(UserEditViewModel model, IFormFile? profilePicture)
-    {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+	{
+		if (!ModelState.IsValid)
+			return View(model);
+
+		var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
         if (user == null)
         {
