@@ -14,5 +14,7 @@ namespace Application.Models
         public string? Description { get; set; }
 
 		public List<CharacterViewModel> Characters { get; set; } = new List<CharacterViewModel>();
+        public List<Account> Followers { get; set; } = new List<Account>();
+        public List<Account> Following { get; set; } = new List<Account>();
 	}
 }

@@ -30,5 +30,7 @@ namespace Application.Models
 		public virtual List<string> Genrenames { get; set; } = new List<string>();
 
         public virtual List<int> Connections { get; set; } = new List<int>();
-    }
+
+		public List<ReviewViewModel> Reviews { get; set; } = new(); // only for Anime details let's hope
+	}
 }

@@ -19,5 +19,11 @@ namespace Application.Models
         public DateTime? Startdate { get; set; }
 
         public DateTime? Finishdate { get; set; }
+
+        // for showing
+        public string? Mediumname { get; set; }
+        public string? Poster { get; set; }
+        public int? Mediumcount { get; set; }
+        public DateTime? Postdate { get; set; }
     }
 }

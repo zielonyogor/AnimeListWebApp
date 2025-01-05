@@ -57,7 +57,7 @@
                 listItem.innerHTML = `
                                 <span>${badge.name}</span>
                             <div>
-                                <button class="btn btn-sm btn-warning edit-btn"  data-name="${badge.name}"" data-description="${badge.description}" data-nameColor="${badge.nameColor}" data-backgroundColor="${badge.backgroundColor}">Edit</button>
+                                <button class="btn btn-sm btn-warning edit-btn"  data-name="${badge.name}"" data-description="${badge.description}" data-nameColor="${badge.namecolor}" data-backgroundColor="${badge.backgroundcolor}">Edit</button>
                                 <button class="btn btn-sm btn-danger delete-btn" data-name="${badge.name}">Delete</button>
                             </div>
                         `;
@@ -80,8 +80,8 @@
                 button.addEventListener("click", event => {
                     const name = event.target.getAttribute("data-name");
                     const description = event.target.getAttribute("data-description");
-                    const nameColor = event.target.getAttribute("data-nameColor");
-                    const backgroundColor = event.target.getAttribute("data-backgroundColor");
+                    const nameColor = event.target.getAttribute("data-namecolor");
+                    const backgroundColor = event.target.getAttribute("data-backgroundcolor");
                     startEditBadge(name, description, nameColor, backgroundColor);
                 })
             );

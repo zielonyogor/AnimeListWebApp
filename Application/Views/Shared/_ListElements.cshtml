@@ -1,0 +1,21 @@
+﻿@model IEnumerable<ListElementViewModel>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Newest List Entries</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item d-flex align-items-center">
+                <img src="@(item.Poster ?? "/images/placeholder.svg")" alt="poster" class="me-3" style="width: 4rem; height: 6rem; object-fit: cover;" />
+                <div>
+                    <h6>@item.Mediumname</h6>
+                    <p class="mb-1">Status: @item.Status</p>
+                    <p class="mb-1">@item.Finishednumber/@item.Mediumcount</p>
+                    <p class="mb-1">Rating: @(item.Rating == null ? "?" : item.Rating)/10</p>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

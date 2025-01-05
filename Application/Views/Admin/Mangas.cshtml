@@ -39,7 +39,7 @@
                     <option value="Light novel">Light novel</option>
                 </select>
 
-                <div class="form-group position-relative">
+                <div class="form-group position-relative mb-3">
                     <label for="manga-author">Author</label>
                     <input type="text" id="manga-author" class="form-control" placeholder="Start typing to search authors..." autocomplete="off" />
                     <ul id="manga-author-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
@@ -47,10 +47,11 @@
                     </ul>
                 </div>
 
-
-                <label for="manga-poster">Manga Poster</label>
-                <img id="manga-poster-preview" style="width: 100px; aspect-ratio: 1/1;" />
-                <input type="text" id="manga-poster" name="poster" class="form-control" />
+                <div class="form-group position-relative mb-3">
+					<label for="manga-poster">Manga Poster</label>
+                    <img id="manga-poster-preview" style="width: 100px; aspect-ratio: 1/1;" class="mb-3" />
+					<input type="text" id="manga-poster" name="poster" class="form-control" autocomplete="off"/>
+                </div>
 
                 <label for="manga-description">Manga Description</label>
                 <textarea id="manga-description" name="description" class="form-control" style="min-height: 100px;"></textarea>
@@ -424,7 +425,7 @@
             formTitle.textContent = "Edit Manga";
             mangaIdInput.value = id;
             mangaNameInput.value = name;
-            mangaPosterPreview.src = poster !== "null" ? poster : "";
+            mangaPosterPreview.src = poster !== "null" ? poster : "/images/placeholder.svg";
             mangaStatusInput.value = status;
             mangaPublishDateInput.valueAsDate = new Date(publishDate);
             mangaCountInput.value = count;

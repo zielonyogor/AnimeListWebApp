@@ -4,6 +4,7 @@ using Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Application.Data;
 using Microsoft.AspNetCore.Authorization;
+using Application.Misc;
 
 namespace Application.Controllers;
 public class AccountController : Controller
@@ -25,7 +26,10 @@ public class AccountController : Controller
 	[Authorize]
 	public async Task<IActionResult> Index(string username)
     {
-        var user = await _userManager.FindByNameAsync(username);
+        var user = await _userManager.Users
+            .Include(u => u.Accountid1s)
+            .Include(u => u.Accountid2s)
+            .FirstOrDefaultAsync(u => u.UserName == username);
 
         if (user != null)
         {
@@ -45,14 +49,95 @@ public class AccountController : Controller
                 Imagelink = user.Imagelink,
                 Description = user.Description,
                 Createdate = String.Format("{0:dd/MM/yyyy}", user.Createdate),
-                Characters = characters
+                Characters = characters,
+                Following = user.Accountid1s.ToList(),
+                Followers = user.Accountid2s.ToList(),
 
             };
             ViewData["Title"] = $"{username} info";
+
+            var loggedInUser = _userManager.GetUserAsync(User).Result;
+
+            if(loggedInUser == null)
+                return RedirectToAction("Login", "Account");
+
+            var newestListElements = await _context.Listelements
+                .Where(le => le.Accountid == user.Id)
+                .Include(le => le.Medium)
+                .Select(le => new ListElementViewModel
+                {
+                    Mediumid = le.Mediumid,
+                    Finishednumber = le.Finishednumber,
+                    Status = le.Status,
+                    Rating = le.Rating,
+                    Mediumcomment = le.Mediumcomment,
+                    Startdate = le.Startdate,
+                    Finishdate = le.Finishdate,
+                    Postdate = le.PostDate,
+                    Mediumname = le.Medium.Name,
+                    Poster = le.Medium.Poster,
+                    Mediumcount = le.Medium.Count,
+
+                })
+                .OrderByDescending(le => le.Postdate)
+                .Take(5)
+                .ToListAsync();
+
+            ViewBag.NewestListElements = newestListElements;
+
+            ViewBag.IsFollowing = user.Accountid2s.Any(a => a.Id == loggedInUser?.Id);
+
             return View(model);
         }
         return RedirectToAction("Index", "Home");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Follow(string username)
+    {
+        Console.WriteLine("skibidi\n");
+
+        if (!_signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        var user = _userManager.GetUserAsync(User).Result;
+
+        var userToFollow = await _userManager.FindByNameAsync(username);
+
+        if (userToFollow != null)
+        {
+            Console.WriteLine("skibidi po raz kolejny\n");
+            user.Accountid1s.Add(userToFollow);
+            userToFollow.Accountid2s.Add(user);
+
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction("Index", new { username = username });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Unfollow(string username)
+    {
+        if (!_signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        var userToUnfollow = await _userManager.FindByNameAsync(username);
+
+        if (userToUnfollow != null && user != null && user.Accountid1s.Any(u => u.Id == userToUnfollow.Id))
+        {
+            user.Accountid1s.Remove(userToUnfollow);
+            userToUnfollow.Accountid2s.Remove(user);
+
+            await _context.SaveChangesAsync();
+        }
+
+        return RedirectToAction("Index", new { username = username });
+    }
+
 
     // GET: account/edit
     [Authorize]
@@ -84,8 +169,7 @@ public class AccountController : Controller
 		if (!ModelState.IsValid)
 			return View(model);
 
-		var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
+		var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
             return RedirectToAction("Login", "Account");
@@ -118,14 +202,35 @@ public class AccountController : Controller
             user.Description = model.Description;
             changesMade = true;
         }
-        if (profilePicture != null)
+
+        if (profilePicture != null && profilePicture.Length > 0)
         {
-            var filePath = Path.Combine("wwwroot/images", profilePicture.FileName);
+            Console.WriteLine("HELLO I FONUD A PIC");
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var fileExtension = Path.GetExtension(profilePicture.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                ModelState.AddModelError("", "Invalid file type. Only JPG, PNG, and GIF files are allowed.");
+                return View(model);
+            }
+
+            if(!String.IsNullOrEmpty(user.Imagelink))
+                Helper.DeleteImage(user.Imagelink);
+
+            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+            var fileName = $"user_{model.UserName}{fileExtension}";
+            var filePath = Path.Combine(imagesDirectory, fileName);
+            Console.WriteLine($"PATH: {imagesDirectory} + {fileName} + {filePath}");
+
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await profilePicture.CopyToAsync(stream);
+                Console.WriteLine("COPIED\n\n\n");
             }
-            user.Imagelink = $"/images/{profilePicture.FileName}";
+
+
+            user.Imagelink = $"/images/{fileName}";
             changesMade = true;
         }
 
@@ -159,14 +264,15 @@ public class AccountController : Controller
 
         if (!changesMade)
         {
-            return RedirectToAction(nameof(Edit));
+            return RedirectToAction("Edit");
         }
 
         var updateResult = await _userManager.UpdateAsync(user);
         if (updateResult.Succeeded)
         {
             TempData["SuccessMessage"] = "Profile has updated";
-            return RedirectToAction(nameof(Edit));
+            //return RedirectToAction("Index", new { username = user.UserName});
+            return RedirectToAction("Edit");
         }
 
         foreach (var error in updateResult.Errors)
@@ -223,14 +329,29 @@ public class AccountController : Controller
             return View(model);
 
         string imageUrl = string.Empty;
-        if (profilePicture != null)
+        if (profilePicture != null && profilePicture.Length > 0)
         {
-            var filePath = Path.Combine("wwwroot/images", profilePicture.FileName);
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var fileExtension = Path.GetExtension(profilePicture.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                ModelState.AddModelError("", "Invalid file type. Only JPG, PNG, and GIF files are allowed.");
+                return View(model);
+            }
+            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+            if (!Directory.Exists(imagesDirectory))
+            {
+                Directory.CreateDirectory(imagesDirectory);
+            }
+            var fileName = $"user_{model.UserName}{fileExtension}";
+            var filePath = Path.Combine(imagesDirectory, fileName);
+
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await profilePicture.CopyToAsync(stream);
             }
-            imageUrl = $"/images/{profilePicture.FileName}";
+            imageUrl = $"/images/{fileName}";
         }
 
         var user = new Account
@@ -246,6 +367,12 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
+            var badge = await _context.Badges.Where(b => b.Name == "Beginner").FirstOrDefaultAsync();
+            if (badge != null)
+            {
+                user.Badgenames.Add(badge);
+                await _context.SaveChangesAsync();
+            }
             await _signInManager.SignInAsync(user, isPersistent: false);
             return RedirectToAction("Index", "Home");
         }
@@ -254,7 +381,6 @@ public class AccountController : Controller
         {
             ModelState.AddModelError(string.Empty, error.Description);
         }
-
         return View(model);
     }
 

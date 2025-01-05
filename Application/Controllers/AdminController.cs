@@ -25,13 +25,13 @@ namespace Application.Controllers
 		public async Task<IActionResult> AdminPanel()
 		{
 			var mods = (await _userManager.GetUsersInRoleAsync("Moderator"))
-						.Select(u => new
-						{
-							u.Id,
-							u.UserName,
-							u.Email
-						})
-						.ToList();
+				.Select(u => new
+				{
+					u.Id,
+					u.UserName,
+					u.Email
+				})
+				.ToList();
 			return View(mods);
 		}
 
@@ -93,8 +93,34 @@ namespace Application.Controllers
         {
             return View();
         }
+		public async Task<IActionResult> Reviews()
+		{
+            var reviews = await _context.Reviews
+                .Include(r => r.Account)
+                .Include(r => r.Medium)
+                .ToListAsync();
+			return View(reviews);
+		}
 
-        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteReview(int accountId, int mediumId)
+        {
+            var review = await _context.Reviews
+                .Include(r => r.Account)
+                .Include(r => r.Medium)
+                .Where(r => r.Accountid == accountId && r.Mediumid == mediumId)
+                .FirstOrDefaultAsync();
+
+            if(review == null)
+                return RedirectToAction("Reviews");
+
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Reviews");
+        }
+
+		[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Users()
         {
             var accounts = await _userManager.Users
@@ -172,5 +198,59 @@ namespace Application.Controllers
             return RedirectToAction("Users");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UsersBadges()
+        {
+			var accounts = await _userManager.Users
+                .Include(u => u.Badgenames)
+				.Select(u => new AccountViewModel
+				{
+					Id = u.Id,
+					UserName = u.UserName,
+					Email = u.Email,
+					Createdate = u.Createdate,
+					Imagelink = u.Imagelink,
+					Description = u.Description,
+                    Badgenames = u.Badgenames.ToList(),
+				})
+				.ToListAsync();
+
+			return View(accounts);
+		}
+
+        [HttpPost]
+        public async Task<IActionResult> AddBadge(int accountId, string badgeName)
+        {
+            var account = await _context.Accounts.Include(a => a.Badgenames).FirstOrDefaultAsync(a => a.Id == accountId);
+            var badge = await _context.Badges.FindAsync(badgeName);
+
+            if (account == null || badge == null)
+                return NotFound();
+
+            if (account.Badgenames.Contains(badge))
+                return RedirectToAction("UsersBadges");
+
+            account.Badgenames.Add(badge);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("UsersBadges");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveBadge(int accountId, string badgeName)
+        {
+            var account = await _context.Accounts
+                .Include(a => a.Badgenames)
+                .FirstOrDefaultAsync(a => a.Id == accountId);
+            var badge = await _context.Badges.FindAsync(badgeName);
+
+            if (account == null || badge == null)
+                return NotFound();
+
+            account.Badgenames.Remove(badge);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("UsersBadges");
+        }
     }
 }

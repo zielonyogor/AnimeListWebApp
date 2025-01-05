@@ -30,7 +30,7 @@
                 characterCard.classList.add("col-md-4", "mb-3");
                 characterCard.innerHTML = `
                     <div class="card">
-                        <img src="${a.image}" class="card-img-top" alt="Character image">
+                            <img src="${a.image || "/images/placeholder.svg"}" class="card-img-top" alt="Character image">
                         <div class="card-body">
                             <h5 class="card-title">${a.name}</h5>
                             <p class="card-text">${a.description || "No description available."}</p>

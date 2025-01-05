@@ -7,7 +7,7 @@
 <h1>@Model.Name</h1>
 <div class="row align-content-between">
 	<div class="col-4">
-		<img src="@Model.Image" alt="@Model.Name poster" style="width:60%;" />
+		<img src="@(Model.Image ?? "/images/placeholder.svg")" alt="@Model.Name poster" style="width:60%;" />
 	</div>
 	<div class="col-6">
 		<div class="row">
@@ -27,8 +27,8 @@
 		@foreach(var medium in Model.Media)
 		{
 			<div>
-				<img src="@medium.Poster" style="min-height: 5vh; max-height: 10vh;" alt="Medium poster"/>
-				<p><strong>@medium.Name</strong> (@medium.Type)</p>
+					<img src="@(medium.Poster ?? "/images/placeholder.svg")" style="min-height: 5vh; max-height: 10vh;" alt="Medium poster" />
+				<p><strong>@medium.Name</strong> (@(medium.Type == "A" ? "Anime" : "Manga"))</p>
 			</div>
 		}
 		</div>

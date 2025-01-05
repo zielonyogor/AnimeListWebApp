@@ -1,0 +1,30 @@
+﻿@{
+	ViewData["Title"] = "Review Panel";
+}
+
+@model IEnumerable<dynamic>
+
+<div class="row mt-5">
+	<h2>Reviews</h2>
+	<ul class="list-group">
+	@foreach (var item in Model)
+	{
+		<li class="list-group-item">
+			<p>
+				<strong>@item.Account.UserName</strong> <span class="text-secondary">(@item.Postdate)</span>
+				<form asp-action="DeleteReview" method="post">
+					<input type="hidden" name="accountId" value="@item.Account.Id" />
+					<input type="hidden" name="mediumId" value="@item.Medium.Id" />
+					<button type="submit" class="btn btn-sm btn-danger delete-btn float-end">
+						Delete
+					</button>
+				</form>
+			</p>
+			<p>@item.Medium.Name - @(item.Medium.Type == "A" ? "Anime" : "Manga")</p>
+			<p><strong>Feeling:</strong> @item.Feeling</p>
+			<p>@item.Description</p>
+			
+		</li>
+	}
+	</ul>
+</div>

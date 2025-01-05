@@ -13,11 +13,11 @@
     <a asp-action="AddToList" asp-controller="Home" class="btn btn-primary">Add</a>
 </div>
 
-<table class="table table-striped table-responsive">
+<table class="table table-bordered table-responsive">
     <thead>
         <tr>
             <th>Image</th>
-            <th style="min-width: max(10vw, 20px);">Name</th>
+            <th >Name</th>
             <th>Status</th>
             <th>Count</th>
             <th>Rating</th>
@@ -32,12 +32,12 @@
         {
             <tr>
                 <td>
-                    <img src="@item.Mediumposter" alt="Medium poster" style="max-width: 3vw;" />
+                    <img src="@(item.Mediumposter ?? "/images/placeholder.svg")" alt="Medium poster" style="max-width: max(6vw, 20px);" />
                 </td>
                 <td>@item.Mediumname - @item.Mediumid</td>
                 <td>@item.Status</td>
                 <td>@item.Finishednumber</td>
-                <td>@item.Rating/10</td>
+                <td>@(item.Rating ?? "?")/10</td>
                 <td>@item.Startdate?.ToString("yyyy-MM-dd")</td>
 				<td>@item.Finishdate?.ToString("yyyy-MM-dd")</td>
 				<td>@item.Mediumcomment</td>

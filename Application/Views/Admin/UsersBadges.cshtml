@@ -1,0 +1,96 @@
+﻿@{
+	ViewData["Title"] = "Users' Badges";
+}
+
+@model IEnumerable<AccountViewModel>
+
+<div class="container mt-4">
+    <h1>Manage Users' Badges</h1>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Preview</th>
+                <th>Badges</th>
+                <th>Add badges</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="text" name="UserName" class="form-control" value="@account.UserName" />
+                    </td>
+                    <td>@account.Email</td>
+                    <td>
+                        <img id="preview-@account.Id" src="@account.Imagelink" alt="Preview" style="width: 50px; height: 50px;" />
+                    </td>
+                    <td>
+                        @foreach (var badge in account.Badgenames)
+                        {
+                            <span class="badge me-1"
+                                  style="background-color: @(badge.Backgroundcolor ?? "#FFFFFF"); color: @(badge.Namecolor ?? "#000000")">
+                                @(badge.Name ?? "Unnamed")
+                                <form method="post" asp-action="RemoveBadge" asp-route-accountId="@account.Id" asp-route-badgeName="@badge.Name" style="display:inline;">
+                                    <button type="submit" class="btn-close btn-close ms-1" style="font-size: 0.8em;"></button>
+                                </form>
+                            </span>
+                        }
+                    </td>
+                    <td>
+                            <input type="hidden" name="AccountId" value="@account.Id" />
+                            <div class="input-group">
+                                <input type="text" id="badge-search-@account.Id" class="form-control badge-search" placeholder="Search badges..." autocomplete="off" />
+                                <button type="button" class="btn btn-secondary search-badge-btn" data-account-id="@account.Id">Search</button>
+                            </div>
+                            <div id="badge-results-@account.Id" class="mt-2"></div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchButtons = document.querySelectorAll(".search-badge-btn");
+
+        searchButtons.forEach(button => {
+            button.addEventListener("click", async () => {
+                const accountId = button.getAttribute("data-account-id");
+                const searchInput = document.getElementById(`badge-search-${accountId}`);
+                const resultsContainer = document.getElementById(`badge-results-${accountId}`);
+                const query = searchInput.value.trim();
+
+                if (!query) return;
+
+                resultsContainer.innerHTML = "Searching...";
+
+                try {
+                    const response = await fetch(`/api/Badge?search=${encodeURIComponent(query)}`);
+                    const badges = await response.json();
+
+                    resultsContainer.innerHTML = badges.map(badge => `
+                            <div class="badge-item mb-2">
+                                <span class="badge me-1"
+                                      style="background-color: ${badge.backgroundColor ?? "#FFFFFF"}; color: ${badge.nameColor ?? "#000000"}">
+                                    ${badge.name ?? "Unnamed"}
+                                </span>
+                                <form method="post" action="/Admin/AddBadge" style="display:inline;">
+                                    <input type="hidden" name="accountId" value="${accountId}" />
+                                    <input type="hidden" name="badgeName" value="${badge.name}" />
+                                    <button type="submit" class="btn btn-sm btn-success">Add</button>
+                                </form>
+                            </div>
+                        `).join('');
+                } catch (error) {
+                    resultsContainer.innerHTML = "Error fetching badges.";
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>

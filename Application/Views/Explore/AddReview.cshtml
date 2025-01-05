@@ -1,38 +1,24 @@
-﻿@model Application.Models.Review
+﻿@model ReviewViewModel
 
-@{
-    ViewData["Title"] = "AddReview";
-}
+<h1>Review - @Model.Name <span class="h4 text-secondary">@Model.Type, @Model.PublishDate?.ToString("yyyy-MM-dd")</span></h1>
 
-<h1>AddReview</h1>
-
-<h4>Review</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddReview">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Accountid" class="control-label"></label>
-                <select asp-for="Accountid" class ="form-control" asp-items="ViewBag.Accountid"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Mediumid" class="control-label"></label>
-                <select asp-for="Mediumid" class ="form-control" asp-items="ViewBag.Mediumid"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="SubmitReview" method="post" class="mt-4">
+	<input type="hidden" asp-for="ReturnUrl" />
+	<input type="hidden" asp-for="MediumId" />
+	<input type="hidden" asp-for="Name" />
+	<input type="hidden" asp-for="Type" />
+	<input type="hidden" asp-for="PublishDate" />
+	<div class="form-group">
+		<label for="feeling">Feeling</label>
+		<select asp-for="Feeling" class="form-control">
+			<option value="Recommended" selected>Recommended</option>
+			<option value="Not recommended">Not recommended</option>
+			<option value="Mixed feelings">Mixed feelings</option>
+		</select>
+	</div>
+    <div class="form-group mt-3">
+        <label for="description">Description</label>
+        <textarea asp-for="Description" class="form-control" rows="5" placeholder="Write your review here..."></textarea>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+    <button type="submit" class="btn btn-success mt-4">Submit Review</button>
+</form>

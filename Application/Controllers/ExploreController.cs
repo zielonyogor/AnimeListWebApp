@@ -1,9 +1,13 @@
 ﻿using Application.Data;
 using Application.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Application.Controllers;
 public class ExploreController : Controller
@@ -33,17 +37,38 @@ public class ExploreController : Controller
 
 	public async Task<IActionResult> AnimeDetails(int id)
 	{
-		var client = _httpClientFactory.CreateClient("Application");
-		var response = await client.GetAsync($"/api/Anime/{id}");
-		if (response.IsSuccessStatusCode)
+		var anime = await _context.Animes
+		.Include(a => a.Medium)
+		.ThenInclude(m => m.Genrenames)
+		.Where(a => a.Mediumid == id)
+		.Select(a => new AnimeViewModel
 		{
-			var anime = await response.Content.ReadFromJsonAsync<AnimeViewModel>();
-			if (anime == null)
-				return RedirectToAction("Anime");
+			Id = a.Medium.Id,
+			Name = a.Medium.Name,
+			Poster = a.Medium.Poster,
+			Status = a.Medium.Status,
+			Publishdate = a.Medium.Publishdate,
+			Type = a.Medium.Type,
+			Studioname = a.Studioname,
+			Description = a.Medium.Description,
+			Genrenames = a.Medium.Genrenames.Select(g => g.Name).ToList(),
+			Connections = a.Medium.Idmedium1s.Select(m => m.Id)
+				.Union(a.Medium.Idmedium2s.Select(m => m.Id))
+				.ToList(),
+			Reviews = a.Medium.Reviews.Select(r => new ReviewViewModel
+			{
+				UserName = r.Account.UserName,
+				Feeling = r.Feeling,
+				Description = r.Description,
+				Postdate = r.Postdate
+			}).ToList()
+		})
+		.FirstOrDefaultAsync();
 
-			return View(anime);
-		}
-		return RedirectToAction("Anime");
+		if (anime == null)
+			return NotFound();
+
+		return View(anime);
 	}
 
 	public IActionResult Manga()
@@ -53,19 +78,44 @@ public class ExploreController : Controller
 
 	public async Task<IActionResult> MangaDetails(int id)
 	{
-		var client = _httpClientFactory.CreateClient("Application");
-		var response = await client.GetAsync($"/api/Manga/{id}");
-		if (response.IsSuccessStatusCode)
+		var manga = await _context.Mangas
+		.Include(a => a.Medium)
+		.ThenInclude(m => m.Genrenames)
+		.Where(a => a.Mediumid == id)
+		.Select(a => new MangaViewModel
 		{
-			var manga = await response.Content.ReadFromJsonAsync<MangaViewModel>();
-			if (manga == null)
-				return RedirectToAction("Manga");
+			Id = a.Medium.Id,
+			Name = a.Medium.Name,
+			Poster = a.Medium.Poster,
+			Status = a.Medium.Status,
+			Publishdate = a.Medium.Publishdate,
+			Type = a.Medium.Type,
+			AuthorId = a.Authorid,
+			Description = a.Medium.Description,
+			Genrenames = a.Medium.Genrenames.Select(g => g.Name).ToList(),
+			Connections = a.Medium.Idmedium1s.Select(m => m.Id)
+				.Union(a.Medium.Idmedium2s.Select(m => m.Id))
+				.ToList(),
+			Reviews = a.Medium.Reviews.Select(r => new ReviewViewModel
+			{
+				UserName = r.Account.UserName,
+				Feeling = r.Feeling,
+				Description = r.Description,
+				Postdate = r.Postdate
+			}).ToList()
+		})
+		.FirstOrDefaultAsync();
 
-			Console.WriteLine(manga.Connections.Count);
+		if (manga == null)
+			return NotFound();
 
-			return View(manga);
-		}
-		return RedirectToAction("Manga");
+
+		var author = await _context.Authors
+			.FirstOrDefaultAsync(a => a.Id == manga.AuthorId);
+		if (author != null)
+			manga.AuthorName = author.Name;
+
+		return View(manga);
 	}
 
 	public IActionResult Character()
@@ -96,40 +146,6 @@ public class ExploreController : Controller
 		ViewBag.IsInFavorites = isInFavorites;
 
 		return View(character);
-		//var client = _httpClientFactory.CreateClient("Application");
-		//var response = await client.GetAsync($"/api/Character/{id}");
-		//if (response.IsSuccessStatusCode)
-		//{
-		//	var character = await response.Content.ReadFromJsonAsync<CharacterViewModel>();
-		//	if (character == null)
-		//		return RedirectToAction("Character");
-
-		//	Character characterModel = new Character { 
-		//		Id = character.Id,
-		//		Name = character.Name,
-		//		Description = character.Description,
-		//		Image = character.Image
-		//	};
-		//	if (character.Connections.Count != 0)
-		//	{
-		//		foreach (var conn in character.Connections)
-		//		{
-		//			var responseConn = await client.GetAsync($"/api/Media/{conn}");
-		//			if (responseConn.IsSuccessStatusCode)
-		//			{
-		//				var medium = await responseConn.Content.ReadFromJsonAsync<Medium>();
-		//				if (medium == null)
-		//					continue;
-		//				characterModel.Media.Add(medium);
-		//			}
-		//		}
-		//	}
-
-		//	bool isFavorite = 
-
-		//	return View(characterModel);
-		//}
-		//return RedirectToAction("Character");
 	}
 
 	[HttpPost]
@@ -162,5 +178,74 @@ public class ExploreController : Controller
 		}
 
 		return RedirectToAction("Characters");
+	}
+
+	[HttpGet]
+	[Authorize]
+	public async Task<IActionResult> AddReview(int mediumId, string? returnUrl)
+	{
+		var medium = await _context.Media.FirstOrDefaultAsync(m => m.Id == mediumId);
+		if (medium == null)
+		{
+			return NotFound();
+		}
+
+		var model = new ReviewViewModel
+		{
+			MediumId = mediumId,
+			Name = medium.Name,
+			Type = medium.Type == "A" ? "Anime" : "Manga",
+			PublishDate = medium.Publishdate,
+			ReturnUrl = returnUrl
+		};
+
+		return View(model);
+	}
+
+    [HttpPost]
+    [Authorize]
+	public async Task<IActionResult> SubmitReview(ReviewViewModel model)
+    {
+		model.Postdate = DateTime.Now;
+		Console.WriteLine($"{model.Name} - {model.MediumId} : {model.Postdate}");
+        if (ModelState.IsValid)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var review = new Review
+            {
+                Accountid = user.Id,
+                Mediumid = model.MediumId,
+                Description = model.Description!,
+                Feeling = model.Feeling!,
+                Postdate = DateTime.Now
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+			if (!string.IsNullOrEmpty(model.ReturnUrl))
+			{
+				return Redirect(model.ReturnUrl);
+			}
+
+			return RedirectToAction("Explore");
+		}
+
+		return View("AddReview", model);
+    }
+
+	[HttpGet]
+	[Authorize]
+	public async Task<IActionResult> Users()
+	{
+		var model = await _context.Accounts
+			.Select(u => new UserInfoViewModel
+			{
+				UserName = u.UserName,
+				Description = u.Description,
+				Imagelink = u.Imagelink
+			}).ToListAsync();
+		return View(model);
 	}
 }

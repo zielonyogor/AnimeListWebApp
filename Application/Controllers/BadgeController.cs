@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Application.Data;
 using Application.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Application.Controllers
 {
@@ -18,9 +19,10 @@ namespace Application.Controllers
 
         // GET: api/Badge
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetBadges()
+        public async Task<ActionResult<IEnumerable<object>>> GetBadges([FromQuery] string? search)
         {
             var badges = await _context.Badges
+                .Where(b => string.IsNullOrEmpty(search) || b.Name.ToLower().Contains(search.ToLower()))
                 .Select(b => new
                 {
                     b.Name,
@@ -59,6 +61,7 @@ namespace Application.Controllers
 
         // PUT: api/Badge/beginner
         [HttpPut("{name}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutBadge(string name, Badge badge)
         {
             if (name != badge.Name)
@@ -89,6 +92,7 @@ namespace Application.Controllers
 
         // POST: api/Badge
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Badge>> PostBadge(Badge badge)
         {
             if (!ModelState.IsValid)
@@ -116,6 +120,7 @@ namespace Application.Controllers
 
         // DELETE: api/Badge/beginner
         [HttpDelete("{name}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBadge(string name)
         {
             var badge = await _context.Badges.FindAsync(name);

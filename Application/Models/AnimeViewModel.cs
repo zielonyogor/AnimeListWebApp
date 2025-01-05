@@ -1,10 +1,15 @@
-﻿namespace Application.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Application.Models
 {
     public class AnimeViewModel
     {
         // People are not supposed to write ID into POST request, but it is useful for GET
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
+
+		[Required(ErrorMessage = "Name is required.")]
+		[StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
+		public string Name { get; set; } = null!;
 
         public string? Status { get; set; }
 
@@ -18,10 +23,12 @@
 
         public string? Type { get; set; }
 
-        public string Studioname { get; set; } = null!;
+		[Required(ErrorMessage = "Studio is required")]
+		public string Studioname { get; set; } = null!;
 
         public virtual List<string> Genrenames { get; set; } = new List<string>();
 
         public virtual List<int> Connections { get; set; } = new List<int>();
-    }
+		public List<ReviewViewModel> Reviews { get; set; } = new(); // only for Mangas details let's hope
+	}
 }

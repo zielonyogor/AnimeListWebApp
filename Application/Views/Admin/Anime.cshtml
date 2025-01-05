@@ -39,7 +39,7 @@
                     <option value="OVA">OVA</option>
                 </select>
 
-                <div class="form-group position-relative">
+                <div class="form-group position-relative mb-3">
                     <label for="anime-studio">Studio</label>
                     <input type="text" id="anime-studio" class="form-control" placeholder="Start typing to search studios..." autocomplete="off" />
                     <ul id="anime-studio-suggestions" class="dropdown-menu" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto;">
@@ -47,10 +47,11 @@
                     </ul>
                 </div>
 
-
-                <label for="anime-poster">Anime Poster</label>
-                <img id="anime-poster-preview" style="width: 100px; aspect-ratio: 1/1;" />
-                <input type="text" id="anime-poster" name="poster" class="form-control" autocomplete="off" />
+				<div class="form-group position-relative mb-3">
+					<label for="anime-poster">Anime Poster</label>
+					<img id="anime-poster-preview" style="width: 100px; aspect-ratio: 1/1;" class="mb-3"/>
+					<input type="text" id="anime-poster" name="poster" class="form-control" autocomplete="off" />
+                </div>
 
                 <label for="anime-description">Anime Description</label>
                 <textarea id="anime-description" name="description" class="form-control" style="min-height: 100px;"></textarea>
@@ -420,7 +421,7 @@
             formTitle.textContent = "Edit Anime";
             animeIdInput.value = id;
             animeNameInput.value = name;
-            animePosterPreview.src = poster !== "null" ? poster : "";
+            animePosterPreview.src = poster !== "null" ? poster : "/images/placeholder.svg";
             animeStatusInput.value = status;
             animePublishDateInput.valueAsDate = new Date(publishDate);
             animeCountInput.value = count;
