@@ -1,4 +1,5 @@
 ﻿using Application.Data;
+using Application.Misc;
 using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -186,6 +187,8 @@ namespace Application.Controllers
                     }
                     return BadRequest(new { Message = "Failed to delete user from identity", Errors = identityResult.Errors });
                 }
+
+                Helper.DeleteImage(user.Imagelink);
                 
                 await transaction.CommitAsync();
             }

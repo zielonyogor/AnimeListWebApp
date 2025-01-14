@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Application.Data;
-using Application.Models;
 
 namespace Application.Controllers
 {
@@ -26,13 +20,15 @@ namespace Application.Controllers
         public async Task<ActionResult<IEnumerable<object>>> GetMedia([FromQuery] string? search)
         {
             var media = await _context.Media
-                .Where(m => string.IsNullOrEmpty(search) || m.Name.ToLower().StartsWith(search.ToLower()))
+                .Where(m => string.IsNullOrEmpty(search) || m.Name.ToLower().Contains(search.ToLower()))
                 .Select(m => new
                 {
                     m.Id,
                     m.Name,
                     Type = m.Type == "A" ? "Anime" : "Manga",
-                    m.Publishdate
+                    m.Publishdate,
+                    m.Status,
+                    m.Count
                 })
                 .ToListAsync();
 

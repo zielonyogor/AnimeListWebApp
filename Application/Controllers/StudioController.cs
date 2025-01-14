@@ -8,6 +8,7 @@ namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StudioController : ControllerBase
     {
         private readonly ModelContext _context;
@@ -36,14 +37,14 @@ namespace Application.Controllers
 
         // GET: api/Studio/Mappa
         [HttpGet("{name}")]
-        public async Task<ActionResult<object>> GetStudio(string name)
+        public async Task<ActionResult<StudioViewModel>> GetStudio(string name)
         {
             var studio = await _context.Studios
-               .Select(s => new
+               .Select(s => new StudioViewModel
                {
-                   s.Name,
-                   s.Wikipedialink,
-                   Animes = s.Animes.Select(a => a.Mediumid).ToList()
+                   Name = s.Name,
+                   Wikipedialink = s.Wikipedialink,
+                   AnimeIds = s.Animes.Select(a => a.Mediumid).ToList()
                })
                .FirstOrDefaultAsync(s => s.Name == name);
 

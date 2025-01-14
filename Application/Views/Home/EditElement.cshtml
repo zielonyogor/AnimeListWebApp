@@ -80,19 +80,22 @@
                 });
             }
 
+			// Responsive to status
             statusSelect.addEventListener("change", () => {
                 if (statusSelect.value === "Plan to watch") {
                     mediumFinishedNumber.value = 0;
-					mediumFinishedNumber.disabled = true;
-					mediumRating.value = 0;
-					mediumRating.disabled = true;
+					mediumRating.value = null;
 					mediumStartDate.value = null;
-					mediumStartDate.disabled = true;
 					mediumFinishDate.value = null;
+
+					mediumFinishedNumber.disabled = true;
+					mediumStartDate.disabled = true;
 					mediumFinishDate.disabled = true;
+					mediumRating.disabled = true;
                 }
 				else if (statusSelect.value === "Watching"){
 					mediumFinishDate.value = null;
+
 					mediumFinishDate.disabled = true;
 					mediumFinishedNumber.disabled = false;
 					mediumRating.disabled = false;
@@ -100,32 +103,44 @@
 				}
 				else if (statusSelect.value === "Dropped") {
 					mediumFinishDate.value = null;
+
 					mediumFinishDate.disabled = true;
 					mediumFinishedNumber.disabled = false;
 					mediumRating.disabled = false;
 					mediumStartDate.disabled = false;
 				}
+				else if (statusSelect.value === "Completed") {
+					mediumFinishedNumber.value = data.count;
+					mediumFinishDate.value = new Date();
+
+					mediumFinishedNumber.disabled = true;
+					mediumStartDate.disabled = false;
+					mediumFinishDate.disabled = false;
+					mediumRating.disabled = false;
+				}
 				else {
 					mediumFinishedNumber.disabled = false;
 					mediumRating.disabled = false;
 					mediumStartDate.disabled = false;
-					mediumFinishDate.disabled = false;
+					mediumFinishDate.disabled = true;
                 }
             });
 
 			// Repeat for after loaded
 			if (statusSelect.value === "Plan to watch") {
 				mediumFinishedNumber.value = 0;
-				mediumFinishedNumber.disabled = true;
-				mediumRating.value = 0;
-				mediumRating.disabled = true;
+				mediumRating.value = null;
 				mediumStartDate.value = null;
-				mediumStartDate.disabled = true;
 				mediumFinishDate.value = null;
+
+				mediumFinishedNumber.disabled = true;
+				mediumStartDate.disabled = true;
 				mediumFinishDate.disabled = true;
+				mediumRating.disabled = true;
 			}
 			else if (statusSelect.value === "Watching") {
 				mediumFinishDate.value = null;
+
 				mediumFinishDate.disabled = true;
 				mediumFinishedNumber.disabled = false;
 				mediumRating.disabled = false;
@@ -133,10 +148,26 @@
 			}
 			else if (statusSelect.value === "Dropped") {
 				mediumFinishDate.value = null;
+
 				mediumFinishDate.disabled = true;
 				mediumFinishedNumber.disabled = false;
 				mediumRating.disabled = false;
 				mediumStartDate.disabled = false;
+			}
+			else if (statusSelect.value === "Completed") {
+				mediumFinishedNumber.value = data.count;
+				mediumFinishDate.value = new Date();
+
+				mediumFinishedNumber.disabled = true;
+				mediumStartDate.disabled = false;
+				mediumFinishDate.disabled = false;
+				mediumRating.disabled = false;
+			}
+			else {
+				mediumFinishedNumber.disabled = false;
+				mediumRating.disabled = false;
+				mediumStartDate.disabled = false;
+				mediumFinishDate.disabled = true;
 			}
 
         } catch (error) {

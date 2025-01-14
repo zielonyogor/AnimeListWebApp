@@ -13,7 +13,7 @@
                 </button>
             </form>
         }
-        else
+        else if (!ViewBag.IsFollowButtonDisabled)
         {
             <form asp-action="Follow" asp-route-username="@Model.UserName" method="post">
                 <button class="btn btn-outline-primary float-end">

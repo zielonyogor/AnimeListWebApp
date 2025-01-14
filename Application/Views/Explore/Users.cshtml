@@ -3,7 +3,7 @@
 }
 
 @model IEnumerable<dynamic>
-
+@* 
 <div class="row">
 	@foreach(var item in Model)
 	{
@@ -20,4 +20,41 @@
 			</div>
 		</div>
 	}
+</div> *@
+
+<div class="container">
+    <h1>Users List</h1>
+
+    <form method="get" asp-action="Users">
+        <div class="input-group mb-3">
+            <input type="text" name="search" class="form-control" placeholder="Search users..." value="@ViewData["SearchTerm"]">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="row">
+        @if (!Model.Any())
+        {
+            <p>No users found.</p>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="card mb-3">
+                    <div class="card-body d-flex align-items-center justify-content-between p-2">
+                        <div class="d-flex align-items-start">
+                            <img src="@(item.Imagelink ?? "/images/placeholder.svg")" alt="profile picture"
+                                 class="me-5" style="width: 12vh; height: 12vh; object-fit: cover; border-radius: 5%;" />
+                            <div>
+                                <h5 class="card-title">@item.UserName</h5>
+                                <p class="card-text mb-0">@(item.Description ?? "No description available.")</p>
+                            </div>
+                        </div>
+                        <a href="/Account?username=@item.UserName" class="btn btn-sm btn-primary">View Profile</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>

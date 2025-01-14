@@ -17,29 +17,29 @@
     </div>
     <div class="mb-3">
         <label asp-for="Status" class="form-label">Status</label>
-        <select asp-for="Status" class="form-select">
-            <option>Completed</option>
-            <option>Plan to watch</option>
-            <option>On-hold</option>
-            <option>Dropped</option>
-            <option>Watching</option>
+        <select asp-for="Status" id="status-select" class="form-select">
+            <option value="Completed">Completed</option>
+            <option value="Plan to watch">Plan to watch</option>
+            <option value="On-hold">On-hold</option>
+            <option value="Dropped">Dropped</option>
+            <option value="Watching" selected>Watching</option>
         </select>
     </div>
     <div class="mb-3">
-        <label asp-for="Finishednumber" class="form-label">Finished Number</label>
-        <input asp-for="Finishednumber" class="form-control" type="number" min="0" step="1" max="9999" value="0" />
+        <label asp-for="Finishednumber" class="form-label">Count</label>
+        <input asp-for="Finishednumber" id="medium-number" class="form-control" type="number" min="0" step="1" max="9999" value="0" />
     </div>
     <div class="mb-3">
         <label asp-for="Startdate" class="form-label">Start date</label>
-        <input asp-for="Startdate" class="form-control" type="date" />
+        <input asp-for="Startdate" id="medium-startDate" class="form-control" type="date" />
     </div>
     <div class="mb-3">
         <label asp-for="Finishdate" class="form-label">Finish date</label>
-        <input asp-for="Finishdate" class="form-control" type="date" />
+        <input asp-for="Finishdate" id="medium-finishDate" class="form-control" type="date" />
     </div>
     <div class="mb-3">
         <label asp-for="Rating" class="form-label">Rating</label>
-        <input asp-for="Rating" type="number" class="form-control" min="0" max="10" />
+        <input asp-for="Rating" type="number" id="medium-rating" class="form-control" min="0" max="10" />
     </div>
     <div class="mb-3">
         <label asp-for="Mediumcomment" class="form-label">Comment</label>
@@ -52,7 +52,16 @@
     const mediumId = document.getElementById("medium-id");
     const mediumInput = document.getElementById("list-medium");
     const mediumSuggestions = document.getElementById("list-medium-suggestions");
+
+    const mediumFinishedNumber = document.getElementById("medium-number");
+    const mediumStartDate = document.getElementById("medium-startDate");
+    mediumStartDate.value = new Date();
+    const mediumFinishDate = document.getElementById("medium-finishDate");
+    const statusSelect = document.getElementById("status-select");
+    const mediumRating = document.getElementById("medium-rating");
+
     const apiMediaUrl = "/api/Media";
+    let mediaStatus = null;
 
     async function fetchConnections(query) {
         try {
@@ -75,6 +84,30 @@
                 mediumInput.value = connection.name;
                 mediumId.valueAsNumber = connection.id;
                 mediumSuggestions.style.display = "none";
+
+                // Change values based on media
+                mediaStatus = connection;
+                console.log(mediaStatus.count);
+
+                mediumFinishedNumber.max = mediaStatus.count;
+                const formattedPublishDate = new Date(connection.publishdate).toISOString().split("T")[0];
+                console.log(formattedPublishDate);
+                mediumStartDate.min = formattedPublishDate;
+                mediumFinishDate.min = formattedPublishDate;
+
+                if (connection.status === "Not finished") {
+                    Array.from(statusSelect.options).forEach(option => {
+                        option.disabled = false;
+                    });
+                    const completedOption = Array.from(statusSelect.options).find(option => option.value === "Completed");
+                    completedOption.disabled = true;
+                }
+                else if (connection.status === "To be released") {
+                    Array.from(statusSelect.options).forEach(option => {
+                        option.disabled = option.value !== "Plan to watch";
+                        option.selected = option.value === "Plan to watch";
+                    });
+                }
             });
             mediumSuggestions.appendChild(suggestionItem);
         });
@@ -97,4 +130,51 @@
             mediumSuggestions.style.display = "none";
         }
     });
+
+    // Responsive to status
+    statusSelect.addEventListener("change", () => {
+        if (statusSelect.value === "Plan to watch") {
+            mediumFinishedNumber.value = 0;
+            mediumRating.value = null;
+            mediumStartDate.value = null;
+            mediumFinishDate.value = null;
+
+            mediumFinishedNumber.disabled = true;
+            mediumStartDate.disabled = true;
+            mediumFinishDate.disabled = true;
+            mediumRating.disabled = true;
+        }
+        else if (statusSelect.value === "Watching") {
+            mediumFinishDate.value = null;
+
+            mediumFinishDate.disabled = true;
+            mediumFinishedNumber.disabled = false;
+            mediumRating.disabled = false;
+            mediumStartDate.disabled = false;
+        }
+        else if (statusSelect.value === "Dropped") {
+            mediumFinishDate.value = null;
+
+            mediumFinishDate.disabled = true;
+            mediumFinishedNumber.disabled = false;
+            mediumRating.disabled = false;
+            mediumStartDate.disabled = false;
+        }
+        else if (statusSelect.value === "Completed") {
+            mediumFinishedNumber.value = mediaStatus.count;
+            mediumFinishDate.value = new Date();
+
+            mediumFinishedNumber.disabled = true;
+            mediumStartDate.disabled = false;
+            mediumFinishDate.disabled = false;
+            mediumRating.disabled = false;
+        }
+        else {
+            mediumFinishedNumber.disabled = false;
+            mediumRating.disabled = false;
+            mediumStartDate.disabled = false;
+            mediumFinishDate.disabled = true;
+        }
+    });
+
 </script>

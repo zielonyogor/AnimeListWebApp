@@ -85,6 +85,8 @@ public class AccountController : Controller
 
             ViewBag.NewestListElements = newestListElements;
 
+            bool isFollowButtonDisabled = user.Id == loggedInUser.Id;
+            ViewBag.IsFollowButtonDisabled = isFollowButtonDisabled;
             ViewBag.IsFollowing = user.Accountid2s.Any(a => a.Id == loggedInUser?.Id);
 
             return View(model);

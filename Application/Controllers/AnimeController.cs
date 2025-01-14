@@ -209,7 +209,7 @@ namespace Application.Controllers
 
         // POST: api/Anime
         [HttpPost]
-        //[Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<AnimeViewModel>> PostAnime(AnimeViewModel model)
         {
             if (!ModelState.IsValid)

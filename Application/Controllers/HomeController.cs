@@ -16,7 +16,7 @@ public class HomeController : Controller
     private readonly SignInManager<Account> _signInManager;
     private readonly UserManager<Account> _userManager;
 
-    public HomeController(ILogger<HomeController> logger, ModelContext context, SignInManager<Account> signInManager, UserManager<Account> userManager) // 
+    public HomeController(ILogger<HomeController> logger, ModelContext context, SignInManager<Account> signInManager, UserManager<Account> userManager)
     {
         _logger = logger;
         _context = context;
@@ -40,25 +40,50 @@ public class HomeController : Controller
         var listElements = await _context.Listelements
             .Where(le => le.Accountid == accountId)
             .Include(le => le.Medium)
-            .Select(le => new
+            .Select(le => new ListElementViewModel
             {
-                le.Accountid,
-                le.Mediumid,
-                le.Finishednumber,
-                le.Status,
-                le.Rating,
-                le.Mediumcomment,
-                le.Startdate,
-                le.Finishdate,
-                le.PostDate,
+                Mediumid = le.Mediumid,
+                Finishednumber = le.Finishednumber,
+                Status = le.Status,
+                Rating = le.Rating,
+                Mediumcomment = le.Mediumcomment,
+                Startdate = le.Startdate,
+                Finishdate = le.Finishdate,
+                Postdate = le.PostDate,
                 Mediumname = le.Medium.Name,
-                Mediumposter = le.Medium.Poster
+                Poster = le.Medium.Poster
             })
-            .OrderByDescending(le => le.PostDate)
+            .OrderByDescending(le => le.Postdate)
             .ToListAsync();
 
 		return View(listElements);
 	}
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteElement(int mediumId)
+    {
+		if (!_signInManager.IsSignedIn(User))
+		{
+			return RedirectToAction("Login", "Account");
+		}
+
+		var user = _userManager.GetUserAsync(User).Result;
+		int accountId = user.Id;
+
+		var element = await _context.Listelements.Where(e =>
+			e.Mediumid == mediumId &&
+			e.Accountid == accountId)
+			.FirstOrDefaultAsync();
+
+		if (element != null)
+		{
+            _context.Listelements.Remove(element);
+            await _context.SaveChangesAsync();
+		}
+
+		return RedirectToAction("Index");
+	}
+
 
     [HttpGet]
     public IActionResult AddToList()

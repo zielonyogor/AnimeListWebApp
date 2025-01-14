@@ -5,22 +5,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Application.Controllers;
+
+[Authorize]
 public class ExploreController : Controller
 {
-	private readonly IHttpClientFactory _httpClientFactory;
 	private readonly ModelContext _context;
 
 	private readonly SignInManager<Account> _signInManager;
 	private readonly UserManager<Account> _userManager;
 
-	public ExploreController(IHttpClientFactory httpClientFactory, ModelContext context, SignInManager<Account> signInManager, UserManager<Account> userManager)
+	public ExploreController(ModelContext context, SignInManager<Account> signInManager, UserManager<Account> userManager)
 	{
-		_httpClientFactory = httpClientFactory;
 		_context = context;
 		_signInManager = signInManager;
 		_userManager = userManager;
@@ -181,7 +179,6 @@ public class ExploreController : Controller
 	}
 
 	[HttpGet]
-	[Authorize]
 	public async Task<IActionResult> AddReview(int mediumId, string? returnUrl)
 	{
 		var medium = await _context.Media.FirstOrDefaultAsync(m => m.Id == mediumId);
@@ -203,7 +200,6 @@ public class ExploreController : Controller
 	}
 
     [HttpPost]
-    [Authorize]
 	public async Task<IActionResult> SubmitReview(ReviewViewModel model)
     {
 		model.Postdate = DateTime.Now;
@@ -236,16 +232,73 @@ public class ExploreController : Controller
     }
 
 	[HttpGet]
-	[Authorize]
-	public async Task<IActionResult> Users()
+    public async Task<IActionResult> Users(string? search)
+    {
+		ViewData["SearchTerm"] = search;
+
+        var query = _context.Accounts.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.ToLower();
+            query = query.Where(u => u.UserName.ToLower().Contains(search));
+        }
+
+        var model = await query
+            .Select(u => new UserInfoViewModel
+            {
+                UserName = u.UserName,
+                Description = u.Description,
+                Imagelink = u.Imagelink
+            })
+            .ToListAsync();
+
+        return View(model);
+    }
+
+	[HttpGet]
+	public IActionResult Studio()
 	{
-		var model = await _context.Accounts
-			.Select(u => new UserInfoViewModel
+		return View();
+	}
+
+	[HttpGet]
+	public async Task<IActionResult> StudioDetails(string name)
+	{
+		var model = await _context.Studios
+			.Where(u => u.Name == name)
+			.Select(s => new StudioViewModel
 			{
-				UserName = u.UserName,
-				Description = u.Description,
-				Imagelink = u.Imagelink
-			}).ToListAsync();
+				Name = s.Name,
+				Wikipedialink = s.Wikipedialink,
+                AnimeIds = s.Animes.Select(a => a.Mediumid).ToList()
+            })
+			.FirstOrDefaultAsync();
+
 		return View(model);
+	}
+
+	[HttpGet]
+	public IActionResult Author()
+	{
+		return View();
+	}
+
+	[HttpGet]
+	public async Task<IActionResult> AuthorDetails(int id)
+	{
+        var model = await _context.Authors
+            .Where(a => a.Id == id)
+            .Select(a => new AuthorViewModel
+            {
+				Id = a.Id,
+                Name = a.Name,
+				Image = a.Image,
+                Wikipedialink = a.Wikipedialink,
+                MangaIds = a.Mangas.Select(m => m.Mediumid).ToList()
+            })
+            .FirstOrDefaultAsync();
+
+        return View(model);
 	}
 }

@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Explore Studios";
+}
+
+<h1>Studio List</h1>
+
+<div class="search-bar">
+    <input id="searchInput" type="text" placeholder="Search studio..." class="form-control mb-3" />
+</div>
+
+<div id="studioList" class="row">
+    <!-- Studio list will be dynamically populated -->
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const studioList = document.getElementById("studioList");
+        const searchInput = document.getElementById("searchInput");
+
+        async function fetchStudio(search = "") {
+            const response = await fetch(`/api/Studio?search=${encodeURIComponent(search)}`);
+            const data = await response.json();
+            renderStudioList(data);
+        }
+
+        function renderStudioList(studio) {
+            studioList.innerHTML = "";
+            studio.forEach(a => {
+                const studioCard = document.createElement("div");
+                studioCard.classList.add("col-md-4", "mb-3");
+                studioCard.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">${a.name}</h5>
+                            <a href="/Explore/StudioDetails?name=${a.name}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                `;
+                studioList.appendChild(studioCard);
+            });
+        }
+
+        searchInput.addEventListener("input", () => {
+            fetchStudio(searchInput.value);
+        });
+
+        // Initial fetch
+        fetchStudio();
+    });
+</script>

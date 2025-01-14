@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-@model IEnumerable<dynamic>
+@model IEnumerable<ListElementViewModel>
 
 <div class="text-center">
 	<h1 class="display-4">Welcome</h1>
@@ -32,12 +32,12 @@
         {
             <tr>
                 <td>
-                    <img src="@(item.Mediumposter ?? "/images/placeholder.svg")" alt="Medium poster" style="max-width: max(6vw, 20px);" />
+                    <img src="@(item.Poster ?? "/images/placeholder.svg")" alt="Medium poster" style="max-width: max(6vw, 20px);" />
                 </td>
-                <td>@item.Mediumname - @item.Mediumid</td>
+                <td>@item.Mediumname</td>
                 <td>@item.Status</td>
                 <td>@item.Finishednumber</td>
-                <td>@(item.Rating ?? "?")/10</td>
+                <td>@(item.Rating == null ? "?" : item.Rating)/10</td>
                 <td>@item.Startdate?.ToString("yyyy-MM-dd")</td>
 				<td>@item.Finishdate?.ToString("yyyy-MM-dd")</td>
 				<td>@item.Mediumcomment</td>

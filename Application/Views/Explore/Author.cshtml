@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Explore Authors";
+}
+
+<h1>Author List</h1>
+
+<div class="search-bar">
+    <input id="searchInput" type="text" placeholder="Search author..." class="form-control mb-3" />
+</div>
+
+<div id="authorList" class="row">
+    <!-- Author list will be dynamically populated -->
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const authorList = document.getElementById("authorList");
+        const searchInput = document.getElementById("searchInput");
+
+        async function fetchAuthor(search = "") {
+            const response = await fetch(`/api/Author?search=${encodeURIComponent(search)}`);
+            const data = await response.json();
+            renderAuthorList(data);
+        }
+
+        function renderAuthorList(author) {
+            authorList.innerHTML = "";
+            author.forEach(a => {
+                const authorCard = document.createElement("div");
+                authorCard.classList.add("col-md-4", "mb-3");
+                authorCard.innerHTML = `
+                    <div class="card">
+                            <img src="${a.image || "/images/placeholder.svg"}" class="card-img-top" alt="Character image">
+                        <div class="card-body">
+                            <h5 class="card-title">${a.name}</h5>
+                            <a href="/Explore/AuthorDetails?id=${a.id}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                `;
+                authorList.appendChild(authorCard);
+            });
+        }
+
+        searchInput.addEventListener("input", () => {
+            fetchAuthor(searchInput.value);
+        });
+
+        // Initial fetch
+        fetchAuthor();
+    });
+</script>
