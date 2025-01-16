@@ -1,0 +1,78 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8F2434CE-DC4E-F2FF-A0BF-D5BAB5E4B94B" name="USERCHARACTER">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:55:52 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_16</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CHARACTER_ID" id="860E6042-F5D3-8685-32F6-9C25C4370631">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:57:44 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>12</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="56C7EC17-D5F6-4C5E-B37D-F242D3469B47" referredColumn="98BDC56E-C6E9-CAAE-E614-B928145C32B3"/>
+</associations>
+</Column>
+<Column name="ACCOUNT_Id" id="E016D3EF-E0C7-381E-FA6E-9262E70ACF5B">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:58:00 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9DF0EB40-5753-FC14-21EB-381A64365A61" referredColumn="33271A8D-5FED-1E2C-0FDB-E0C9A53089B3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="E98EBC5C-C30B-F9C8-97D8-5BA0DEC5CDA7" name="pkUserCharacter">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:58:22 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="860E6042-F5D3-8685-32F6-9C25C4370631"/>
+<colUsage columnID="E016D3EF-E0C7-381E-FA6E-9262E70ACF5B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="90B9AA14-4A26-16BD-C8E3-9D50312AD914" name="fkCharacterUser">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:57:44 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="860E6042-F5D3-8685-32F6-9C25C4370631"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C4CF8165-827B-EDFE-DD46-033A8D2552B6" name="fkUserCharacter">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:58:00 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E016D3EF-E0C7-381E-FA6E-9262E70ACF5B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

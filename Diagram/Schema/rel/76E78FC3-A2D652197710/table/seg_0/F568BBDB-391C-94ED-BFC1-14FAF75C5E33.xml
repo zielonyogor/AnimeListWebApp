@@ -1,0 +1,93 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F568BBDB-391C-94ED-BFC1-14FAF75C5E33" name="ANIME">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:20:36 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_11</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="TYPE" id="C33FFF8A-4240-C008-3EE4-D6703F95EBF3">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:21:20 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>5</dataTypeSize>
+<listOfValues>
+<valueDef value="Movie" description=""/>
+<valueDef value="OVA" description=""/>
+<valueDef value="TV" description=""/>
+</listOfValues>
+<ownDataTypeParameters>5,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="STUDIONAME" id="58326262-75E7-1ABE-D877-CA320AF99B22">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:31:53 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>30 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="60DD894E-2E68-EC83-DBC3-D4A523FC0371" referredColumn="02BF0398-5F53-58C2-67A7-D103850387F5"/>
+</associations>
+</Column>
+<Column name="MEDIUMID" id="7295736E-8075-4CFA-CA11-FD95F91F1ACD">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:32:11 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>5</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="FC86F24E-2713-17E5-0B0B-A1D6E7B06CAC" referredColumn="2415BF7F-16FB-7FEB-A4A1-460AB31EC4B4"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="47362192-A137-89C3-E508-BD240C4A131E" name="ANIME_PK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:32:34 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="58326262-75E7-1ABE-D877-CA320AF99B22"/>
+<colUsage columnID="7295736E-8075-4CFA-CA11-FD95F91F1ACD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3095A59A-4B79-0B15-A251-5D2F48220382" name="ANIME_STUDIO_FK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:31:53 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="58326262-75E7-1ABE-D877-CA320AF99B22"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="966C6D5F-8798-B709-B8CC-81327E612740" name="ANIME_MEDIUM_FK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:32:11 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7295736E-8075-4CFA-CA11-FD95F91F1ACD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

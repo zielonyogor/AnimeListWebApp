@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Relation_18" directorySegmentName="seg_0" id="354B8F94-27CF-E934-5391-59ED010C4AAA">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-14 15:30:34 UTC</createdTime>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<nameOnSource>lubiana przez</nameOnSource>
+<nameOnTarget>lubi</nameOnTarget>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>4E7D705D-78B6-CC83-BCC2-8B3BC6F25F7B</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>2C6CB3F9-BE91-7036-8CE7-00163AF82F63</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

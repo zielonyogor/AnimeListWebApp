@@ -1,0 +1,175 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="46A87A34-01E8-FEB7-91C4-EBCFA71006CA" name="ACCOUNT">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:23:34 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_4</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Id" id="33271A8D-5FED-1E2C-0FDB-E0C9A53089B3">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,0,2</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Email" id="43FAE70E-49EF-0C00-E891-5F2331564F13">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>50 CHAR</dataTypeSize>
+<ownDataTypeParameters>50 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UserName" id="EAAA9B39-6F87-D9B8-84F3-E276CEEF8BDA">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20 CHAR</dataTypeSize>
+<ownDataTypeParameters>20 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PasswordHash" id="B162C863-0873-2A56-0389-EE9B433725C7">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>256 CHAR</dataTypeSize>
+<ownDataTypeParameters>256 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NormalizedUserName" id="96B49496-2FA0-2D42-9476-A66ED99207BF">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20 CHAR</dataTypeSize>
+<ownDataTypeParameters>20 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NormalizedEmail" id="107AC0C8-8997-6C71-4FE4-4C9308175676">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>256 BYTE</dataTypeSize>
+<ownDataTypeParameters>256 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SecurityStamp" id="AB969165-7936-09EE-777D-90CBEDD3FB7C">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>2000 CHAR</dataTypeSize>
+<ownDataTypeParameters>2000 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ConcurrencyStamp" id="D4CE21A3-6D26-4990-288C-872D0719BE11">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>2000 CHAR</dataTypeSize>
+<ownDataTypeParameters>2000 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DESCRIPTION" id="AE108095-0156-5502-6921-3D72D1A084FD">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>500 CHAR</dataTypeSize>
+<ownDataTypeParameters>500 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="IMAGELINK" id="010B7C9A-306D-AEFC-F0D7-EEE66781672A">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>300 CHAR</dataTypeSize>
+<ownDataTypeParameters>300 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CREATEDATE" id="CC63D49E-DFBA-FC2B-DC13-97C5923E03A2">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<defaultValue>CURRENT_DATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<defaultOntNull>true</defaultOntNull>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="0D481D18-DFF2-F1EC-ABA0-280330C54312" name="ACCOUNT_PK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="33271A8D-5FED-1E2C-0FDB-E0C9A53089B3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C0A98D5B-F721-63B8-7EAB-565067A8BECF" name="ACCOUNT__UN">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="43FAE70E-49EF-0C00-E891-5F2331564F13"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="483B53CD-B21B-9983-6F63-0A77DE2E542A" name="ACCOUNT__UNv1">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:33:10 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EAAA9B39-6F87-D9B8-84F3-E276CEEF8BDA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

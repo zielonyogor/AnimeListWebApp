@@ -1,0 +1,94 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="C198C729-B870-18DC-F01F-8ED2BEA874F9" name="MANGA">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:19:15 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_10</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="MEDIUMID" id="B3703D06-EB78-5E49-03BC-18B8205B7851">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:30:07 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>5</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C43B3D9D-B26B-6933-D9F5-710ABB15A933" referredColumn="2415BF7F-16FB-7FEB-A4A1-460AB31EC4B4"/>
+</associations>
+</Column>
+<Column name="TYPE" id="9E06CAC0-0441-9D9C-4BC8-B79638F87250">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:20:19 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>10 CHAR</dataTypeSize>
+<listOfValues>
+<valueDef value="Light novel" description=""/>
+<valueDef value="Manga" description=""/>
+<valueDef value="Oneshot" description=""/>
+</listOfValues>
+<ownDataTypeParameters>10 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="AUTHORID" id="0976640B-732E-CD2E-B401-CE94416C47A2">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:31:06 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>5</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0B029138-CB18-45A6-3918-9169568A23E0" referredColumn="AB12B83E-0FF4-4091-79BE-4428C6F5FA32"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="427630E4-AB28-497C-2D4F-A67A2CAF90F6" name="MANGA_PK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:31:27 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B3703D06-EB78-5E49-03BC-18B8205B7851"/>
+<colUsage columnID="0976640B-732E-CD2E-B401-CE94416C47A2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="443CDCD4-7BB7-9DD1-5D04-2198B59F7D94" name="fkMangaId">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:30:07 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B3703D06-EB78-5E49-03BC-18B8205B7851"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="19D507FD-8503-6CEE-FF25-09E110B511B8" name="MANGA_AUTHOR_FK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:31:06 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0976640B-732E-CD2E-B401-CE94416C47A2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

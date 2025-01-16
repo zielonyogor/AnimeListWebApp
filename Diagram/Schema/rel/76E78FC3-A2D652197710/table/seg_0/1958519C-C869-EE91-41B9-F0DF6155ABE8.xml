@@ -1,0 +1,77 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1958519C-C869-EE91-41B9-F0DF6155ABE8" name="MEDIUMGENRE">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:01:11 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_7</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDMEDIUM1" id="E11BAFC6-455B-C068-2E12-95F082C1C698">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:04:18 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>5</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="086DC332-D55B-E724-54CB-FDC5DAE9B971" referredColumn="2415BF7F-16FB-7FEB-A4A1-460AB31EC4B4"/>
+</associations>
+</Column>
+<Column name="GENRENAME1" id="80832D6E-7AFD-E4DC-B629-1A41958FC791">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:05:29 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>100 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="49DF4086-6238-5646-B9E1-1C54AE51AB6C" referredColumn="3D1A08DA-BB02-F8B5-FEA2-D96FCD0852AF"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="EB177074-054B-66A0-0FA5-49E2492F9DA0" name="pkMediumGenre">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:02:39 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E11BAFC6-455B-C068-2E12-95F082C1C698"/>
+<colUsage columnID="80832D6E-7AFD-E4DC-B629-1A41958FC791"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2F070CF6-474A-7ED7-3C92-A61C685B4CE2" name="fkMediumGenre">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:04:18 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E11BAFC6-455B-C068-2E12-95F082C1C698"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6D8D6C6F-CBAA-112B-0D25-F4EAE584DB57" name="fkGenreMedium">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:05:29 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="80832D6E-7AFD-E4DC-B629-1A41958FC791"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

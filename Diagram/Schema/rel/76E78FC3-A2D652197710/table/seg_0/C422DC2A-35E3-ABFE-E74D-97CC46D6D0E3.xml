@@ -1,0 +1,48 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="C422DC2A-35E3-ABFE-E74D-97CC46D6D0E3" name="STUDIO">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:54:08 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_5</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="NAME" id="02BF0398-5F53-58C2-67A7-D103850387F5">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:54:24 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>30 CHAR</dataTypeSize>
+<ownDataTypeParameters>30 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="WIKIPEDIALINK" id="532EB11B-CD98-C488-8507-2870633B6FE3">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:55:24 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>100 CHAR</dataTypeSize>
+<ownDataTypeParameters>100 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="D1BB888B-61D3-A6ED-D6B6-F253A1CEC04F" name="STUDIO_PK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:55:33 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="02BF0398-5F53-58C2-67A7-D103850387F5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

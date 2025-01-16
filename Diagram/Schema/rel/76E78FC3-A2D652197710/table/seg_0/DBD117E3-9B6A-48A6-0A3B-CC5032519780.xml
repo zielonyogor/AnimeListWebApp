@@ -1,0 +1,131 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="DBD117E3-9B6A-48A6-0A3B-CC5032519780" name="MEDIUM">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 20:51:15 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_6</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="2415BF7F-16FB-7FEB-A4A1-460AB31EC4B4">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 20:51:50 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>5</dataTypeScale>
+<ownDataTypeParameters>,0,5</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="4AE4B636-427F-348E-10DC-C0A26336F4B2">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 20:52:25 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>30 CHAR</dataTypeSize>
+<ownDataTypeParameters>30 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="STATUS" id="1AFD275D-D1F4-AFC8-67E7-91CCEDC652DB">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:00:36 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<constraintName>chkMediumStatus</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>14 CHAR</dataTypeSize>
+<listOfValues>
+<valueDef value="Finished" description=""/>
+<valueDef value="Not finished" description=""/>
+<valueDef value="To be released" description=""/>
+</listOfValues>
+<ownDataTypeParameters>14 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="COUNT" id="E4849BA8-49C1-C62E-D8D6-AEC71AD806AF">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:00:36 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>4</dataTypeScale>
+<ownDataTypeParameters>,0,4</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="POSTER" id="7C7A4AA3-AA48-30AA-9015-91C82A75EF5F">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:00:36 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>300 CHAR</dataTypeSize>
+<ownDataTypeParameters>300 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PUBLISHDATE" id="55A5D397-215E-E8A5-4419-FB585FE119F4">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:00:36 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<defaultValue>CURRENT_DATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<defaultOntNull>true</defaultOntNull>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DESCRIPTION" id="9B7E78CD-3141-BCB6-285E-272681A00094">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:00:36 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>1000 CHAR</dataTypeSize>
+<ownDataTypeParameters>1000 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TYPE" id="07B05D69-9F4A-EF28-9BDB-DC40ABA72C90">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:00:36 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<constraintName>chkMediumType</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>1 CHAR</dataTypeSize>
+<listOfValues>
+<valueDef value="A" description=""/>
+<valueDef value="M" description=""/>
+</listOfValues>
+<ownDataTypeParameters>1 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="35CCA2D3-112D-25E9-9865-2A41384C569F" name="MEDIUM_PK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 20:52:25 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="2415BF7F-16FB-7FEB-A4A1-460AB31EC4B4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

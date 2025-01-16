@@ -1,0 +1,78 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="ECCAA703-39C3-FEB1-4912-A01573F9110F" name="MEDIUMCHARACTER">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:56:06 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_17</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="MEDIUM_ID" id="9A14C452-737B-431C-06DB-1CA90B1827EA">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:56:14 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>5</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="46FE9C00-9094-372B-AB41-1058D3383211" referredColumn="2415BF7F-16FB-7FEB-A4A1-460AB31EC4B4"/>
+</associations>
+</Column>
+<Column name="CHARACTER_ID" id="F09968C9-FBC3-B940-286E-CC0E97ACB096">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:56:20 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>12</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="AC83F262-D499-36B9-67A2-00AAB491E2B2" referredColumn="98BDC56E-C6E9-CAAE-E614-B928145C32B3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="2FABE4FA-5E27-3279-668B-E76BF6DC65D5" name="pkMediumCHaracter">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:57:03 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9A14C452-737B-431C-06DB-1CA90B1827EA"/>
+<colUsage columnID="F09968C9-FBC3-B940-286E-CC0E97ACB096"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0F9AAD9D-98FE-4F57-F309-327B52394ED1" name="fkMediumCharacter">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:56:14 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9A14C452-737B-431C-06DB-1CA90B1827EA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F4D64496-D6A9-6097-8E36-A4F8A0BEF3C5" name="fkCHaracterMedium">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:56:20 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F09968C9-FBC3-B940-286E-CC0E97ACB096"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

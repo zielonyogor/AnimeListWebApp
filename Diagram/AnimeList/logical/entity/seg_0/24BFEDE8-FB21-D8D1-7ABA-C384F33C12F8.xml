@@ -27,18 +27,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="adres_email" id="1DA9DFD0-6C65-013A-F7E3-252CC43163B1">
-<createdBy>Frostyl</createdBy>
-<createdTime>2024-11-11 14:22:43 UTC</createdTime>
-<generatorID>89A41F03-503A-1FB9-0F5A-D11766904944</generatorID>
-<ownerDesignName>AnimeList</ownerDesignName>
-<engineerTo>
-<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
-</engineerTo>
-<referedAttribute>48F74AE5-514D-772A-B4C8-8A327286D354</referedAttribute>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="opis" id="8C615438-4A32-33E6-0D68-C1F2E588C8F3">
 <createdBy>Frostyl</createdBy>
 <createdTime>2024-11-11 14:24:16 UTC</createdTime>
@@ -69,6 +57,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="adres_email1" id="BDFD5565-6DE2-EAA0-4C3F-187BF3F021CE">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-14 15:31:18 UTC</createdTime>
+<generatorID>01B916E8-6DF1-2F0C-66AB-B0E1F807947B</generatorID>
+<ownerDesignName>AnimeList</ownerDesignName>
+<engineerTo>
+<item key="0F1D9557-2CF5-93FD-50DE-9626E863D354" value="true"/>
+</engineerTo>
+<referedAttribute>48F74AE5-514D-772A-B4C8-8A327286D354</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="9BD2426F-4778-7502-60FA-5963F4C422BA" name="Recenzja PK">
@@ -81,7 +81,7 @@
 <pk>true</pk>
 <usedAttributes>
 <attributeRef>7C549CA2-764C-23A4-53ED-13507F5310A1</attributeRef>
-<attributeRef>1DA9DFD0-6C65-013A-F7E3-252CC43163B1</attributeRef>
+<attributeRef>BDFD5565-6DE2-EAA0-4C3F-187BF3F021CE</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

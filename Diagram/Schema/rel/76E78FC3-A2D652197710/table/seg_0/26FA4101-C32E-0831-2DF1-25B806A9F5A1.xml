@@ -1,0 +1,36 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="26FA4101-C32E-0831-2DF1-25B806A9F5A1" name="BADGE">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:22:32 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_3</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="NAME" id="51504D27-E02C-9B28-6806-18990462C170">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:22:54 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20 CHAR</dataTypeSize>
+<ownDataTypeParameters>20 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="7D7452BA-6216-8331-4F42-467D6CD24356" name="pkBadge">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 16:23:28 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="51504D27-E02C-9B28-6806-18990462C170"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

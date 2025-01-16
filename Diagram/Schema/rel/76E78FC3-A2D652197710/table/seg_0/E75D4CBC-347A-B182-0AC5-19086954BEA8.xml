@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E75D4CBC-347A-B182-0AC5-19086954BEA8" name="USERBADGE">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:17:59 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_8</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="AQUIREDATE" id="677F56CF-F8B5-CB87-DC99-E18BDA00C84B">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:18:45 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<defaultValue>CURRENT_DATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BADGENAME" id="484D13BF-E255-574F-E411-DD9915B6E9C1">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:33:12 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E8302F6C-A312-80CF-9DE9-624286320F2F" referredColumn="51504D27-E02C-9B28-6806-18990462C170"/>
+</associations>
+</Column>
+<Column name="ACCOUNTID" id="FD446455-3F38-DBF7-E67A-8713BD785D57">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:33:23 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E12AE0A4-3F85-D9A8-D373-CC37EFDC1A99" referredColumn="33271A8D-5FED-1E2C-0FDB-E0C9A53089B3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="2718844F-9688-73C8-B4D2-7E475AF9209F" name="USERBADGE_PK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:34:16 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="484D13BF-E255-574F-E411-DD9915B6E9C1"/>
+<colUsage columnID="FD446455-3F38-DBF7-E67A-8713BD785D57"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D51059AE-A7D9-D5E2-DBD1-D00C096F6378" name="fkBadgeUser">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:33:12 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="484D13BF-E255-574F-E411-DD9915B6E9C1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="61A0EB4F-0092-F7C4-121B-5426B707726B" name="fkUserBadge">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:33:23 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FD446455-3F38-DBF7-E67A-8713BD785D57"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

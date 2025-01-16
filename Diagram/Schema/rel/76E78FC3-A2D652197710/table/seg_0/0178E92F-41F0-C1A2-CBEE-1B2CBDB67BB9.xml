@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="0178E92F-41F0-C1A2-CBEE-1B2CBDB67BB9" name="FOLLOWER">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:18:53 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<ordsAlias>table_9</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ACCOUNTID2" id="F58DAA57-7CAD-6227-4A50-1A1E7B98739D">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:35:07 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="16E234E9-2169-3A01-0A15-3E062D3F6419" referredColumn="33271A8D-5FED-1E2C-0FDB-E0C9A53089B3"/>
+</associations>
+</Column>
+<Column name="ACCOUNTID2_2" id="9E93838A-523F-067E-F2D8-965475D2C313">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:35:16 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C5068D86-277F-A1D7-22E7-6579D329DD06" referredColumn="33271A8D-5FED-1E2C-0FDB-E0C9A53089B3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="7AD6791C-3671-5D6F-C458-F15FEB1A22C4" name="pkFollower">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:35:33 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F58DAA57-7CAD-6227-4A50-1A1E7B98739D"/>
+<colUsage columnID="9E93838A-523F-067E-F2D8-965475D2C313"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5AB1497B-ED7A-B94D-6866-F7C7D2754D43" name="fkUser1">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:35:07 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F58DAA57-7CAD-6227-4A50-1A1E7B98739D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BF10038C-50B4-F382-55F8-8F31620E2915" name="fkUser2">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:35:16 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9E93838A-523F-067E-F2D8-965475D2C313"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="chkFollowPair" directorySegmentName="seg_0" id="A7738396-716E-43B1-4C72-CFCF95D89D16">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-16 21:36:46 UTC</createdTime>
+<ownerDesignName>Schema</ownerDesignName>
+<rule><![CDATA[ACCOUNTID2 != ACCOUNTID1]]></rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>
