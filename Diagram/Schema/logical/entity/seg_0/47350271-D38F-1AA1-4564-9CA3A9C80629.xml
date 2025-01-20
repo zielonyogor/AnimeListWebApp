@@ -1,0 +1,55 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="47350271-D38F-1AA1-4564-9CA3A9C80629" name="ANIME">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>F568BBDB-391C-94ED-BFC1-14FAF75C5E33</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<hierarchicalParent>76B22771-EAE7-72F8-4D80-3520931E2BEA</hierarchicalParent>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="TYPE" id="F40F0604-F460-5CAC-E13C-EBC39812702F">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>C33FFF8A-4240-C008-3EE4-D6703F95EBF3</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>5</dataTypeSize>
+<listOfValues>
+<valueDef value="Movie" description=""/>
+<valueDef value="OVA" description=""/>
+<valueDef value="TV" description=""/>
+</listOfValues>
+<ownDataTypeParameters>5,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="STUDIONAME" id="BF65E472-C5DF-BF59-7FD4-22DA551BA249">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>F046BAB7-3BB3-AF87-939B-411839CDA254</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<referedAttribute>586E5DF7-2D9F-B5B6-6B57-AE236A214FF9</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>30 CHAR</dataTypeSize>
+<ownDataTypeParameters>30 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="MANGA_AUTHOR_FK" directorySegmentName="seg_0" id="AB996DEE-190D-5EBC-DEE1-DAC8FBF1BA93">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>0B029138-CB18-45A6-3918-9169568A23E0</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<sourcePk>65998252-BB76-3B4E-0CD5-3A5F4E8B5137</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>E5ABF51E-840F-DE6C-DFFB-A048BD2349E1</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>649C6AC8-110B-BB21-C3C1-46F48DAD4A9D</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>

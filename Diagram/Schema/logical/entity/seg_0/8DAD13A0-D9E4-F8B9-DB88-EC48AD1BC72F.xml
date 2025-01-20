@@ -1,0 +1,116 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8DAD13A0-D9E4-F8B9-DB88-EC48AD1BC72F" name="REVIEW">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>B0043581-9100-29A4-C0D3-97E01C02DA0F</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="DESCRIPTION" id="BA548C14-B1D7-E817-CCCB-9CCC11B3C4D4">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>556A6AC3-BD5D-B879-A99A-69F57C1B44E1</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>500 CHAR</dataTypeSize>
+<ownDataTypeParameters>500 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FEELING" id="04BAB013-EF74-1690-4337-A5CE3BE0B467">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>02205E78-D510-241D-AEF1-6CF88810C863</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>17</dataTypeSize>
+<listOfValues>
+<valueDef value="Mixed feelings" description=""/>
+<valueDef value="Not recommended" description=""/>
+<valueDef value="Recommended" description=""/>
+</listOfValues>
+<ownDataTypeParameters>17,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="POSTDATE" id="9BE43814-27AD-7606-39D9-B94DCE1A365F">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>FC0798E0-562D-6FB5-AE20-645A1325E4EF</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<defaultValue>CURRENT_DATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="MEDIUMID" id="51C32659-62FA-C7B9-DBCE-480D6DC7AB7D">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>AF316CCE-E460-0AC1-1D0B-77C5FC75D26F</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<referedAttribute>B106E12D-84E5-1B80-2B0D-4453CEC68F3E</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>5</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ACCOUNTID" id="4F95FE1F-1AA4-72B8-5C5C-655158A1C163">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>E6E64826-8018-C0B0-EFF3-BFF66DEC4099</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<referedAttribute>A547827F-FCA4-496F-852D-10F192C2FF60</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="3DEFAEEE-43CE-07F8-EC2C-D0763B95FBE4" name="REVIEW PK">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>AA397D4F-7781-3E7E-2CFB-B0F1E11D7F4D</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>51C32659-62FA-C7B9-DBCE-480D6DC7AB7D</attributeRef>
+<attributeRef>4F95FE1F-1AA4-72B8-5C5C-655158A1C163</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

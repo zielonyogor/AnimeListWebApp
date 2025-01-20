@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="ANIME_STUDIO_FK" directorySegmentName="seg_0" id="F046BAB7-3BB3-AF87-939B-411839CDA254">
+<createdBy>kasia</createdBy>
+<createdTime>2025-01-20 19:48:27 UTC</createdTime>
+<generatorID>60DD894E-2E68-EC83-DBC3-D4A523FC0371</generatorID>
+<ownerDesignName>Schema</ownerDesignName>
+<engineerTo>
+<item key="76E78FC3-E7C0-EB74-4A94-A2D652197710" value="true"/>
+</engineerTo>
+<sourcePk>CE3CF4F7-F563-5B49-7088-507E930B41B9</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>12AB125F-B35C-BF0D-1096-8EE7D7D5700B</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>47350271-D38F-1AA1-4564-9CA3A9C80629</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>
