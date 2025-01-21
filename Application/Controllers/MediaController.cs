@@ -51,7 +51,6 @@ namespace Application.Controllers
                     m.Count
                 })
                 .FirstOrDefaultAsync(m => m.Id == id);
-            Console.WriteLine($"{id}, {medium?.Name} \n\n\n");
             if (medium == null)
             {
                 return NotFound();

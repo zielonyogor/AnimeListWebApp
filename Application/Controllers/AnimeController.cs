@@ -22,7 +22,6 @@ namespace Application.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AnimeViewModel>>> GetAnimes([FromQuery] string? search)
         {
-            Console.WriteLine(search);
             var animes = await _context.Animes
             .Include(a => a.Medium)
             .ThenInclude(m => m.Genrenames)
@@ -243,7 +242,6 @@ namespace Application.Controllers
                 _context.Media.Add(medium);
                 await _context.SaveChangesAsync();
 
-                Console.WriteLine($"\n\nMedium ID: {medium.Id}\n\n");
                 model.Id = medium.Id;
 
                 if (!String.IsNullOrWhiteSpace(model.Poster))

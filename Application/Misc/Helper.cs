@@ -15,7 +15,6 @@ namespace Application.Misc
         public static async Task<int> SaveImage(string imagePath, string filenamePath)
         {
             var response = await httpClient.GetAsync(imagePath);
-            Console.WriteLine(response.Content);
             if (!response.IsSuccessStatusCode)
             {
                 return -1;
@@ -35,7 +34,6 @@ namespace Application.Misc
                 var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
                 var imageFileName = Path.GetFileName(path);
                 var imagePath = Path.Combine(wwwrootPath, imageFileName);
-                Console.WriteLine($"{imagePath}");
 
                 System.IO.File.Delete(imagePath);
             }

@@ -243,7 +243,6 @@ public class MangaController : ControllerBase
 			_context.Media.Add(medium);
 			await _context.SaveChangesAsync();
 
-			Console.WriteLine($"\n\nMedium ID: {medium.Id}\n\n");
 			model.Id = medium.Id;
 
 			if (!string.IsNullOrWhiteSpace(model.Poster))
@@ -362,8 +361,6 @@ public class MangaController : ControllerBase
 		}
 		else if (model.Status == "Not finished")
 		{
-			Console.WriteLine("Is notfinished, making checks");
-			Console.WriteLine($"{model.Publishdate}");
 			if (model.Count == 0)
 			{
 				result.Errors.Add("Count", ["Not finished Mangas must have chapters"]);

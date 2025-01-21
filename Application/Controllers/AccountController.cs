@@ -97,8 +97,6 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Follow(string username)
     {
-        Console.WriteLine("skibidi\n");
-
         if (!_signInManager.IsSignedIn(User))
         {
             return RedirectToAction("Login", "Account");
@@ -109,7 +107,6 @@ public class AccountController : Controller
 
         if (userToFollow != null)
         {
-            Console.WriteLine("skibidi po raz kolejny\n");
             user.Accountid1s.Add(userToFollow);
             userToFollow.Accountid2s.Add(user);
 
@@ -207,7 +204,6 @@ public class AccountController : Controller
 
         if (profilePicture != null && profilePicture.Length > 0)
         {
-            Console.WriteLine("HELLO I FONUD A PIC");
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
             var fileExtension = Path.GetExtension(profilePicture.FileName).ToLower();
 
@@ -223,12 +219,10 @@ public class AccountController : Controller
             var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
             var fileName = $"user_{model.UserName}{fileExtension}";
             var filePath = Path.Combine(imagesDirectory, fileName);
-            Console.WriteLine($"PATH: {imagesDirectory} + {fileName} + {filePath}");
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await profilePicture.CopyToAsync(stream);
-                Console.WriteLine("COPIED\n\n\n");
             }
 
 

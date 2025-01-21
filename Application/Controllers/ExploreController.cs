@@ -203,7 +203,6 @@ public class ExploreController : Controller
 	public async Task<IActionResult> SubmitReview(ReviewViewModel model)
     {
 		model.Postdate = DateTime.Now;
-		Console.WriteLine($"{model.Name} - {model.MediumId} : {model.Postdate}");
         if (ModelState.IsValid)
         {
             var user = await _userManager.GetUserAsync(User);

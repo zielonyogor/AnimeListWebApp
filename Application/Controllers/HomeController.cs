@@ -131,22 +131,6 @@ public class HomeController : Controller
 
             return RedirectToAction("Index");
         }
-
-        foreach (var state in ModelState)
-        {
-            if (state.Value.Errors.Count > 0)
-            {
-                Console.WriteLine($"Key: {state.Key}");
-                foreach (var error in state.Value.Errors)
-                {
-                    Console.WriteLine($"Error: {error.ErrorMessage}");
-                    if (error.Exception != null)
-                    {
-                        Console.WriteLine($"Exception: {error.Exception.Message}");
-                    }
-                }
-            }
-        }
         return View(newElement);
     }
 
@@ -161,7 +145,6 @@ public class HomeController : Controller
         var user = await _userManager.GetUserAsync(User);
         int accountId = user.Id;
 
-        Console.WriteLine($"Medium ID: {mediumId}, {accountId}");
 
         var element = await _context.Listelements.Where(e =>
             e.Mediumid ==  mediumId &&

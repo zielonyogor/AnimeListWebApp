@@ -61,7 +61,6 @@ namespace Application.Controllers
         [Authorize(Roles = "Admin,Moderator")]
         public async Task<IActionResult> PutStudio(string name, [FromBody] Studio studio)
         {
-            Console.WriteLine(name);
             if (name != studio.Name)
             {
                 return BadRequest();
@@ -97,7 +96,7 @@ namespace Application.Controllers
             {
                 return BadRequest(ModelState);
             }
-            Console.WriteLine("aaaaaaaa\n\n\n\n\n");
+            
             _context.Studios.Add(studio);
             try
             {
