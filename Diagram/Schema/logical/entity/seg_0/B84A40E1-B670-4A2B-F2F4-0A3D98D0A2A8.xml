@@ -30,7 +30,7 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <dataTypePrecision>0</dataTypePrecision>
 <dataTypeScale>2</dataTypeScale>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>,0,2</ownDataTypeParameters>
 </Attribute>
 <Attribute name="MEDIUMID" id="91BE2BF5-376A-7AB6-1EB4-0B77ECD536D1">
 <createdBy>kasia</createdBy>
@@ -46,7 +46,7 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <dataTypePrecision>0</dataTypePrecision>
 <dataTypeScale>5</dataTypeScale>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>,0,5</ownDataTypeParameters>
 </Attribute>
 <Attribute name="FINISHEDNUMBER" id="5B84E2F1-7015-5010-690F-17C3CC78CBD0">
 <createdBy>kasia</createdBy>
